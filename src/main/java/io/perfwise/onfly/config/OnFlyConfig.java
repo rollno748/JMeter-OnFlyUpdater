@@ -1,5 +1,7 @@
 package io.perfwise.onfly.config;
 
+import static spark.Spark.*;
+
 import org.apache.jmeter.config.ConfigElement;
 import org.apache.jmeter.testbeans.TestBean;
 import org.apache.jmeter.testbeans.TestBeanHelper;
@@ -26,17 +28,12 @@ public class OnFlyConfig extends AbstractTestElement implements ConfigElement, T
 		this.setRunningVersion(true);
 		TestBeanHelper.prepare(this);
 		JMeterVariables variables = getThreadContext().getVariables();
-		
-		LOGGER.info(variables.toString());
-//		if (variables.getObject(BOLT_CONNECTION) != null) {
-//			log.error("Bolt connection already exists");
-//		} else {
-//			synchronized (this) {
-//				driver = GraphDatabase.driver(getBoltUri(), AuthTokens.basic(getUsername(), getPassword()));
-//				variables.putObject(BOLT_CONNECTION, driver);
-//			}
-//		}
-
+		//Start Spark rest services
+		try{
+			init();
+		}catch (Exception e) {
+			LOGGER.error("On-Fly-Updater REST services failed to start", e);
+		}
 	}
 
 	public void testStarted(String host) {
@@ -45,7 +42,12 @@ public class OnFlyConfig extends AbstractTestElement implements ConfigElement, T
 
 	public void testEnded() {
 		synchronized (this) {
-            //kill api
+			try {
+				stop();
+			}catch (Exception e) {
+				LOGGER.error("On-Fly-Updater REST services failed to stop", e);
+			}
+            
         }
 	}
 
