@@ -1,0 +1,23 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>io.perfwise</groupId>
+	<artifactId>jmeter-onfly-updater</artifactId>
+	<version>0.1</version>
+
+	<properties>
+		<di-jmeter-version>5.1.1</di-jmeter-version>
+		<jmeter.lib.scope>provided</jmeter.lib.scope>
+	</properties>
+	
+	<dependencies>
+		<dependency>
+			<groupId>org.apache.jmeter</groupId>
+			<artifactId>ApacheJMeter_java</artifactId>
+			<version>${di-jmeter-version}</version>
+			<scope>${jmeter.lib.scope}</scope>
+		</dependency>
+	</dependencies>
+
+</project>
