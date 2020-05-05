@@ -1,35 +1,44 @@
 package io.perfwise.rest;
 
-import java.io.IOException;
-import java.io.OutputStreamWriter;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.net.URLEncoder;
+import static spark.Spark.get;
+import static spark.Spark.init;
+import static spark.Spark.port;
+import static spark.Spark.stop;
 
+import org.apache.jmeter.threads.JMeterVariables;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class RestServices {
-	
-	public static void setPersonData(String name, String birthYear, String about) throws IOException {
-		HttpURLConnection connection = (HttpURLConnection) new URL("http://localhost:8080/people/" + name)
-				.openConnection();
 
-		connection.setRequestMethod("POST");
+	private static final Logger LOGGER = LoggerFactory.getLogger(RestServices.class);
+	private String URIPATH;
+	private JMeterVariables vars;
 
-		String postData = "name=" + URLEncoder.encode(name);
-		postData += "&about=" + URLEncoder.encode(about);
-		postData += "&birthYear=" + birthYear;
+	public RestServices(String uriPath, JMeterVariables variables) {
+		this.URIPATH = uriPath;
+		this.vars = variables;
 
-		connection.setDoOutput(true);
-		OutputStreamWriter wr = new OutputStreamWriter(connection.getOutputStream());
-		wr.write(postData);
-		wr.flush();
+	}
 
-		int responseCode = connection.getResponseCode();
-		if (responseCode == 200) {
-			System.out.println("POST was successful.");
-		} else if (responseCode == 401) {
-			System.out.println("Wrong password.");
+	public void status() {
+		get(URIPATH+"/status", (req, res) -> "Hello World");
+	}
+
+	public void healthCheck() {
+	}
+
+	public static void startRestServer(String port) {
+		port(Integer.parseInt(port));
+		try {
+			init();
+		} catch (Exception e) {
+			LOGGER.error("On-Fly-Updater REST services failed to start", e);
 		}
+	}
+
+	public static void stopRestServer() {
+		stop();
 	}
 
 }
