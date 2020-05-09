@@ -5,7 +5,6 @@ import static spark.Spark.init;
 import static spark.Spark.port;
 import static spark.Spark.stop;
 
-
 import org.apache.jmeter.threads.JMeterVariables;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,9 +15,8 @@ public class RestServices {
 	private String URIPATH;
 	private JMeterVariables vars;
 
-	public RestServices(String uriPath, JMeterVariables variables) {
+	public RestServices(String uriPath) {
 		this.URIPATH = uriPath;
-		this.vars = variables;
 
 	}
 

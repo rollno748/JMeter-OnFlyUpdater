@@ -1,19 +1,26 @@
 package io.perfwise.onfly.config;
 
+import static spark.Spark.before;
+import static spark.Spark.get;
+import static spark.Spark.path;
+import static spark.Spark.post;
+import static spark.Spark.put;
+
+import java.util.Properties;
+
 import org.apache.jmeter.config.ConfigElement;
+import org.apache.jmeter.engine.StandardJMeterEngine;
 import org.apache.jmeter.testbeans.TestBean;
 import org.apache.jmeter.testbeans.TestBeanHelper;
 import org.apache.jmeter.testelement.AbstractTestElement;
 import org.apache.jmeter.testelement.TestStateListener;
-import org.apache.jmeter.threads.JMeterVariables;
+import org.apache.jmeter.threads.JMeterContextService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import static spark.Spark.get;
-import static spark.Spark.path;
-import static spark.Spark.before;
-
 import io.perfwise.rest.RestServices;
+import io.perfwise.utils.Credentials;
+import io.perfwise.utils.JsonHelper;
 
 
 public class OnFlyConfig extends AbstractTestElement implements ConfigElement, TestStateListener, TestBean {
@@ -24,13 +31,16 @@ public class OnFlyConfig extends AbstractTestElement implements ConfigElement, T
 	private String port;
 	private String uriPath;
 	private String password;
+	private static StandardJMeterEngine engine;
 	
 
 	public void testStarted() {
 		this.setRunningVersion(true);
 		TestBeanHelper.prepare(this);
-		JMeterVariables variables = getThreadContext().getVariables();
-		new RestServices(getUriPath(), variables);
+		Properties props = JMeterContextService.getContext().getProperties();
+		engine = JMeterContextService.getContext().getEngine();
+		new Credentials(getPassword());
+		new RestServices(getUriPath());
 		//Start Spark REST services
 		RestServices.startRestServer(getPort());
 		
@@ -39,22 +49,46 @@ public class OnFlyConfig extends AbstractTestElement implements ConfigElement, T
 		path(getUriPath(), () -> {
 		    before("/*", (q, a) -> LOGGER.info("Received api call"));
 		    
-		    get("/status", (req, res) -> {
-		    	
+		    get("/status", (req, res) -> {	
 		    	res.type("application/json");
-			    return "{\"message\":\"On-Fly-Updater Running\"}";
+			    return "{\"status\":\"On-Fly-Updater Running\"}";
 		    });
 		    
-//		    path("/username", () -> {
-//		        post("/add",       UserApi.addUsername);
-//		        put("/change",     UserApi.changeUsername);
-//		        delete("/remove",  UserApi.deleteUsername);
-//		    });
+		    get("/jmeterprops", (req, res) -> {	
+		    	res.type("application/json");
+		    	
+			    return JsonHelper.getJmeterProperties(props);
+		    }); 
+		    
+		    get("/jmetervars", (req, res) -> {	
+		    	res.type("application/json");
+			    return JsonHelper.toJson(JMeterContextService.getClientSideVariables());
+		    }); 
+		    
+		    get("/threadinfo", (req, res) -> {	
+		    	res.type("application/json");
+			    return JsonHelper.toJson(JMeterContextService.getThreadCounts());
+		    }); 
+		    
+		    post("/stoptest", (req, res) -> {
+		    	res.type("application/json");
+		    	if(Credentials.validate(req.headers("password"))) {
+		    		engine.askThreadsToStop();
+		    	}
+		    	return true;
+		    });
+		    
+		    
+		    put("/update", (req, res) -> {	
+		    	res.type("application/json");
+		    	
+			    return JsonHelper.getJmeterProperties(props);
+		    }); 
+		    
 		});
 		
-		
-		
 	}
+
 
 
 	public void testStarted(String host) {
