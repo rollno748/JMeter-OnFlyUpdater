@@ -1,7 +1,7 @@
 package io.perfwise.utils;
 
 public class Credentials {
-	
+
 	private static String keyPass;
 
 	public Credentials(String key) {
@@ -10,12 +10,10 @@ public class Credentials {
 	}
 
 	public static boolean validate(String pass) {
-		
-		if(keyPass != pass) {
-			return false;
+		if (keyPass.equals(pass)) {
+			return true;
 		}
-		return true;
+		return false;
 	}
-	
 
 }
