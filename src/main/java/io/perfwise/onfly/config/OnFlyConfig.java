@@ -9,6 +9,10 @@ import org.apache.jmeter.threads.JMeterVariables;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import static spark.Spark.get;
+import static spark.Spark.path;
+import static spark.Spark.before;
+
 import io.perfwise.rest.RestServices;
 
 
@@ -29,6 +33,27 @@ public class OnFlyConfig extends AbstractTestElement implements ConfigElement, T
 		new RestServices(getUriPath(), variables);
 		//Start Spark REST services
 		RestServices.startRestServer(getPort());
+		
+		
+		
+		path(getUriPath(), () -> {
+		    before("/*", (q, a) -> LOGGER.info("Received api call"));
+		    
+		    get("/status", (req, res) -> {
+		    	
+		    	res.type("application/json");
+			    return "{\"message\":\"On-Fly-Updater Running\"}";
+		    });
+		    
+//		    path("/username", () -> {
+//		        post("/add",       UserApi.addUsername);
+//		        put("/change",     UserApi.changeUsername);
+//		        delete("/remove",  UserApi.deleteUsername);
+//		    });
+		});
+		
+		
+		
 	}
 
 
@@ -87,6 +112,10 @@ public class OnFlyConfig extends AbstractTestElement implements ConfigElement, T
 
 	public void setPassword(String password) {
 		this.password = password;
+	}
+	
+	public void setVariables(String vars) {
+		
 	}
 	
 	
