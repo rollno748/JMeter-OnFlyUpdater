@@ -45,11 +45,11 @@ Add required config element (On-Fly-Updater config)
 
 ## REST Services
 * Check the API Status (GET http://localhost:1304/on-fly/status)
-* Get the JMeter Properties (GET http://localhost:1304/on-fly/jmeterprops)
+* Get the JMeter Properties (GET http://localhost:1304/on-fly/props?type=system/jmeter)
 * Get the JMeter variables (GET http://localhost:1304/on-fly/jmetervars)
 * Get the thread Information (GET http://localhost:1304/on-fly/threadinfo) 
 * Stop the JMeter test (GET http://localhost:1304/on-fly/stoptest)
-* Update the Properties/Variables (GET http://localhost:1304/on-fly/update)
+* Update the Properties/Variables (PUT http://localhost:1304/on-fly/update)
 
 
 
