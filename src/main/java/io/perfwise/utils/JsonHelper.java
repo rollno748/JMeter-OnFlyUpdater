@@ -10,6 +10,8 @@ import org.apache.jmeter.threads.JMeterVariables;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import io.perfwise.rest.controller.User;
+
 public class JsonHelper {
 	
 	private static Gson gson = new GsonBuilder().create();
@@ -32,6 +34,11 @@ public class JsonHelper {
 
 	public static Object toJson(ThreadCounts threadCounts) {
 		return gson.toJson(threadCounts);
+	}
+
+	public static User fromJson(String body, Class<User> user) {
+		// TODO Auto-generated method stub
+		return new Gson().fromJson(body, User.class);
 	}
 	
 

@@ -1,10 +1,12 @@
 package io.perfwise.onfly.config;
 
 import org.apache.jmeter.config.ConfigElement;
+import org.apache.jmeter.engine.StandardJMeterEngine;
 import org.apache.jmeter.testbeans.TestBean;
 import org.apache.jmeter.testbeans.TestBeanHelper;
 import org.apache.jmeter.testelement.AbstractTestElement;
 import org.apache.jmeter.testelement.TestStateListener;
+import org.apache.jmeter.threads.JMeterContextService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -28,6 +30,8 @@ public class OnFlyConfig extends AbstractTestElement implements ConfigElement, T
 		// Start Spark REST services
 		RestServices.startRestServer(port);
 		RestServices.loadServices();
+		StandardJMeterEngine jMeterEngine = JMeterContextService.getContext().getEngine();
+		System.out.println(jMeterEngine);
 
 	}
 

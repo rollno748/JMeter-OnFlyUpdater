@@ -55,6 +55,7 @@ Add required config element (On-Fly-Updater config)
 
 ##References
 * REST servies: http://sparkjava.com/documentation
+* Examples: https://www.baeldung.com/spark-framework-rest-api
 
 
 
