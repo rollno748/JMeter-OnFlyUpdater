@@ -51,11 +51,21 @@ Add required config element (On-Fly-Updater config)
 * Stop the JMeter test (GET http://localhost:1304/on-fly/stoptest)
 * Update the Properties/Variables (PUT http://localhost:1304/on-fly/update)
 
-
+## Features
+- [x] GET Plugin Running Status
+- [x] GET Property Display (System/Jmeter)
+- [x] GET Status (Overall User Running Status)
+- [ ] GET Test Info
+- [ ] GET Jmeter Variables
+- [ ] PUT Threads (Add/Remove)
+- [ ] PUT Properties (Supports only Jmeter properties) 
+- [ ] PUT Jmeter Variables
+- [ ] PUT Thread Groups (Enable/Disable)
+- [ ] PUT Element (Enable/Disable Listeners)
+- [ ] POST Stop test (Stop/Shutdown)
 
 ##References
 * REST servies: http://sparkjava.com/documentation
 * Examples: https://www.baeldung.com/spark-framework-rest-api
-
 
 
