@@ -32,7 +32,7 @@ This plugin adds feature to control jmeter over REST APIs
 
 * Download the source code from the Github.
 * Just do a mvn clean install (Git bash is required)
-* Jar will be generated under the target directory (jmeter-pubsub-sampler-1.0.jar)
+* Jar will be generated under the target directory (jmeter-onfly-updater-0.1.jar)
 * Copy the Jar to \<Jmeter Installed Directory\>/lib/ext/
 
 ## How to use it
@@ -54,9 +54,9 @@ Add required config element (On-Fly-Updater config)
 - [ ] PUT Jmeter Variables (GET http://<IP/Hostname>:<Port>/<URI-PATH>/vars)
 - [ ] PUT Thread Groups (Enable/Disable) (GET http://<IP/Hostname>:<Port>/<URI-PATH>/threadgroups)
 - [ ] PUT Element (Enable/Disable Listeners) (GET http://<IP/Hostname>:<Port>/<URI-PATH>/element)
-- [ ] POST Stop test (Stop/Shutdown) (GET http://<IP/Hostname>:<Port>/<URI-PATH>/stoptest?action=shutdown)
+- [x] POST Stop test (Stop/Shutdown) (GET http://<IP/Hostname>:<Port>/<URI-PATH>/stoptest?action=shutdown)
 
-##References
+## References
 * REST servies: http://sparkjava.com/documentation
 * Examples: https://www.baeldung.com/spark-framework-rest-api
 

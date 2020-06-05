@@ -8,8 +8,6 @@ import static spark.Spark.port;
 import static spark.Spark.post;
 import static spark.Spark.put;
 
-import java.lang.reflect.Type;
-
 import org.apache.jmeter.threads.JMeterContextService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,6 +18,8 @@ import com.healthmarketscience.jackcess.PropertyMap.Property;
 import io.perfwise.rest.controller.ThreadGroupHandler;
 import io.perfwise.rest.controller.User;
 import io.perfwise.service.PropertyService;
+import io.perfwise.service.ThreadGroupService;
+import io.perfwise.service.VariableService;
 import io.perfwise.utils.Credentials;
 import io.perfwise.utils.JsonHelper;
 import spark.Spark;
@@ -54,52 +54,58 @@ public class RestServices extends ThreadGroupHandler {
 		path(UriPath, () -> {
 			before("/*", (q, a) -> LOGGER.info("Received api call"));
 
-			// --- Get Plugin Running Status ---
 			get("/ping", (req, res) -> {
 				res.type("application/json");
+				// --- Get Plugin Running Status ---
 				return new Gson().toJson(new StandardResponse(StatusResponse.SUCCESS, "On-Fly-Updater Running"));
 			});
 
-			// --- Get Properties (System/Jmeter)---
+			
 			get("/properties", (req, res) -> {
 				res.type("application/json");
+				// --- Get Properties (System/Jmeter)---
 				return new Gson().toJson(PropertyService.getProperty(req.queryParams("type")));
 			});
 
 			
-			// --- Update Jmeter properties --- Not Completed
+			
 			put("/update", (req, res) -> {
 				res.type("application/json");
+				// --- Update Jmeter properties --- Not Completed
 				return new Gson().toJson(PropertyService.updateProperty(req.body(), Property.class));
 			});
 
-			// --- Get thread Running Status (Active, started, running)---
+			
 			get("/status", (req, res) -> {
 				res.type("application/json");
+				// --- Get thread Running Status (Active, started, running)---
 				return new Gson().toJson(new StandardResponse(StatusResponse.SUCCESS, JMeterContextService.getThreadCounts()));
 			});
 
-			// --- Get the complete test informations (Threads, threadgroups, etc)
+			
 			get("/testinfo", (req, res) -> {
 				res.type("application/json");
 				if (req.queryParams("type") != null && Credentials.validate(req.headers("password"))) {
 					return null;
 				}
+				// --- Get the complete test informations (Threads, threadgroups, etc)
 				return new Gson().toJson("AuthError");
 			});
 
-			// --- Add/remove users from specific threadgroup ---
+			
 			put("/threads", (req, res) -> {
 				res.type("application/json");
 				User user = JsonHelper.fromJson(req.body(), User.class);
-				return ThreadGroupHandler.update(user);
+				// --- Add/remove users from specific threadgroup ---
+				return ThreadGroupService.update(user);
 			});
 
-			// --- Get Jmeter variables info ---
+			
 			get("/vars", (req, res) -> {
 				res.type("application/json");
 				// return JsonHelper.getJmeterVars(true);
-				return true;
+				// --- Get Jmeter variables info ---
+				return VariableService.getVars();
 			});
 
 			// --- Get Jmeter variables info ---
@@ -121,13 +127,14 @@ public class RestServices extends ThreadGroupHandler {
 				return null;
 			});
 
-			// --- Get Plugin Running Status ---
+			
 			post("/stoptest", (req, res) -> {
 				res.type("application/json");
 				
 				if (req.queryParams("action") != null && Credentials.validate(req.headers("password"))) {
-					return ThreadGroupHandler.stopTest(req.queryParams("action"));
+					return ThreadGroupService.stopTest(req.queryParams("action"));
 				}
+				// --- Get Plugin Running Status ---
 				return new Gson().toJson("AuthError");
 			});
 
