@@ -4,6 +4,7 @@ import java.util.Map.Entry;
 import java.util.Properties;
 import java.util.Set;
 
+import org.apache.jmeter.control.Controller;
 import org.apache.jmeter.threads.JMeterContextService.ThreadCounts;
 import org.apache.jmeter.threads.JMeterVariables;
 
@@ -28,8 +29,8 @@ public class JsonHelper {
 		return gson.toJson(set);
 	}
 
-	public static Object toJson(JMeterVariables clientSideVariables) {
-		return gson.toJson(clientSideVariables);
+	public static Object toJson(JMeterVariables variables) {
+		return gson.toJson(variables);
 	}
 
 	public static Object toJson(ThreadCounts threadCounts) {
@@ -39,6 +40,11 @@ public class JsonHelper {
 	public static User fromJson(String body, Class<User> user) {
 		// TODO Auto-generated method stub
 		return new Gson().fromJson(body, User.class);
+	}
+
+	public static Object toJson(Controller samplerController) {
+		// TODO Auto-generated method stub
+		return  gson.toJson(samplerController);
 	}
 	
 
