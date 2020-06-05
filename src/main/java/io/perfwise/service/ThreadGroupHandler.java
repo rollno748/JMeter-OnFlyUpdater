@@ -1,15 +1,17 @@
-package io.perfwise.rest.controller;
+package io.perfwise.service;
 
 import org.apache.jmeter.engine.StandardJMeterEngine;
 import org.apache.jmeter.threads.AbstractThreadGroup;
-import org.apache.jmeter.threads.ThreadGroup;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import io.perfwise.model.User;
 import io.perfwise.onfly.config.OnFlyConfig;
+import io.perfwise.rest.StandardResponse;
+import io.perfwise.rest.StatusResponse;
 
 
-public class ThreadGroupHandler extends ThreadGroup {
+public class ThreadGroupHandler extends OnFlyConfig {
 
 	private static final long serialVersionUID = -989418731318270980L;
 	private static final Logger LOGGER = LoggerFactory.getLogger(ThreadGroupHandler.class);
@@ -22,7 +24,7 @@ public class ThreadGroupHandler extends ThreadGroup {
 			removeUsers(user);
 
 		} else {
-			return "{\"message\": \"request body error\"}";
+			return new StandardResponse(StatusResponse.AUTHERROR, "Invalid Credentials");
 		}
 		return user;
 	}
@@ -63,8 +65,6 @@ public class ThreadGroupHandler extends ThreadGroup {
 			LOGGER.info("Exception :: "+ e);
 			return false;
 		}
-		
-		
 	}
 	
 

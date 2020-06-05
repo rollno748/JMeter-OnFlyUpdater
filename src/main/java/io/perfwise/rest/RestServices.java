@@ -15,9 +15,10 @@ import org.slf4j.LoggerFactory;
 import com.google.gson.Gson;
 import com.healthmarketscience.jackcess.PropertyMap.Property;
 
-import io.perfwise.rest.controller.ThreadGroupHandler;
-import io.perfwise.rest.controller.User;
+import io.perfwise.model.User;
 import io.perfwise.service.PropertyService;
+import io.perfwise.service.TestService;
+import io.perfwise.service.ThreadGroupHandler;
 import io.perfwise.service.ThreadGroupService;
 import io.perfwise.service.VariableService;
 import io.perfwise.utils.Credentials;
@@ -56,51 +57,52 @@ public class RestServices extends ThreadGroupHandler {
 
 			get("/ping", (req, res) -> {
 				res.type("application/json");
-				// --- Get Plugin Running Status ---
 				return new Gson().toJson(new StandardResponse(StatusResponse.SUCCESS, "On-Fly-Updater Running"));
 			});
 
-			
-			get("/properties", (req, res) -> {
-				res.type("application/json");
-				// --- Get Properties (System/Jmeter)---
-				return new Gson().toJson(PropertyService.getProperty(req.queryParams("type")));
-			});
-
-			
-			
-			put("/update", (req, res) -> {
-				res.type("application/json");
-				// --- Update Jmeter properties --- Not Completed
-				return new Gson().toJson(PropertyService.updateProperty(req.body(), Property.class));
-			});
-
-			
 			get("/status", (req, res) -> {
 				res.type("application/json");
-				// --- Get thread Running Status (Active, started, running)---
-				return new Gson().toJson(new StandardResponse(StatusResponse.SUCCESS, JMeterContextService.getThreadCounts()));
+				if (Credentials.validate(req.headers("password"))) {
+					return new Gson().toJson(TestService.getStatus());
+				}
+				return new Gson().toJson(new StandardResponse(StatusResponse.AUTHERROR, "Invalid Credentials"));
 			});
 
-			
-			get("/testinfo", (req, res) -> {
+			get("/properties", (req, res) -> {
 				res.type("application/json");
 				if (req.queryParams("type") != null && Credentials.validate(req.headers("password"))) {
-					return null;
+					return new Gson().toJson(PropertyService.getProperty(req.queryParams("type")));
 				}
-				// --- Get the complete test informations (Threads, threadgroups, etc)
-				return new Gson().toJson("AuthError");
+				return new Gson().toJson(new StandardResponse(StatusResponse.AUTHERROR, "Invalid Credentials"));
 			});
 
-			
+			put("/properties", (req, res) -> {
+				res.type("application/json");
+				if (Credentials.validate(req.headers("password"))) {
+					return new Gson().toJson(PropertyService.updateProperty(req.body(), Property.class));
+				}
+				return new Gson().toJson(new StandardResponse(StatusResponse.AUTHERROR, "Invalid Credentials"));
+			});
+
+			get("/testinfo", (req, res) -> {
+				res.type("application/json");
+				if (Credentials.validate(req.headers("password"))) {
+					return new Gson().toJson(TestService.getOverallTestInfo());
+				}
+				return new Gson().toJson(new StandardResponse(StatusResponse.AUTHERROR, "Invalid Credentials"));
+			});
+
 			put("/threads", (req, res) -> {
 				res.type("application/json");
 				User user = JsonHelper.fromJson(req.body(), User.class);
 				// --- Add/remove users from specific threadgroup ---
-				return ThreadGroupService.update(user);
+				if (Credentials.validate(req.headers("password"))) {
+					return new Gson().toJson(ThreadGroupService.update(user));
+				}
+				return new Gson().toJson(new StandardResponse(StatusResponse.AUTHERROR, "Invalid Credentials"));
+
 			});
 
-			
 			get("/vars", (req, res) -> {
 				res.type("application/json");
 				// return JsonHelper.getJmeterVars(true);
@@ -111,31 +113,39 @@ public class RestServices extends ThreadGroupHandler {
 			// --- Get Jmeter variables info ---
 			put("/vars", (req, res) -> {
 				res.type("application/json");
-				// return JsonHelper.getJmeterVars(true);
-				return true;
+
+				if (Credentials.validate(req.headers("password"))) {
+					return null;
+				}
+				return new Gson().toJson(new StandardResponse(StatusResponse.AUTHERROR, "Invalid Credentials"));
 			});
 
 			// --- Get list of threadgroups info from testplan---
 			put("/threadgroups", (req, res) -> {
 				res.type("application/json");
-				return JsonHelper.toJson(JMeterContextService.getContext().getThreadGroup().getSamplerController());
+				if (Credentials.validate(req.headers("password"))) {
+					return JsonHelper.toJson(JMeterContextService.getContext().getThreadGroup().getSamplerController());
+				}
+				return new Gson().toJson(new StandardResponse(StatusResponse.AUTHERROR, "Invalid Credentials"));
 			});
 
 			// -- Enable/Disable element
 			put("/element", (req, res) -> {
 				res.type("application/json");
-				return null;
+				if (Credentials.validate(req.headers("password"))) {
+					return null;
+				}
+				return new Gson().toJson(new StandardResponse(StatusResponse.AUTHERROR, "Invalid Credentials"));
 			});
 
-			
 			post("/stoptest", (req, res) -> {
 				res.type("application/json");
-				
+
 				if (req.queryParams("action") != null && Credentials.validate(req.headers("password"))) {
 					return ThreadGroupService.stopTest(req.queryParams("action"));
 				}
-				// --- Get Plugin Running Status ---
-				return new Gson().toJson("AuthError");
+				// Stop Test -- Applies to all threadgroups
+				return new Gson().toJson(new StandardResponse(StatusResponse.AUTHERROR, "Invalid Credentials"));
 			});
 
 		});

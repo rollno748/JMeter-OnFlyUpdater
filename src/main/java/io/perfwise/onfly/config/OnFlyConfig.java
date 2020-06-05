@@ -71,12 +71,11 @@ public class OnFlyConfig extends ConfigTestElement
 
 	@Override
 	public void iterationStart(LoopIterationEvent iterEvent) {
-		if(iterEvent.getIteration() <= 1) {
-            jmeterEngine = JMeterContextService.getContext().getEngine();
-        }
-		
+		if (iterEvent.getIteration() <= 1) {
+			jmeterEngine = JMeterContextService.getContext().getEngine();
+		}
+
 		threadGrp = JMeterContextService.getContext().getThreadGroup();
-		
 
 	}
 
@@ -131,7 +130,7 @@ public class OnFlyConfig extends ConfigTestElement
 	public void setVariables(String vars) {
 
 	}
-	
+
 	public static StandardJMeterEngine getJmeterEngine() {
 		return jmeterEngine;
 	}
@@ -147,7 +146,5 @@ public class OnFlyConfig extends ConfigTestElement
 	public static void setThreadGrp(AbstractThreadGroup threadGrp) {
 		OnFlyConfig.threadGrp = threadGrp;
 	}
-	
-	
 
 }

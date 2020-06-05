@@ -6,8 +6,8 @@ import org.apache.jmeter.threads.ThreadGroup;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import io.perfwise.model.User;
 import io.perfwise.onfly.config.OnFlyConfig;
-import io.perfwise.rest.controller.User;
 
 public class ThreadGroupService extends ThreadGroup {
 

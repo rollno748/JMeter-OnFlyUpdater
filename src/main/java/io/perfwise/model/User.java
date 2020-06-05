@@ -1,4 +1,4 @@
-package io.perfwise.rest.controller;
+package io.perfwise.model;
 
 public class User {
 	
