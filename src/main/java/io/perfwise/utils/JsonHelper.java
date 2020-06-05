@@ -11,7 +11,7 @@ import org.apache.jmeter.threads.JMeterVariables;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-import io.perfwise.rest.controller.User;
+import io.perfwise.onfly.model.User;
 
 public class JsonHelper {
 	

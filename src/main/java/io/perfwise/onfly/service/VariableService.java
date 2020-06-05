@@ -1,4 +1,4 @@
-package io.perfwise.service;
+package io.perfwise.onfly.service;
 
 public class VariableService {
 

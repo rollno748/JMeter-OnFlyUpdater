@@ -15,7 +15,7 @@ import org.apache.jmeter.threads.JMeterContextService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import io.perfwise.rest.RestServices;
+import io.perfwise.onfly.rest.RestController;
 import io.perfwise.utils.Credentials;
 
 public class OnFlyConfig extends ConfigTestElement
@@ -34,11 +34,11 @@ public class OnFlyConfig extends ConfigTestElement
 		this.setRunningVersion(true);
 		TestBeanHelper.prepare(this);
 		new Credentials(getPassword());
-		new RestServices(getUriPath());
+		new RestController(getUriPath());
 
 		// Start Spark REST services
-		RestServices.startRestServer(port);
-		RestServices.loadServices();
+		RestController.startRestServer(port);
+		RestController.loadServices();
 
 	}
 
@@ -49,7 +49,7 @@ public class OnFlyConfig extends ConfigTestElement
 	public void testEnded() {
 		synchronized (this) {
 			try {
-				RestServices.stopRestServer();
+				RestController.stopRestServer();
 			} catch (Exception e) {
 				LOGGER.error("On-Fly-Updater REST services failed to stop", e);
 			}

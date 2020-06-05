@@ -1,4 +1,4 @@
-package io.perfwise.rest;
+package io.perfwise.onfly.rest;
 
 import static spark.Spark.before;
 import static spark.Spark.get;
@@ -16,26 +16,26 @@ import org.slf4j.LoggerFactory;
 
 import com.google.gson.Gson;
 
-import io.perfwise.model.User;
-import io.perfwise.model.Property;
-import io.perfwise.service.PropertyService;
-import io.perfwise.service.TestService;
-import io.perfwise.service.ThreadGroupHandler;
-import io.perfwise.service.ThreadGroupService;
-import io.perfwise.service.VariableService;
+import io.perfwise.onfly.model.Property;
+import io.perfwise.onfly.model.User;
+import io.perfwise.onfly.service.PropertyService;
+import io.perfwise.onfly.service.TestService;
+import io.perfwise.onfly.service.ThreadGroupHandler;
+import io.perfwise.onfly.service.ThreadGroupService;
+import io.perfwise.onfly.service.VariableService;
 import io.perfwise.utils.Credentials;
 import io.perfwise.utils.JsonHelper;
 import spark.Spark;
 
-public class RestServices extends ThreadGroupHandler {
+public class RestController extends ThreadGroupHandler {
 
 	private static final long serialVersionUID = 3776795558086590868L;
-	private static final Logger LOGGER = LoggerFactory.getLogger(RestServices.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(RestController.class);
 	private static String UriPath;
 
 	
-	public RestServices(String UriPath) {
-		RestServices.UriPath = UriPath;
+	public RestController(String UriPath) {
+		RestController.UriPath = UriPath;
 	}
 
 	public static void startRestServer(String port) {
@@ -84,6 +84,7 @@ public class RestServices extends ThreadGroupHandler {
 			put("/properties", (req, res) -> {
 				res.type("application/json");
 				if (Credentials.validate(req.headers("password"))) {
+	
 					Property props = new Gson().fromJson(req.body(), Property.class);
 					
 					return new Gson().toJson(PropertyService.updateProperty(props));

@@ -1,13 +1,13 @@
-package io.perfwise.service;
+package io.perfwise.onfly.service;
 
 import org.apache.jmeter.threads.AbstractThreadGroup;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import io.perfwise.model.User;
 import io.perfwise.onfly.config.OnFlyConfig;
-import io.perfwise.rest.StandardResponse;
-import io.perfwise.rest.StatusResponse;
+import io.perfwise.onfly.model.User;
+import io.perfwise.onfly.rest.StandardResponse;
+import io.perfwise.onfly.rest.StatusResponse;
 
 
 public class ThreadGroupHandler extends OnFlyConfig {

@@ -1,11 +1,11 @@
-package io.perfwise.service;
+package io.perfwise.onfly.service;
 
 import org.apache.jmeter.engine.StandardJMeterEngine;
 import org.apache.jmeter.threads.JMeterContextService;
 
 import io.perfwise.onfly.config.OnFlyConfig;
-import io.perfwise.rest.StandardResponse;
-import io.perfwise.rest.StatusResponse;
+import io.perfwise.onfly.rest.StandardResponse;
+import io.perfwise.onfly.rest.StatusResponse;
 
 public class TestService {
 

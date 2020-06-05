@@ -1,12 +1,13 @@
-package io.perfwise.service;
+package io.perfwise.onfly.service;
 
 import org.apache.jmeter.util.JMeterUtils;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 
-import io.perfwise.model.Property;
-import io.perfwise.rest.StandardResponse;
-import io.perfwise.rest.StatusResponse;
+import io.perfwise.onfly.model.Property;
+import io.perfwise.onfly.rest.StandardResponse;
+import io.perfwise.onfly.rest.StatusResponse;
 
 public class PropertyService {
 
@@ -26,13 +27,14 @@ public class PropertyService {
 
 	public static StandardResponse updateProperty(Property props) {
 
-		if (props.getPropType().equalsIgnoreCase("jmeter")) {
+		if (props.getType().equalsIgnoreCase("jmeter")) {
 			try {
-				
-				for(int i=0; i<props.getProps().size(); i++) {
-					
-					//JMeterUtils.setProperty(props.getPropType(), propValue);
-				}
+
+				JsonObject json = props.getProperties();
+
+				json.entrySet().parallelStream().forEach(entry -> {
+					JMeterUtils.setProperty(entry.getKey(), entry.getValue().getAsString());
+				});
 
 				return new StandardResponse(StatusResponse.SUCCESS, "Property updated successfully");
 			} catch (Exception e) {
@@ -41,9 +43,8 @@ public class PropertyService {
 			}
 
 		} else {
-			return new StandardResponse(StatusResponse.ERROR, "Update is possible only for Jmeter properties");
+			return new StandardResponse(StatusResponse.ERROR, "Update is possible only for property type 'Jmeter'");
 		}
 
 	}
-
 }

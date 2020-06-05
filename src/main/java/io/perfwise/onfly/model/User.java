@@ -1,4 +1,4 @@
-package io.perfwise.model;
+package io.perfwise.onfly.model;
 
 public class User {
 	

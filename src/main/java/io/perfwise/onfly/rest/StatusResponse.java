@@ -1,4 +1,4 @@
-package io.perfwise.rest;
+package io.perfwise.onfly.rest;
 
 public enum StatusResponse {
 
