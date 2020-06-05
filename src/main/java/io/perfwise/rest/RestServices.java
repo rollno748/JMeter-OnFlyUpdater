@@ -8,14 +8,16 @@ import static spark.Spark.port;
 import static spark.Spark.post;
 import static spark.Spark.put;
 
+import java.net.InetAddress;
+
 import org.apache.jmeter.threads.JMeterContextService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.google.gson.Gson;
-import com.healthmarketscience.jackcess.PropertyMap.Property;
 
 import io.perfwise.model.User;
+import io.perfwise.model.Property;
 import io.perfwise.service.PropertyService;
 import io.perfwise.service.TestService;
 import io.perfwise.service.ThreadGroupHandler;
@@ -28,11 +30,10 @@ import spark.Spark;
 public class RestServices extends ThreadGroupHandler {
 
 	private static final long serialVersionUID = 3776795558086590868L;
-
 	private static final Logger LOGGER = LoggerFactory.getLogger(RestServices.class);
-
 	private static String UriPath;
 
+	
 	public RestServices(String UriPath) {
 		RestServices.UriPath = UriPath;
 	}
@@ -43,10 +44,14 @@ public class RestServices extends ThreadGroupHandler {
 		try {
 			port(serverPort);
 			init();
-			LOGGER.info("On-Fly-Updater REST services started:: 0.0.0.0:" + port);
+			LOGGER.info(String.format("On-Fly-Updater REST services started :: http://%s:%s%s/", InetAddress.getLocalHost().getHostAddress(),port,UriPath));
 		} catch (Exception e) {
 			LOGGER.error("On-Fly-Updater REST services failed to start", e);
 		}
+	}
+
+	public static void stopRestServer() {
+		Spark.stop();
 	}
 
 	public static void loadServices() {
@@ -79,7 +84,9 @@ public class RestServices extends ThreadGroupHandler {
 			put("/properties", (req, res) -> {
 				res.type("application/json");
 				if (Credentials.validate(req.headers("password"))) {
-					return new Gson().toJson(PropertyService.updateProperty(req.body(), Property.class));
+					Property props = new Gson().fromJson(req.body(), Property.class);
+					
+					return new Gson().toJson(PropertyService.updateProperty(props));
 				}
 				return new Gson().toJson(new StandardResponse(StatusResponse.AUTHERROR, "Invalid Credentials"));
 			});
@@ -142,18 +149,13 @@ public class RestServices extends ThreadGroupHandler {
 				res.type("application/json");
 
 				if (req.queryParams("action") != null && Credentials.validate(req.headers("password"))) {
-					return ThreadGroupService.stopTest(req.queryParams("action"));
+					return new Gson().toJson(TestService.stopTest(req.queryParams("action")));
 				}
-				// Stop Test -- Applies to all threadgroups
 				return new Gson().toJson(new StandardResponse(StatusResponse.AUTHERROR, "Invalid Credentials"));
 			});
 
 		});
 
-	}
-
-	public static void stopRestServer() {
-		Spark.stop();
 	}
 
 }

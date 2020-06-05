@@ -1,7 +1,9 @@
 package io.perfwise.service;
 
+import org.apache.jmeter.engine.StandardJMeterEngine;
 import org.apache.jmeter.threads.JMeterContextService;
 
+import io.perfwise.onfly.config.OnFlyConfig;
 import io.perfwise.rest.StandardResponse;
 import io.perfwise.rest.StatusResponse;
 
@@ -19,7 +21,21 @@ public class TestService {
 			return new StandardResponse(StatusResponse.ERROR, e.toString());
 		}
 	}
-	
-	
+
+	public static StandardResponse stopTest(String action) {
+		try {
+			StandardJMeterEngine engine = OnFlyConfig.getJmeterEngine();
+
+			if (action.toLowerCase().equals("shutdown")) {
+				engine.askThreadsToStop();
+				return new StandardResponse(StatusResponse.SUCCESS, "Jmeter is Shutting down !!");
+			}else {
+				engine.stopTest(true);
+				return new StandardResponse(StatusResponse.SUCCESS, "Jmeter Stopped abrubtly !!");
+			}
+		} catch (Exception e) {
+			return new StandardResponse(StatusResponse.ERROR, e.toString());
+		}
+	}
 
 }

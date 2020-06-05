@@ -57,7 +57,7 @@ Add required config element (On-Fly-Updater config)
 - [x] POST Stop test (Stop/Shutdown) (GET http://{IP/Hostname}:{Port}/{URI-PATH}/stoptest?action=shutdown)
 
 ## References
+* Plugin's Core Idea: https://octoperf.com/blog/2020/03/15/beanshell-server
 * REST servies: http://sparkjava.com/documentation
 * Examples: https://www.baeldung.com/spark-framework-rest-api
-
 

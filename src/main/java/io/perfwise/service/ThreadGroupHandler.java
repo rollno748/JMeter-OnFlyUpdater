@@ -1,6 +1,5 @@
 package io.perfwise.service;
 
-import org.apache.jmeter.engine.StandardJMeterEngine;
 import org.apache.jmeter.threads.AbstractThreadGroup;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -48,23 +47,6 @@ public class ThreadGroupHandler extends OnFlyConfig {
 			LOGGER.info("Removing thread");
 		}
 		return "Success";
-	}
-	
-	
-	
-	public static Object stopTest(String action) {
-		try {
-			StandardJMeterEngine engine = OnFlyConfig.getJmeterEngine();
-			
-			if(action.toLowerCase().equals("shutdown")) {
-				engine.askThreadsToStop();
-			}
-			engine.stopTest(true);
-			return true;
-		}catch(Exception e) {
-			LOGGER.info("Exception :: "+ e);
-			return false;
-		}
 	}
 	
 
