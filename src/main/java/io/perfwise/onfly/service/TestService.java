@@ -31,9 +31,11 @@ public class TestService {
 
 			if (action.toLowerCase().equals("shutdown")) {
 				engine.askThreadsToStop();
+				//OnFlyConfig.getJmeterEngine().stopEngine();
 				return new StandardResponse(StatusResponse.SUCCESS, "Jmeter is Shutting down !!");
 			}else {
 				engine.stopTest(true);
+				//OnFlyConfig.getJmeterEngine().stopEngineNow();
 				return new StandardResponse(StatusResponse.SUCCESS, "Jmeter Stopped abrubtly !!");
 			}
 		} catch (Exception e) {

@@ -41,6 +41,9 @@ Add required config element (On-Fly-Updater config)
 * Set a password for authentication (Default password will be Upd@t3M3)
 * Set the Port number on which the Spark Services to run (Optional, Defaults to 1304)
 * Set the URI path (Optional, Defaults to /on-fly)
+* Once the test started, the Spark server will start a REST server according to the config provided. The default will be http://127.0.0.1:1304/on-fly/
+* The Rest services supported are as follows. e.g; http://localhost:1304/on-fly/ping
+* The On-Fly Updated will have a credentials based control to REST services, it requires a header password to be send along with the REST services.
 
 ## Supported REST Services
 
@@ -74,5 +77,5 @@ Some more info on the plugin
 ## Tools Used
 * PostMan
 * Eclipse
-* https://dillinger.io/ (Markdown editor online)
+* Markdown editor online (https://dillinger.io/)
 

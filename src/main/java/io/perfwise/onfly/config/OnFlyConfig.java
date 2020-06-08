@@ -1,18 +1,18 @@
 package io.perfwise.onfly.config;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.jmeter.config.ConfigElement;
-import org.apache.jmeter.config.ConfigTestElement;
 import org.apache.jmeter.engine.StandardJMeterEngine;
 import org.apache.jmeter.engine.event.LoopIterationEvent;
 import org.apache.jmeter.engine.event.LoopIterationListener;
-import org.apache.jmeter.samplers.SampleEvent;
-import org.apache.jmeter.samplers.SampleListener;
 import org.apache.jmeter.testbeans.TestBean;
 import org.apache.jmeter.testbeans.TestBeanHelper;
+import org.apache.jmeter.testelement.AbstractTestElement;
 import org.apache.jmeter.testelement.TestStateListener;
+import org.apache.jmeter.testelement.ThreadListener;
 import org.apache.jmeter.threads.JMeterContext;
 import org.apache.jmeter.threads.JMeterContextService;
 import org.apache.jmeter.threads.JMeterThread;
@@ -24,8 +24,8 @@ import org.slf4j.LoggerFactory;
 import io.perfwise.onfly.rest.RestController;
 import io.perfwise.utils.Credentials;
 
-public class OnFlyConfig extends ConfigTestElement
-		implements ConfigElement, TestStateListener, TestBean, SampleListener, LoopIterationListener {
+public class OnFlyConfig extends AbstractTestElement
+		implements Serializable, Cloneable, ThreadListener, TestStateListener, LoopIterationListener, TestBean {
 
 	private static final long serialVersionUID = 3031594799580611171L;
 	private static final Logger LOGGER = LoggerFactory.getLogger(OnFlyConfig.class);
@@ -92,24 +92,19 @@ public class OnFlyConfig extends ConfigTestElement
 			vars = JMeterContextService.getContext().getVariables();
 		}
 	}
-
+	
 	@Override
-	public void sampleOccurred(SampleEvent e) {
+	public void threadStarted() {
 		// TODO Auto-generated method stub
-
+		
 	}
 
 	@Override
-	public void sampleStarted(SampleEvent e) {
+	public void threadFinished() {
 		// TODO Auto-generated method stub
-
+		
 	}
 
-	@Override
-	public void sampleStopped(SampleEvent e) {
-		// TODO Auto-generated method stub
-
-	}
 
 	// Getter and Setters
 
@@ -208,4 +203,6 @@ public class OnFlyConfig extends ConfigTestElement
 	public static void removeThreadNamesFromList(String threadName) {
 		OnFlyConfig.jmeterThreadNames.remove(threadName);
 	}
+
+
 }

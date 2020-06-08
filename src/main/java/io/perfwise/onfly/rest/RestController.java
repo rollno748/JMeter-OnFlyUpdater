@@ -27,7 +27,6 @@ import io.perfwise.onfly.service.ThreadGroupHandler;
 import io.perfwise.onfly.service.ThreadGroupService;
 import io.perfwise.onfly.service.VariableService;
 import io.perfwise.utils.Credentials;
-import io.perfwise.utils.JsonHelper;
 import spark.Spark;
 
 public class RestController extends ThreadGroupHandler {
@@ -137,7 +136,7 @@ public class RestController extends ThreadGroupHandler {
 				res.type("application/json");
 				if (Credentials.validate(req.headers("password"))) {
 					//new Gson().toJson(ThreadGroupService.getAllThreadGroupsInfo());
-					return JsonHelper.toJson(JMeterContextService.getContext().getThreadGroup().getSamplerController());
+					return new Gson().toJson(JMeterContextService.getContext().getThreadGroup().getSamplerController());
 				}
 				return new Gson().toJson(new StandardResponse(StatusResponse.AUTHERROR, "Invalid Credentials"));
 			});
