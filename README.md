@@ -43,17 +43,20 @@ Add required config element (On-Fly-Updater config)
 * Set the URI path (Optional, Defaults to /on-fly)
 
 ## Supported REST Services
-- [x] GET Plugin Running Status (GET http://{IP/Hostname}:{Port}/{URI-PATH}/ping)
-- [x] GET Property Display (System/Jmeter) (GET http://{IP/Hostname}:{Port}/{URI-PATH}/properties?type=jmeter)
-- [x] GET Status (Overall User Running Status) (GET http://{IP/Hostname}:{Port}/{URI-PATH}/status)
-- [ ] GET Test Info (GET http://{IP/Hostname}:{Port}/{URI-PATH}/testinfo)
-- [ ] GET Jmeter Variables (GET http://{IP/Hostname}:{Port}/{URI-PATH}/vars)
-- [ ] PUT Threads (Add/Remove) (GET http://{IP/Hostname}:{Port}/{URI-PATH}/threads)
-- [x] PUT Properties (Supports only Jmeter properties) (GET http://{IP/Hostname}:{Port}/{URI-PATH}/properties)
-- [ ] PUT Jmeter Variables (GET http://{IP/Hostname}:{Port}/{URI-PATH}/vars)
-- [ ] PUT Thread Groups (Enable/Disable) (GET http://{IP/Hostname}:{Port}/{URI-PATH}/threadgroups)
-- [ ] PUT Element (Enable/Disable Listeners) (GET http://{IP/Hostname}:{Port}/{URI-PATH}/element)
-- [x] POST Stop test (Stop/Shutdown) (GET http://{IP/Hostname}:{Port}/{URI-PATH}/stoptest?action=shutdown)
+
+|Service|HTTP Method|URI|QueryParams|ReqBody|Status|
+|:---|:---:|:---|:---|:---|:---:|
+PluginRunningStatus|GET|/{URI-PATH}/ping|NA||Completed
+PropertyDisplay|GET|/{URI-PATH}/properties?type={type}|jmeter/system||Completed
+GetStatus|GET|/{URI-PATH}/status|NA||Completed
+TestInfo|GET|/{URI-PATH}/testinfo|NA||In Progress
+JmeterVariables|GET|/{URI-PATH}/vars|NA||In Progress
+UpdateThreads|PUT|/{URI-PATH}/threads|NA||In Progress
+UpdateProperties|PUT|/{URI-PATH}/properties|NA||Completed
+UpdateJmeterVariables|PUT|/{URI-PATH}/vars|NA||In Progress
+UpdateThreadGroups|PUT|/{URI-PATH}/threadgroups|NA||In Progress
+UpdateTestElement|PUT|/{URI-PATH}/element|NA||In Progress
+StopTest|POST|/{URI-PATH}/stoptest?action={action}|shutdown/stop||Completed
 
 ## Additional Info
 Some more info on the plugin
@@ -67,4 +70,9 @@ Some more info on the plugin
 * Plugin's Core Idea: https://octoperf.com/blog/2020/03/15/beanshell-server
 * REST servies: http://sparkjava.com/documentation
 * Examples: https://www.baeldung.com/spark-framework-rest-api
+
+## Tools Used
+* PostMan
+* Eclipse
+* https://dillinger.io/ (Markdown editor online)
 
