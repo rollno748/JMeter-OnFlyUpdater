@@ -1,32 +1,33 @@
 package io.perfwise.onfly.model;
 
 public class User {
-	
-	private int threadGroup;
-    private String type;
-    private int usersCount;
-    
-    
-    
-	public int getThreadGroup() {
+
+	private String threadGroup;
+	private String action;
+	private int threadCount;
+
+	public String getThreadGroup() {
 		return threadGroup;
 	}
-	public void setThreadGroup(int threadGroup) {
+
+	public void setThreadGroup(String threadGroup) {
 		this.threadGroup = threadGroup;
 	}
-	public String getType() {
-		return type;
+
+	public String getAction() {
+		return action;
 	}
-	public void setType(String type) {
-		this.type = type;
+
+	public void setAction(String action) {
+		this.action = action;
 	}
-	public int getUsersCount() {
-		return usersCount;
+
+	public int getThreadCount() {
+		return threadCount;
 	}
-	public void setUsersCount(int usersCount) {
-		this.usersCount = usersCount;
-	} 
-    
-    
+
+	public void setThreadCount(int threadCount) {
+		this.threadCount = threadCount;
+	}
 
 }

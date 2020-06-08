@@ -15,9 +15,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParser;
 
+import io.perfwise.onfly.model.Element;
 import io.perfwise.onfly.model.Property;
-import io.perfwise.onfly.model.User;
 import io.perfwise.onfly.service.PropertyService;
 import io.perfwise.onfly.service.TestService;
 import io.perfwise.onfly.service.ThreadGroupHandler;
@@ -101,11 +104,12 @@ public class RestController extends ThreadGroupHandler {
 			});
 
 			put("/threads", (req, res) -> {
-				res.type("application/json");
-				User user = JsonHelper.fromJson(req.body(), User.class);
-				// --- Add/remove users from specific threadgroup ---
+				res.type("application/json");				
 				if (Credentials.validate(req.headers("password"))) {
-					return new Gson().toJson(ThreadGroupService.update(user));
+					JsonParser  jsonParser = new JsonParser();
+			        JsonElement jsonElement   = jsonParser.parse( req.body() );
+			        JsonArray jsonArray = jsonElement.getAsJsonArray();
+					return new Gson().toJson(ThreadGroupService.updateThreads(jsonArray));
 				}
 				return new Gson().toJson(new StandardResponse(StatusResponse.AUTHERROR, "Invalid Credentials"));
 
@@ -129,19 +133,33 @@ public class RestController extends ThreadGroupHandler {
 			});
 
 			// --- Get list of threadgroups info from testplan---
-			put("/threadgroups", (req, res) -> {
+			get("/threadgroups", (req, res) -> {
 				res.type("application/json");
 				if (Credentials.validate(req.headers("password"))) {
+					//new Gson().toJson(ThreadGroupService.getAllThreadGroupsInfo());
 					return JsonHelper.toJson(JMeterContextService.getContext().getThreadGroup().getSamplerController());
 				}
 				return new Gson().toJson(new StandardResponse(StatusResponse.AUTHERROR, "Invalid Credentials"));
 			});
+			
+			put("/threadgroups", (req, res) -> {
+				res.type("application/json");
+				if (Credentials.validate(req.headers("password"))) {
+					//new Gson().toJson(ThreadGroupService.getAllThreadGroupsInfo());
+					return new Gson().toJson(ThreadGroupService.getAllThreadGroupsInfo());
+				}
+				return new Gson().toJson(new StandardResponse(StatusResponse.AUTHERROR, "Invalid Credentials"));
+			});
+			
+			
 
-			// -- Enable/Disable element
+
 			put("/element", (req, res) -> {
 				res.type("application/json");
 				if (Credentials.validate(req.headers("password"))) {
-					return null;
+					Element element = new Gson().fromJson(req.body(), Element.class);
+					
+					return new Gson().toJson(TestService.updateTestElement(element));
 				}
 				return new Gson().toJson(new StandardResponse(StatusResponse.AUTHERROR, "Invalid Credentials"));
 			});

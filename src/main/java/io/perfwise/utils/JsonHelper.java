@@ -38,12 +38,10 @@ public class JsonHelper {
 	}
 
 	public static User fromJson(String body, Class<User> user) {
-		// TODO Auto-generated method stub
 		return new Gson().fromJson(body, User.class);
 	}
 
 	public static Object toJson(Controller samplerController) {
-		// TODO Auto-generated method stub
 		return  gson.toJson(samplerController);
 	}
 	

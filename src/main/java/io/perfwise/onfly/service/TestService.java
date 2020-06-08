@@ -1,9 +1,12 @@
 package io.perfwise.onfly.service;
 
+import org.apache.jmeter.control.Controller;
+import org.apache.jmeter.control.GenericController;
 import org.apache.jmeter.engine.StandardJMeterEngine;
 import org.apache.jmeter.threads.JMeterContextService;
 
 import io.perfwise.onfly.config.OnFlyConfig;
+import io.perfwise.onfly.model.Element;
 import io.perfwise.onfly.rest.StandardResponse;
 import io.perfwise.onfly.rest.StatusResponse;
 
@@ -36,6 +39,23 @@ public class TestService {
 		} catch (Exception e) {
 			return new StandardResponse(StatusResponse.ERROR, e.toString());
 		}
+	}
+
+	public static StandardResponse updateTestElement(Element element) {
+		try {
+			JMeterContextService.getContext().getThreadGroup().getSamplerController();
+			JMeterContextService.getContext().getThreadGroup().setEnabled(false);
+			
+			Controller controller = new GenericController();
+			controller.addTestElement(controller);
+			
+			return new StandardResponse(StatusResponse.SUCCESS, "Element status updated in Jmeter");
+			
+		}catch (Exception e) {
+			return new StandardResponse(StatusResponse.ERROR, e.toString());
+		}
+		
+		
 	}
 
 }

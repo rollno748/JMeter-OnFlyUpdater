@@ -1,20 +1,16 @@
 package io.perfwise.onfly.service;
 
-import org.apache.jmeter.threads.AbstractThreadGroup;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import io.perfwise.onfly.config.OnFlyConfig;
-import io.perfwise.onfly.model.User;
-import io.perfwise.onfly.rest.StandardResponse;
-import io.perfwise.onfly.rest.StatusResponse;
 
 
 public class ThreadGroupHandler extends OnFlyConfig {
 
 	private static final long serialVersionUID = -989418731318270980L;
 	private static final Logger LOGGER = LoggerFactory.getLogger(ThreadGroupHandler.class);
-
+/*
 	public static Object update(User user) {
 
 		if (user.getType().equalsIgnoreCase("add")) {
@@ -49,5 +45,6 @@ public class ThreadGroupHandler extends OnFlyConfig {
 		return "Success";
 	}
 	
+	*/
 
 }

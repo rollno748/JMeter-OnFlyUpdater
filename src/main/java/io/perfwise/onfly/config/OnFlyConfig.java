@@ -1,5 +1,8 @@
 package io.perfwise.onfly.config;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.jmeter.config.ConfigElement;
 import org.apache.jmeter.config.ConfigTestElement;
 import org.apache.jmeter.engine.StandardJMeterEngine;
@@ -10,8 +13,11 @@ import org.apache.jmeter.samplers.SampleListener;
 import org.apache.jmeter.testbeans.TestBean;
 import org.apache.jmeter.testbeans.TestBeanHelper;
 import org.apache.jmeter.testelement.TestStateListener;
-import org.apache.jmeter.threads.AbstractThreadGroup;
+import org.apache.jmeter.threads.JMeterContext;
 import org.apache.jmeter.threads.JMeterContextService;
+import org.apache.jmeter.threads.JMeterThread;
+import org.apache.jmeter.threads.JMeterVariables;
+import org.apache.jmeter.threads.ThreadGroup;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -27,8 +33,13 @@ public class OnFlyConfig extends ConfigTestElement
 	private String port;
 	private String uriPath;
 	private String password;
+	private static boolean threadUpdateBoolean;
 	private static StandardJMeterEngine jmeterEngine;
-	private static AbstractThreadGroup threadGrp;
+	private static JMeterContext context;
+	private static JMeterThread jmeterThread;
+	private static List<String> jmeterThreadNames = new ArrayList<>();
+	private static ThreadGroup threadGroups;
+	private static JMeterVariables vars;
 
 	public void testStarted() {
 		this.setRunningVersion(true);
@@ -71,12 +82,15 @@ public class OnFlyConfig extends ConfigTestElement
 
 	@Override
 	public void iterationStart(LoopIterationEvent iterEvent) {
-		if (iterEvent.getIteration() <= 1) {
+
+		if(iterEvent.getIteration()==1) {
 			jmeterEngine = JMeterContextService.getContext().getEngine();
+			context = JMeterContextService.getContext();
+			threadGroups = (ThreadGroup) JMeterContextService.getContext().getThreadGroup();
+			jmeterThread = JMeterContextService.getContext().getThread();
+			jmeterThreadNames.add(JMeterContextService.getContext().getThread().getThreadName());
+			vars = JMeterContextService.getContext().getVariables();
 		}
-
-		threadGrp = JMeterContextService.getContext().getThreadGroup();
-
 	}
 
 	@Override
@@ -139,12 +153,59 @@ public class OnFlyConfig extends ConfigTestElement
 		OnFlyConfig.jmeterEngine = jmeterEngine;
 	}
 
-	public static AbstractThreadGroup getThreadGrp() {
-		return threadGrp;
+	public static ThreadGroup getThreadGroups() {
+		return threadGroups;
 	}
 
-	public static void setThreadGrp(AbstractThreadGroup threadGrp) {
-		OnFlyConfig.threadGrp = threadGrp;
+	public static void setThreadGrp(ThreadGroup threadGroups) {
+		OnFlyConfig.threadGroups = threadGroups;
 	}
 
+	public static JMeterVariables getVars() {
+		return vars;
+	}
+
+	public static void setVars(JMeterVariables vars) {
+		OnFlyConfig.vars = vars;
+	}
+
+	public static boolean isThreadUpdateBoolean() {
+		return threadUpdateBoolean;
+	}
+
+	public static void setThreadUpdateBoolean(boolean threadUpdateBoolean) {
+		OnFlyConfig.threadUpdateBoolean = threadUpdateBoolean;
+	}
+
+	public static JMeterContext getContext() {
+		return context;
+	}
+
+	public static void setContext(JMeterContext context) {
+		OnFlyConfig.context = context;
+	}
+
+	public static JMeterThread getJmeterThread() {
+		return jmeterThread;
+	}
+
+	public static void setJmeterThread(JMeterThread jmeterThread) {
+		OnFlyConfig.jmeterThread = jmeterThread;
+	}
+
+	public static List<String> getJmeterThreadNames() {
+		return jmeterThreadNames;
+	}
+
+	public static void setJmeterThreadNames(List<String> jmeterThreadNames) {
+		OnFlyConfig.jmeterThreadNames = jmeterThreadNames;
+	}
+
+	public static void setThreadGroups(ThreadGroup threadGroups) {
+		OnFlyConfig.threadGroups = threadGroups;
+	}
+
+	public static void removeThreadNamesFromList(String threadName) {
+		OnFlyConfig.jmeterThreadNames.remove(threadName);
+	}
 }

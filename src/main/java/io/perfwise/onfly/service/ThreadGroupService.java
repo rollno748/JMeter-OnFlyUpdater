@@ -1,66 +1,90 @@
 package io.perfwise.onfly.service;
 
-import org.apache.jmeter.engine.StandardJMeterEngine;
-import org.apache.jmeter.threads.AbstractThreadGroup;
 import org.apache.jmeter.threads.ThreadGroup;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+
 import io.perfwise.onfly.config.OnFlyConfig;
 import io.perfwise.onfly.model.User;
+import io.perfwise.onfly.rest.StandardResponse;
+import io.perfwise.onfly.rest.StatusResponse;
 
 public class ThreadGroupService extends ThreadGroup {
 
-	private static final long serialVersionUID = -989418731318270980L;
+	private static final long serialVersionUID = 2380671011782469721L;
 	private static final Logger LOGGER = LoggerFactory.getLogger(ThreadGroupService.class);
 
-	public static Object update(User user) {
+	private static ThreadGroup threadGroup;
 
-		if (user.getType().equalsIgnoreCase("add")) {
-			addUsers(user);
-		} else if (user.getType().equalsIgnoreCase("remove")) {
-			removeUsers(user);
-
-		} else {
-			return "{\"message\": \"request body error\"}";
-		}
-		return user;
+	public ThreadGroupService() {
+		ThreadGroupService.threadGroup = OnFlyConfig.getThreadGroups();
 	}
 
-	public static Object addUsers(User user) {
-
-		for (int i = 1; i <= user.getUsersCount(); i++) {
-			AbstractThreadGroup tg = OnFlyConfig.getThreadGrp();
-			tg.addNewThread(0, OnFlyConfig.getJmeterEngine());
-			LOGGER.info("Adding thread");
-		}
-		return "Success";
-	}
-
-	public static Object removeUsers(User user) {
-
-		for (int i = user.getUsersCount(); i <= 1; i--) {
-			AbstractThreadGroup tg = OnFlyConfig.getThreadGrp();
-			tg.addNewThread(0, OnFlyConfig.getJmeterEngine());
-			LOGGER.info("Removing thread");
-		}
-		return "Success";
-	}
-
-	public static Object stopTest(String action) {
+	public static StandardResponse updateThreads(JsonArray jsonArray) {
 		try {
-			StandardJMeterEngine engine = OnFlyConfig.getJmeterEngine();
 
-			if (action.toLowerCase().equals("shutdown")) {
-				engine.askThreadsToStop();
+			for (JsonElement jsonElement : jsonArray) {
+				User user = new Gson().fromJson(jsonElement, User.class);
+				if (user.getAction().equalsIgnoreCase("add")) {
+					addUsers(user);
+				} else if (user.getAction().equalsIgnoreCase("remove")) {
+					removeUsers(user);
+				}
 			}
-			engine.stopTest(true);
-			return true;
+
+			return new StandardResponse(StatusResponse.SUCCESS, "User count amended successfully");
+
 		} catch (Exception e) {
-			LOGGER.info("Exception :: " + e);
-			return false;
+			return new StandardResponse(StatusResponse.ERROR, "Error updating user count");
+		}
+	}
+
+	private static void removeUsers(User user) {
+
+		try {
+			for (int i=0; i<user.getThreadCount() ; i++) {
+				if(OnFlyConfig.getJmeterThreadNames().size()>i) {
+					threadGroup.stopThread(OnFlyConfig.getJmeterThreadNames().get(i), true);
+					OnFlyConfig.removeThreadNamesFromList(OnFlyConfig.getJmeterThreadNames().get(i));
+				}
+			}
+		} catch (Exception e) {
+			LOGGER.error("Exception occurred while removing the threads");
+		}
+	}
+
+	public static void addUsers(User user) {
+
+		if (threadGroup == null) {
+			threadGroup = OnFlyConfig.getThreadGroups();
 		}
 
+		for (int i = 0; i < user.getThreadCount(); i++) {
+			threadGroup.addNewThread(0, OnFlyConfig.getJmeterEngine());
+		}
+	}
+
+	public static StandardResponse getAllThreadGroupsInfo() {
+		try {
+			System.out.println("Test");
+			return new StandardResponse(StatusResponse.SUCCESS, "User count amended successfully");
+		} catch (Exception e) {
+			return new StandardResponse(StatusResponse.ERROR, "Error updating user count");
+		}
+	}
+
+	// Getters and Setters
+
+	public ThreadGroup getThreadGroup() {
+		return threadGroup;
+	}
+
+	public void setThreadGroup(ThreadGroup threadGroup) {
+		ThreadGroupService.threadGroup = threadGroup;
 	}
 
 }
