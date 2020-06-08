@@ -42,7 +42,6 @@ Add required config element (On-Fly-Updater config)
 * Set the Port number on which the Spark Services to run (Optional, Defaults to 1304)
 * Set the URI path (Optional, Defaults to /on-fly)
 
-
 ## Supported REST Services
 - [x] GET Plugin Running Status (GET http://{IP/Hostname}:{Port}/{URI-PATH}/ping)
 - [x] GET Property Display (System/Jmeter) (GET http://{IP/Hostname}:{Port}/{URI-PATH}/properties?type=jmeter)
@@ -55,6 +54,14 @@ Add required config element (On-Fly-Updater config)
 - [ ] PUT Thread Groups (Enable/Disable) (GET http://{IP/Hostname}:{Port}/{URI-PATH}/threadgroups)
 - [ ] PUT Element (Enable/Disable Listeners) (GET http://{IP/Hostname}:{Port}/{URI-PATH}/element)
 - [x] POST Stop test (Stop/Shutdown) (GET http://{IP/Hostname}:{Port}/{URI-PATH}/stoptest?action=shutdown)
+
+## Additional Info
+Some more info on the plugin
+
+* The REST services will be active only during the test. The End of test will terminate the REST services
+* Plugin Running status also initialised during the test
+* Observed some abnormal behavior on the plugin when the test is restarted without killing the JMeter JVM
+
 
 ## References
 * Plugin's Core Idea: https://octoperf.com/blog/2020/03/15/beanshell-server
