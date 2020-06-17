@@ -1,6 +1,7 @@
 package io.perfwise.onfly.service;
 
 import org.apache.jmeter.threads.ThreadGroup;
+import org.apache.jmeter.threads.gui.ThreadGroupGui;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -75,6 +76,14 @@ public class ThreadGroupService extends ThreadGroup {
 		} catch (Exception e) {
 			return new StandardResponse(StatusResponse.ERROR, "Error updating user count");
 		}
+	}
+	
+	public ThreadGroup getThreadGroupInfo() {
+		
+		ThreadGroupGui tgGui = new ThreadGroupGui();
+		
+		
+		return null;
 	}
 
 	// Getters and Setters

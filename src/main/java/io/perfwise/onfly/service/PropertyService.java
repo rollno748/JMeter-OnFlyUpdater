@@ -36,14 +36,28 @@ public class PropertyService {
 					JMeterUtils.setProperty(entry.getKey(), entry.getValue().getAsString());
 				});
 
-				return new StandardResponse(StatusResponse.SUCCESS, "Property updated successfully");
+				return new StandardResponse(StatusResponse.SUCCESS, "Jmeter Properties updated successfully");
 			} catch (Exception e) {
 
-				return new StandardResponse(StatusResponse.ERROR, "Error occurred while updating the property");
+				return new StandardResponse(StatusResponse.ERROR, "Error occurred while updating the property to Jmeter");
 			}
 
+		} else if(props.getType().equalsIgnoreCase("system")){
+			try {
+
+				JsonObject json = props.getProperties();
+
+				json.entrySet().parallelStream().forEach(entry -> {
+					System.setProperty(entry.getKey(), entry.getValue().getAsString());
+				});
+
+				return new StandardResponse(StatusResponse.SUCCESS, "System Properties updated successfully");
+			} catch (Exception e) {
+
+				return new StandardResponse(StatusResponse.ERROR, "Error occurred while updating the property to System");
+			}
 		} else {
-			return new StandardResponse(StatusResponse.ERROR, "Update is possible only for property type 'Jmeter'");
+			return new StandardResponse(StatusResponse.ERROR, "Invalid type defined.. Update is possible for tyoe jmeter and system");
 		}
 
 	}

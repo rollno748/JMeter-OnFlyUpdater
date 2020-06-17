@@ -19,6 +19,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 
+import io.perfwise.onfly.config.OnFlyConfig;
 import io.perfwise.onfly.model.Element;
 import io.perfwise.onfly.model.Property;
 import io.perfwise.onfly.service.PropertyService;
@@ -60,7 +61,7 @@ public class RestController extends ThreadGroupHandler {
 		LOGGER.info("Loading REST Services");
 
 		path(UriPath, () -> {
-			before("/*", (q, a) -> LOGGER.info("Received api call"));
+			before("/*", (q, a) -> LOGGER.info("Received an API call :: "+ q.uri()));
 
 			get("/ping", (req, res) -> {
 				res.type("application/json");
@@ -101,6 +102,14 @@ public class RestController extends ThreadGroupHandler {
 				}
 				return new Gson().toJson(new StandardResponse(StatusResponse.AUTHERROR, "Invalid Credentials"));
 			});
+			
+			put("/logger/:loglevel", (req, res) -> {
+				res.type("application/json");
+				if (Credentials.validate(req.headers("password"))) {
+					return new Gson().toJson(TestService.setLoggerLevel(req.params(":loglevel")));
+				}
+				return new Gson().toJson(new StandardResponse(StatusResponse.AUTHERROR, "Invalid Credentials"));
+			});
 
 			put("/threads", (req, res) -> {
 				res.type("application/json");				
@@ -136,7 +145,7 @@ public class RestController extends ThreadGroupHandler {
 				res.type("application/json");
 				if (Credentials.validate(req.headers("password"))) {
 					//new Gson().toJson(ThreadGroupService.getAllThreadGroupsInfo());
-					return new Gson().toJson(JMeterContextService.getContext().getThreadGroup().getSamplerController());
+					return new Gson().toJson(OnFlyConfig.getThreadGroupsList());
 				}
 				return new Gson().toJson(new StandardResponse(StatusResponse.AUTHERROR, "Invalid Credentials"));
 			});

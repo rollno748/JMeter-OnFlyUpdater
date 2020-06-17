@@ -1,5 +1,7 @@
 package io.perfwise.onfly.rest;
 
+import javax.xml.transform.Transformer;
+
 import org.apache.jmeter.threads.JMeterContextService.ThreadCounts;
 
 import com.google.gson.JsonElement;
@@ -10,29 +12,34 @@ public class StandardResponse {
 	private String message;
 	private JsonElement data;
 	private ThreadCounts threadCounts;
+	private Transformer newTransformer;
 
 	public StandardResponse(StatusResponse status) {
 		this.status=status;
-		//return new Gson().toJsonTree(StatusResponse.SUCCESS, message);
 	}
 
 	public StandardResponse(StatusResponse status, String message) {
 		this.status=status;
 		this.message=message;
-		//return new Gson().toJsonTree(StatusResponse.SUCCESS, message);
 	}
 
 	public StandardResponse(StatusResponse status, JsonElement data) {
 		this.status=status;
 		this.data=data;
 	}
-
-	// Getters and setters
-
+	
 	public StandardResponse(StatusResponse status, ThreadCounts threadCounts) {
 		this.status=status;
 		this.threadCounts=threadCounts;
 	}
+	
+	public StandardResponse(StatusResponse status, Transformer newTransformer) {
+		this.status=status;
+		this.newTransformer=newTransformer;
+	}
+
+
+	// Getters and setters
 
 	public StatusResponse getStatus() {
 		return status;
@@ -66,5 +73,12 @@ public class StandardResponse {
 		this.threadCounts = threadCounts;
 	}
 	
+	public Transformer getNewTransformer() {
+		return newTransformer;
+	}
+
+	public void setNewTransformer(Transformer newTransformer) {
+		this.newTransformer = newTransformer;
+	}
 
 }

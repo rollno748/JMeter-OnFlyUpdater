@@ -2,6 +2,7 @@ package io.perfwise.onfly.config;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 import org.apache.jmeter.config.ConfigElement;
@@ -24,8 +25,8 @@ import org.slf4j.LoggerFactory;
 import io.perfwise.onfly.rest.RestController;
 import io.perfwise.utils.Credentials;
 
-public class OnFlyConfig extends AbstractTestElement
-		implements Serializable, Cloneable, ThreadListener, TestStateListener, LoopIterationListener, TestBean {
+public class OnFlyConfig extends AbstractTestElement implements ConfigElement, Serializable, Cloneable, ThreadListener,
+		TestStateListener, LoopIterationListener, TestBean {
 
 	private static final long serialVersionUID = 3031594799580611171L;
 	private static final Logger LOGGER = LoggerFactory.getLogger(OnFlyConfig.class);
@@ -37,6 +38,7 @@ public class OnFlyConfig extends AbstractTestElement
 	private static StandardJMeterEngine jmeterEngine;
 	private static JMeterContext context;
 	private static JMeterThread jmeterThread;
+	private static HashSet<ThreadGroup> threadGroupsList = new HashSet<>();
 	private static List<String> jmeterThreadNames = new ArrayList<>();
 	private static ThreadGroup threadGroups;
 	private static JMeterVariables vars;
@@ -83,28 +85,29 @@ public class OnFlyConfig extends AbstractTestElement
 	@Override
 	public void iterationStart(LoopIterationEvent iterEvent) {
 
-		if(iterEvent.getIteration()==1) {
+		if (iterEvent.getIteration() == 1) {
 			jmeterEngine = JMeterContextService.getContext().getEngine();
 			context = JMeterContextService.getContext();
 			threadGroups = (ThreadGroup) JMeterContextService.getContext().getThreadGroup();
+			threadGroups.getProperty(NAME);
 			jmeterThread = JMeterContextService.getContext().getThread();
 			jmeterThreadNames.add(JMeterContextService.getContext().getThread().getThreadName());
 			vars = JMeterContextService.getContext().getVariables();
+			OnFlyConfig.threadGroupsList.add(threadGroups);
 		}
 	}
-	
+
 	@Override
 	public void threadStarted() {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void threadFinished() {
 		// TODO Auto-generated method stub
-		
-	}
 
+	}
 
 	// Getter and Setters
 
@@ -204,5 +207,14 @@ public class OnFlyConfig extends AbstractTestElement
 		OnFlyConfig.jmeterThreadNames.remove(threadName);
 	}
 
+	public static HashSet<ThreadGroup> getThreadGroupsList() {
+		return threadGroupsList;
+	}
+
+	public static void setThreadGroupsList(HashSet<ThreadGroup> threadGroupsList) {
+		OnFlyConfig.threadGroupsList = threadGroupsList;
+	}
+
+	
 
 }

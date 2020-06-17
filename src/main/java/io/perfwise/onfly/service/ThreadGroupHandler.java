@@ -1,15 +1,12 @@
 package io.perfwise.onfly.service;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import io.perfwise.onfly.config.OnFlyConfig;
 
 
 public class ThreadGroupHandler extends OnFlyConfig {
 
 	private static final long serialVersionUID = -989418731318270980L;
-	private static final Logger LOGGER = LoggerFactory.getLogger(ThreadGroupHandler.class);
+	//private static final Logger LOGGER = LoggerFactory.getLogger(ThreadGroupHandler.class);
 /*
 	public static Object update(User user) {
 
