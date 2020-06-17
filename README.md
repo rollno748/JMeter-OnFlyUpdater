@@ -52,6 +52,7 @@ Add required config element (On-Fly-Updater config)
 PluginRunningStatus|GET|/{URI-PATH}/ping|NA||Completed
 PropertyDisplay|GET|/{URI-PATH}/properties?type={type}|jmeter/system||Completed
 GetStatus|GET|/{URI-PATH}/status|NA||Completed
+SetLogger|PUT|/{URI-PATH}/logger/{logType}|WARN/ERROR/DEBUG/OFF||Completed
 TestInfo|GET|/{URI-PATH}/testinfo|NA||In Progress
 JmeterVariables|GET|/{URI-PATH}/vars|NA||In Progress
 UpdateThreads|PUT|/{URI-PATH}/threads|NA||In Progress
