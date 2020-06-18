@@ -39,7 +39,7 @@ public class OnFlyConfig extends AbstractTestElement implements ConfigElement, S
 	private static JMeterContext context;
 	private static JMeterThread jmeterThread;
 	private static HashSet<ThreadGroup> threadGroupsList = new HashSet<>();
-	private static List<String> jmeterThreadNames = new ArrayList<>();
+	private static List<String> jmeterThreadNames = new ArrayList<String>();
 	private static ThreadGroup threadGroups;
 	private static JMeterVariables vars;
 
@@ -88,12 +88,13 @@ public class OnFlyConfig extends AbstractTestElement implements ConfigElement, S
 		if (iterEvent.getIteration() == 1) {
 			jmeterEngine = JMeterContextService.getContext().getEngine();
 			context = JMeterContextService.getContext();
-			threadGroups = (ThreadGroup) JMeterContextService.getContext().getThreadGroup();
-			threadGroups.getProperty(NAME);
-			jmeterThread = JMeterContextService.getContext().getThread();
 			jmeterThreadNames.add(JMeterContextService.getContext().getThread().getThreadName());
-			vars = JMeterContextService.getContext().getVariables();
-			OnFlyConfig.threadGroupsList.add(threadGroups);
+			//threadGroups = (ThreadGroup) JMeterContextService.getContext().getThreadGroup();
+//			threadGroups.getProperty(NAME);
+//			jmeterThread = JMeterContextService.getContext().getThread();
+			
+//			vars = JMeterContextService.getContext().getVariables();
+//			OnFlyConfig.threadGroupsList.add(threadGroups);
 		}
 	}
 
@@ -213,6 +214,10 @@ public class OnFlyConfig extends AbstractTestElement implements ConfigElement, S
 
 	public static void setThreadGroupsList(HashSet<ThreadGroup> threadGroupsList) {
 		OnFlyConfig.threadGroupsList = threadGroupsList;
+	}
+
+	public static void updateThreadNameList(String threadName) {
+		OnFlyConfig.jmeterThreadNames.remove(new String(threadName));
 	}
 
 	

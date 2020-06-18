@@ -10,7 +10,6 @@ import static spark.Spark.put;
 
 import java.net.InetAddress;
 
-import org.apache.jmeter.threads.JMeterContextService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -19,7 +18,6 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 
-import io.perfwise.onfly.config.OnFlyConfig;
 import io.perfwise.onfly.model.Element;
 import io.perfwise.onfly.model.Property;
 import io.perfwise.onfly.service.PropertyService;
@@ -144,8 +142,7 @@ public class RestController extends ThreadGroupHandler {
 			get("/threadgroups", (req, res) -> {
 				res.type("application/json");
 				if (Credentials.validate(req.headers("password"))) {
-					//new Gson().toJson(ThreadGroupService.getAllThreadGroupsInfo());
-					return new Gson().toJson(OnFlyConfig.getThreadGroupsList());
+					return new Gson().toJson(ThreadGroupService.getAllThreadGroupsInfo());
 				}
 				return new Gson().toJson(new StandardResponse(StatusResponse.AUTHERROR, "Invalid Credentials"));
 			});
