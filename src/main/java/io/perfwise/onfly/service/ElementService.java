@@ -15,5 +15,15 @@ public class ElementService extends JMeterTreeNode {
 	public ElementService() {
 		LOGGER.info("ELementService");
 	}
+	
+	
+	public void disableElement() {
+		
+	}
+
+	
+	public void enableElement() {
+		
+	}
 
 }

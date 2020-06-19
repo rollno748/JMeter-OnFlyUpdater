@@ -1,5 +1,7 @@
 package io.perfwise.onfly.service;
 
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 
@@ -32,15 +34,20 @@ public class ThreadGroupService extends ThreadGroup {
 	public static StandardResponse updateThreads(JsonArray jsonArray) {
 
 		context = OnFlyConfig.getContext();
-		
+
 		try {
 
 			for (JsonElement jsonElement : jsonArray) {
 				User user = new Gson().fromJson(jsonElement, User.class);
-				if (user.getAction().equalsIgnoreCase("add")) {
-					addUsers(user);
-				} else if (user.getAction().equalsIgnoreCase("remove")) {
-					removeUsers(user);
+
+				threadGroup = getAppropriateThreadGroupfromList(user.getThreadGroup());
+				if (!(threadGroup == null)) {
+					if (user.getAction().equalsIgnoreCase("add")) {
+						addUsers(user);
+					} else if (user.getAction().equalsIgnoreCase("remove")) {
+						removeUsers(user);
+					}
+					threadGroup = null;
 				}
 			}
 
@@ -49,40 +56,29 @@ public class ThreadGroupService extends ThreadGroup {
 		} catch (Exception e) {
 			return new StandardResponse(StatusResponse.ERROR, "Error updating user count");
 		}
-		
+
 	}
 
 	private static void removeUsers(User user) {
 
-		if (threadGroup == null) {
-			threadGroup = (ThreadGroup) context.getThreadGroup();
-		}
-
 		try {
 			for (int i = 0; i < user.getThreadCount(); i++) {
-
 				if (threadGroup.numberOfActiveThreads() >= user.getThreadCount()) {
-					threadGroup.stopThread(getRandomThreadNames(OnFlyConfig.getJmeterThreadNames()), true);
+					threadGroup.stopThread(getRandomThreadNames(OnFlyConfig.getJmeterThreadNames(), user), true);
+					LOGGER.info(String.format("Removing thread from Threadgroup %s", threadGroup.getName()));
 				}
 			}
 		} catch (Exception e) {
 			LOGGER.error("Exception occurred while removing the threads");
 		}
-		
-		threadGroup=null;
 	}
 
 	public static void addUsers(User user) {
-
-		if (threadGroup == null) {
-			threadGroup = (ThreadGroup) context.getThreadGroup();
-		}
 
 		for (int i = 0; i < user.getThreadCount(); i++) {
 			threadGroup.setNumThreads(user.getThreadCount());
 			threadGroup.addNewThread(0, OnFlyConfig.getJmeterEngine());
 		}
-		threadGroup=null;
 	}
 
 	public static StandardResponse getAllThreadGroupsInfo() {
@@ -95,16 +91,36 @@ public class ThreadGroupService extends ThreadGroup {
 		}
 	}
 
-	public ThreadGroup getThreadGroupInfo() {
+	// returns a random thread name from the associated threadgroup.
+	private static String getRandomThreadNames(List<String> threadNames, User user) {
+		Random rand = new Random();
+		String threadName = null;
 
-		return null;
+		do {
+			threadName = threadNames.get(rand.nextInt(threadNames.size()));
+		} while (!threadName.contains(user.getThreadGroup()));
+
+		OnFlyConfig.updateThreadNameList(threadName);
+		LOGGER.info(String.format("Thread going to be stopped is %s", threadName));
+		return threadName;
 	}
 
-	private static String getRandomThreadNames(List<String> threadNames) {
-		Random rand = new Random();
-        String threadName = threadNames.get(rand.nextInt(threadNames.size()));
-		OnFlyConfig.updateThreadNameList(threadName);
-		return threadName;
+	private static ThreadGroup getAppropriateThreadGroupfromList(String tgName) {
+		threadGroup = null;
+		ThreadGroup tg;
+		HashSet<ThreadGroup> threadGroupList = OnFlyConfig.getJmeterThreadGroups();
+
+		Iterator<ThreadGroup> tmp = threadGroupList.iterator();
+		while (tmp.hasNext()) {
+			tg = tmp.next();
+			
+			if (tg.getName().toLowerCase().equals(tgName.toLowerCase())) {
+				threadGroup = tg;
+				tg=null;
+			}
+		}
+		
+		return threadGroup;
 	}
 
 	// Getters and Setters

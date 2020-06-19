@@ -22,15 +22,13 @@ import io.perfwise.onfly.model.Element;
 import io.perfwise.onfly.model.Property;
 import io.perfwise.onfly.service.PropertyService;
 import io.perfwise.onfly.service.TestService;
-import io.perfwise.onfly.service.ThreadGroupHandler;
 import io.perfwise.onfly.service.ThreadGroupService;
 import io.perfwise.onfly.service.VariableService;
 import io.perfwise.utils.Credentials;
 import spark.Spark;
 
-public class RestController extends ThreadGroupHandler {
-
-	private static final long serialVersionUID = 3776795558086590868L;
+public class RestController {
+	
 	private static final Logger LOGGER = LoggerFactory.getLogger(RestController.class);
 	private static String UriPath;
 

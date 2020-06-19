@@ -38,8 +38,9 @@ public class OnFlyConfig extends AbstractTestElement implements ConfigElement, S
 	private static StandardJMeterEngine jmeterEngine;
 	private static JMeterContext context;
 	private static JMeterThread jmeterThread;
-	private static HashSet<ThreadGroup> threadGroupsList = new HashSet<>();
+	private static HashSet<ThreadGroup> jmeterThreadGroups = new HashSet<>();
 	private static List<String> jmeterThreadNames = new ArrayList<String>();
+	//private static List<ThreadGroup> jmeterThreadGroups = new ArrayList<ThreadGroup>();
 	private static ThreadGroup threadGroups;
 	private static JMeterVariables vars;
 
@@ -88,13 +89,10 @@ public class OnFlyConfig extends AbstractTestElement implements ConfigElement, S
 		if (iterEvent.getIteration() == 1) {
 			jmeterEngine = JMeterContextService.getContext().getEngine();
 			context = JMeterContextService.getContext();
-			jmeterThreadNames.add(JMeterContextService.getContext().getThread().getThreadName());
-			//threadGroups = (ThreadGroup) JMeterContextService.getContext().getThreadGroup();
-//			threadGroups.getProperty(NAME);
-//			jmeterThread = JMeterContextService.getContext().getThread();
-			
-//			vars = JMeterContextService.getContext().getVariables();
-//			OnFlyConfig.threadGroupsList.add(threadGroups);
+			jmeterThreadNames.add(context.getThread().getThreadName());
+			jmeterThreadGroups.add((ThreadGroup) context.getThreadGroup());
+
+			//vars = JMeterContextService.getContext().getVariables();
 		}
 	}
 
@@ -208,18 +206,16 @@ public class OnFlyConfig extends AbstractTestElement implements ConfigElement, S
 		OnFlyConfig.jmeterThreadNames.remove(threadName);
 	}
 
-	public static HashSet<ThreadGroup> getThreadGroupsList() {
-		return threadGroupsList;
-	}
-
-	public static void setThreadGroupsList(HashSet<ThreadGroup> threadGroupsList) {
-		OnFlyConfig.threadGroupsList = threadGroupsList;
-	}
-
 	public static void updateThreadNameList(String threadName) {
 		OnFlyConfig.jmeterThreadNames.remove(new String(threadName));
 	}
 
-	
+	public static HashSet<ThreadGroup> getJmeterThreadGroups() {
+		return jmeterThreadGroups;
+	}
 
+	public static void setJmeterThreadGroups(HashSet<ThreadGroup> jmeterThreadGroups) {
+		OnFlyConfig.jmeterThreadGroups = jmeterThreadGroups;
+	}
+	
 }
