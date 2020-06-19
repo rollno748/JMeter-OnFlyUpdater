@@ -55,7 +55,7 @@ GetStatus|GET|/{URI-PATH}/status|NA||Completed
 SetLogger|PUT|/{URI-PATH}/logger/{logType}|WARN/ERROR/DEBUG/OFF||Completed
 TestInfo|GET|/{URI-PATH}/testinfo|NA||In Progress
 JmeterVariables|GET|/{URI-PATH}/vars|NA||In Progress
-UpdateThreads|PUT|/{URI-PATH}/threads|NA||In Progress
+UpdateThreads|PUT|/{URI-PATH}/threads|NA||ThreadRemoval working
 UpdateProperties|PUT|/{URI-PATH}/properties|NA||Completed
 UpdateJmeterVariables|PUT|/{URI-PATH}/vars|NA||In Progress
 UpdateThreadGroups|PUT|/{URI-PATH}/threadgroups|NA||In Progress
