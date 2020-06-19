@@ -55,7 +55,7 @@ GetStatus|GET|/{URI-PATH}/status|NA||Completed
 SetLogger|PUT|/{URI-PATH}/logger/{logType}|WARN/ERROR/DEBUG/OFF||Completed
 TestInfo|GET|/{URI-PATH}/testinfo|NA||In Progress
 JmeterVariables|GET|/{URI-PATH}/vars|NA||In Progress
-UpdateThreads|PUT|/{URI-PATH}/threads|NA||ThreadRemoval working
+UpdateThreads|PUT|/{URI-PATH}/threads|NA||Partially completed
 UpdateProperties|PUT|/{URI-PATH}/properties|NA||Completed
 UpdateJmeterVariables|PUT|/{URI-PATH}/vars|NA||In Progress
 UpdateThreadGroups|PUT|/{URI-PATH}/threadgroups|NA||In Progress
@@ -69,6 +69,11 @@ Some more info on the plugin
 * Plugin Running status also initialised during the test
 * Observed some abnormal behavior on the plugin when the test is restarted without killing the JMeter JVM
 
+## Known Issues
+[x] Adding thread to running ThreadGroup is not working
+[x] Retrieving test info is not working 
+[x] Updating test element in the testplan is not working
+[x] Updating variables specific to thread
 
 ## References
 * Plugin's Core Idea: https://octoperf.com/blog/2020/03/15/beanshell-server
