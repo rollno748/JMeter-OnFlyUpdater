@@ -55,7 +55,7 @@ GetStatus|GET|/{URI-PATH}/status|NA||Completed
 SetLogger|PUT|/{URI-PATH}/logger/{logType}|WARN/ERROR/DEBUG/OFF||Completed
 TestInfo|GET|/{URI-PATH}/testinfo|NA||In Progress
 JmeterVariables|GET|/{URI-PATH}/vars|NA||In Progress
-UpdateThreads|PUT|/{URI-PATH}/threads|NA||Partially completed
+UpdateThreads|PUT|/{URI-PATH}/threads|NA||Completed
 UpdateProperties|PUT|/{URI-PATH}/properties|NA||Completed
 UpdateJmeterVariables|PUT|/{URI-PATH}/vars|NA||In Progress
 UpdateThreadGroups|PUT|/{URI-PATH}/threadgroups|NA||In Progress
@@ -70,7 +70,6 @@ Some more info on the plugin
 * Observed some abnormal behavior on the plugin when the test is restarted without killing the JMeter JVM
 
 ## Known Issues
-[x] Adding thread to running ThreadGroup is not working
 [x] Retrieving test info is not working 
 [x] Updating test element in the testplan is not working
 [x] Updating variables specific to thread
