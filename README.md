@@ -66,9 +66,9 @@ Some more info on the plugin
 
 ## Known Issues
 
-[ ] Retrieving test info is not working 
-[ ] Updating test element in the testplan is not working
-[ ] Updating variables specific to thread
+* Retrieving test info is not working 
+* Updating test element in the testplan is not working
+* Updating variables specific to thread
 
 ## References
 * Plugin's Core Idea: https://octoperf.com/blog/2020/03/15/beanshell-server
