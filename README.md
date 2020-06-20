@@ -8,7 +8,6 @@ Jmeter plugin to control Jmeter during the running status. This plugin adds feat
 1. Jmeter
 2. Postman/cURL
 
-<<<<<<< HEAD
 ## Features
 
 [x] Get Plugin active status
@@ -21,7 +20,7 @@ Jmeter plugin to control Jmeter during the running status. This plugin adds feat
 [x] Enable/Disable elements to the running test (ThreadGroups/Listeners/ConfigElements etc)
 [x] Get list of variables from one or more threads
 [x] Update variables to one or more threads
-=======
+
 ## Jar Dependencies Required
 
 * spark-core-2.8.0.jar
@@ -53,7 +52,6 @@ Add required config element (On-Fly-Updater config)
 * Once the test started, the Spark server will start a REST server according to the config provided. The default will be http://127.0.0.1:1304/on-fly/
 * The Rest services supported are as follows. e.g; http://localhost:1304/on-fly/ping
 * The On-Fly Updater will have a credentials based control to the REST services. It requires a password header to be passed with the REST services.
->>>>>>> 3a84094527de611041456407be8e70b9fe389b99
 
 ## Supported REST Services
 
@@ -81,14 +79,9 @@ Some more info on the plugin
 
 ## Known Issues
 
-<<<<<<< HEAD
 - [x] Updating test element in the testplan is not working
 - [x] Updating variables specific to thread
-=======
-* Retrieving test info is not working 
-* Updating test element in the testplan is not working
-* Updating variables specific to thread
->>>>>>> 3a84094527de611041456407be8e70b9fe389b99
+
 
 ## References
 
