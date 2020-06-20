@@ -8,6 +8,7 @@ Jmeter plugin to control Jmeter during the running status. This plugin adds feat
 1. Jmeter
 2. Postman/cURL
 
+<<<<<<< HEAD
 ## Features
 
 [x] Get Plugin active status
@@ -20,6 +21,39 @@ Jmeter plugin to control Jmeter during the running status. This plugin adds feat
 [x] Enable/Disable elements to the running test (ThreadGroups/Listeners/ConfigElements etc)
 [x] Get list of variables from one or more threads
 [x] Update variables to one or more threads
+=======
+## Jar Dependencies Required
+
+* spark-core-2.8.0.jar
+* javax.servlet-api-3.1.0.jar
+* jetty-server-9.4.12.v20180830.jar
+* jetty-util-9.4.12.v20180830.jar
+* jetty-http-9.4.12.v20180830.jar
+* jetty-io-9.4.12.v20180830.jar
+* gson-2.2.4.jar
+
+## Jmeter Target
+
+* Jmeter version 5.1.1 or above
+* Java 8 or above
+
+## Installation Instructions
+
+* Download the source code from the Github.
+* Just do a mvn clean install (Git bash is required)
+* Jar will be generated under the target directory (jmeter-onfly-updater-0.1.jar)
+* Copy the Jar to \<Jmeter Installed Directory\>/lib/ext/
+
+## How to use it
+Add required config element (On-Fly-Updater config)
+
+* Set a password for authentication (Default password will be Upd@t3M3)
+* Set the Port number on which the Spark Services to run (Optional, Defaults to 1304)
+* Set the URI path (Optional, Defaults to /on-fly)
+* Once the test started, the Spark server will start a REST server according to the config provided. The default will be http://127.0.0.1:1304/on-fly/
+* The Rest services supported are as follows. e.g; http://localhost:1304/on-fly/ping
+* The On-Fly Updater will have a credentials based control to the REST services. It requires a password header to be passed with the REST services.
+>>>>>>> 3a84094527de611041456407be8e70b9fe389b99
 
 ## Supported REST Services
 
@@ -47,8 +81,14 @@ Some more info on the plugin
 
 ## Known Issues
 
+<<<<<<< HEAD
 - [x] Updating test element in the testplan is not working
 - [x] Updating variables specific to thread
+=======
+* Retrieving test info is not working 
+* Updating test element in the testplan is not working
+* Updating variables specific to thread
+>>>>>>> 3a84094527de611041456407be8e70b9fe389b99
 
 ## References
 
