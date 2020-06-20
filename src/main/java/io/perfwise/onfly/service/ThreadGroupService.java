@@ -65,7 +65,6 @@ public class ThreadGroupService extends ThreadGroup {
 			for (int i = 0; i < user.getThreadCount(); i++) {
 				if (threadGroup.numberOfActiveThreads() >= user.getThreadCount()) {
 					threadGroup.stopThread(getRandomThreadNames(OnFlyConfig.getJmeterThreadNames(), user), true);
-					LOGGER.info(String.format("Removing thread from Threadgroup %s", threadGroup.getName()));
 				}
 			}
 		} catch (Exception e) {
@@ -74,10 +73,13 @@ public class ThreadGroupService extends ThreadGroup {
 	}
 
 	public static void addUsers(User user) {
-
-		for (int i = 0; i < user.getThreadCount(); i++) {
-			threadGroup.setNumThreads(user.getThreadCount());
-			threadGroup.addNewThread(0, OnFlyConfig.getJmeterEngine());
+		OnFlyConfig.setThreadGrp(threadGroup);
+		try {
+			OnFlyConfig.setCount(user.getThreadCount());
+			OnFlyConfig.setAddThread(true);
+			//OnFlyConfig.addThreads(user.getThreadCount());
+		} catch (Exception e) {
+			LOGGER.error("Exception occurred while adding the threads");
 		}
 	}
 
@@ -113,13 +115,13 @@ public class ThreadGroupService extends ThreadGroup {
 		Iterator<ThreadGroup> tmp = threadGroupList.iterator();
 		while (tmp.hasNext()) {
 			tg = tmp.next();
-			
+
 			if (tg.getName().toLowerCase().equals(tgName.toLowerCase())) {
 				threadGroup = tg;
-				tg=null;
+				tg = null;
 			}
 		}
-		
+
 		return threadGroup;
 	}
 

@@ -40,9 +40,11 @@ public class OnFlyConfig extends AbstractTestElement implements ConfigElement, S
 	private static JMeterThread jmeterThread;
 	private static HashSet<ThreadGroup> jmeterThreadGroups = new HashSet<>();
 	private static List<String> jmeterThreadNames = new ArrayList<String>();
-	//private static List<ThreadGroup> jmeterThreadGroups = new ArrayList<ThreadGroup>();
 	private static ThreadGroup threadGroups;
 	private static JMeterVariables vars;
+	private static boolean addThread;
+	private static int count;
+
 
 	public void testStarted() {
 		this.setRunningVersion(true);
@@ -87,12 +89,16 @@ public class OnFlyConfig extends AbstractTestElement implements ConfigElement, S
 	public void iterationStart(LoopIterationEvent iterEvent) {
 
 		if (iterEvent.getIteration() == 1) {
-			jmeterEngine = JMeterContextService.getContext().getEngine();
 			context = JMeterContextService.getContext();
+			jmeterEngine = context.getEngine();
 			jmeterThreadNames.add(context.getThread().getThreadName());
 			jmeterThreadGroups.add((ThreadGroup) context.getThreadGroup());
 
-			//vars = JMeterContextService.getContext().getVariables();
+			// vars = JMeterContextService.getContext().getVariables();
+		}
+
+		if (isAddThread()) {
+			addThreads(count);
 		}
 	}
 
@@ -107,7 +113,14 @@ public class OnFlyConfig extends AbstractTestElement implements ConfigElement, S
 		// TODO Auto-generated method stub
 
 	}
-
+	
+	public static void addThreads(int count) {
+		setAddThread(false);
+		for (int i = 0; i < count; i++) {
+			threadGroups.addNewThread(0, jmeterEngine);
+		}
+	}
+	
 	// Getter and Setters
 
 	public String getPort() {
@@ -217,5 +230,21 @@ public class OnFlyConfig extends AbstractTestElement implements ConfigElement, S
 	public static void setJmeterThreadGroups(HashSet<ThreadGroup> jmeterThreadGroups) {
 		OnFlyConfig.jmeterThreadGroups = jmeterThreadGroups;
 	}
+
+	public static boolean isAddThread() {
+		return addThread;
+	}
+
+	public static void setAddThread(boolean addThread) {
+		OnFlyConfig.addThread = addThread;
+	}
 	
+	public static int getCount() {
+		return count;
+	}
+
+	public static void setCount(int count) {
+		OnFlyConfig.count = count;
+	}
+
 }
