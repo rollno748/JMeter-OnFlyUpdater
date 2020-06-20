@@ -65,6 +65,7 @@ Some more info on the plugin
 * Observed some abnormal behavior on the plugin when the test is restarted without killing the JMeter JVM
 
 ## Known Issues
+
 [ ] Retrieving test info is not working 
 [ ] Updating test element in the testplan is not working
 [ ] Updating variables specific to thread
