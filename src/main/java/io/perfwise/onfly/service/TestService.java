@@ -8,10 +8,10 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.stream.StreamSource;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.jmeter.control.Controller;
-import org.apache.jmeter.control.GenericController;
 import org.apache.jmeter.engine.StandardJMeterEngine;
+import org.apache.jmeter.gui.GuiPackage;
 import org.apache.jmeter.gui.action.SchematicView;
+import org.apache.jmeter.gui.tree.JMeterTreeListener;
 import org.apache.jmeter.threads.JMeterContextService;
 import org.apache.jmeter.util.JMeterUtils;
 import org.apache.logging.log4j.core.config.Configurator;
@@ -19,7 +19,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import io.perfwise.onfly.config.OnFlyConfig;
-import io.perfwise.onfly.model.Element;
 import io.perfwise.onfly.rest.StandardResponse;
 import io.perfwise.onfly.rest.StatusResponse;
 
@@ -28,6 +27,9 @@ public class TestService extends SchematicView {
 	private static final Logger LOGGER = LoggerFactory.getLogger(TestService.class);
 
 	public static StandardResponse getOverallTestInfo() throws Exception {
+		
+		JMeterTreeListener testPlanTree = GuiPackage.getInstance().getTreeListener();
+		testPlanTree.getCurrentNode().getParent();
 		
 		TransformerFactory factory = TransformerFactory.newInstance("net.sf.saxon.BasicTransformerFactory", Thread.currentThread().getContextClassLoader());
 		try {
@@ -61,11 +63,9 @@ public class TestService extends SchematicView {
 
 			if (action.toLowerCase().equals("shutdown")) {
 				engine.askThreadsToStop();
-				//OnFlyConfig.getJmeterEngine().stopEngine();
 				return new StandardResponse(StatusResponse.SUCCESS, "Jmeter is Shutting down !!");
 			}else {
 				engine.stopTest(true);
-				//OnFlyConfig.getJmeterEngine().stopEngineNow();
 				return new StandardResponse(StatusResponse.SUCCESS, "Jmeter Stopped abrubtly !!");
 			}
 		} catch (Exception e) {
@@ -73,22 +73,6 @@ public class TestService extends SchematicView {
 		}
 	}
 
-	public static StandardResponse updateTestElement(Element element) {
-		try {
-			JMeterContextService.getContext().getThreadGroup().getSamplerController();
-			JMeterContextService.getContext().getThreadGroup().setEnabled(false);
-			
-			Controller controller = new GenericController();
-			controller.addTestElement(controller);
-			
-			return new StandardResponse(StatusResponse.SUCCESS, "Element status updated in Jmeter");
-			
-		}catch (Exception e) {
-			return new StandardResponse(StatusResponse.ERROR, e.toString());
-		}
-		
-		
-	}
 	
 	public static StandardResponse setLoggerLevel(String logLevel) {
 		String[] loggerTypes = new String[] {"off","fatal","error","warn","info","debug","trace","all"};

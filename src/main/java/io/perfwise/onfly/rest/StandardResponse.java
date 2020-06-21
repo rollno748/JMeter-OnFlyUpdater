@@ -10,6 +10,7 @@ public class StandardResponse {
 
 	private StatusResponse status;
 	private String message;
+	private Object object;
 	private JsonElement data;
 	private ThreadCounts threadCounts;
 	private Transformer newTransformer;
@@ -37,10 +38,15 @@ public class StandardResponse {
 		this.status=status;
 		this.newTransformer=newTransformer;
 	}
+	
+	public StandardResponse(StatusResponse status, Object object) {
+		this.status=status;
+		this.object=object;
+	}
 
 
 	// Getters and setters
-
+	
 	public StatusResponse getStatus() {
 		return status;
 	}
@@ -81,4 +87,12 @@ public class StandardResponse {
 		this.newTransformer = newTransformer;
 	}
 
+	public Object getObject() {
+		return object;
+	}
+
+	public void setObject(Object object) {
+		this.object = object;
+	}
+	
 }

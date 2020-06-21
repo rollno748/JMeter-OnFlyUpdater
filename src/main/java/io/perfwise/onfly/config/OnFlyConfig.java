@@ -34,14 +34,13 @@ public class OnFlyConfig extends AbstractTestElement implements ConfigElement, S
 	private String port;
 	private String uriPath;
 	private String password;
-	private static boolean threadUpdateBoolean;
 	private static StandardJMeterEngine jmeterEngine;
 	private static JMeterContext context;
 	private static JMeterThread jmeterThread;
 	private static HashSet<ThreadGroup> jmeterThreadGroups = new HashSet<>();
 	private static List<String> jmeterThreadNames = new ArrayList<String>();
 	private static ThreadGroup threadGroups;
-	private static JMeterVariables vars;
+	private static JMeterVariables vars; //So far unused
 	private static boolean addThread;
 	private static int count;
 
@@ -84,6 +83,7 @@ public class OnFlyConfig extends AbstractTestElement implements ConfigElement, S
 	public boolean expectsModification() {
 		return false;
 	}
+	
 
 	@Override
 	public void iterationStart(LoopIterationEvent iterEvent) {
@@ -93,7 +93,7 @@ public class OnFlyConfig extends AbstractTestElement implements ConfigElement, S
 			jmeterEngine = context.getEngine();
 			jmeterThreadNames.add(context.getThread().getThreadName());
 			jmeterThreadGroups.add((ThreadGroup) context.getThreadGroup());
-
+			//List<JMeterTreeNode> nodesToParent = JMeter
 			// vars = JMeterContextService.getContext().getVariables();
 		}
 
@@ -177,14 +177,6 @@ public class OnFlyConfig extends AbstractTestElement implements ConfigElement, S
 
 	public static void setVars(JMeterVariables vars) {
 		OnFlyConfig.vars = vars;
-	}
-
-	public static boolean isThreadUpdateBoolean() {
-		return threadUpdateBoolean;
-	}
-
-	public static void setThreadUpdateBoolean(boolean threadUpdateBoolean) {
-		OnFlyConfig.threadUpdateBoolean = threadUpdateBoolean;
 	}
 
 	public static JMeterContext getContext() {

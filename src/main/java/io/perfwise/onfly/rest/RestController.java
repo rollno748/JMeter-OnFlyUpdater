@@ -10,6 +10,7 @@ import static spark.Spark.put;
 
 import java.net.InetAddress;
 
+import org.apache.jmeter.util.JMeterUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -20,6 +21,7 @@ import com.google.gson.JsonParser;
 
 import io.perfwise.onfly.model.Element;
 import io.perfwise.onfly.model.Property;
+import io.perfwise.onfly.service.ElementService;
 import io.perfwise.onfly.service.PropertyService;
 import io.perfwise.onfly.service.TestService;
 import io.perfwise.onfly.service.ThreadGroupService;
@@ -90,14 +92,6 @@ public class RestController {
 				}
 				return new Gson().toJson(new StandardResponse(StatusResponse.AUTHERROR, "Invalid Credentials"));
 			});
-
-			get("/testinfo", (req, res) -> {
-				res.type("application/json");
-				if (Credentials.validate(req.headers("password"))) {
-					return new Gson().toJson(TestService.getOverallTestInfo());
-				}
-				return new Gson().toJson(new StandardResponse(StatusResponse.AUTHERROR, "Invalid Credentials"));
-			});
 			
 			put("/logger/:loglevel", (req, res) -> {
 				res.type("application/json");
@@ -118,7 +112,34 @@ public class RestController {
 				return new Gson().toJson(new StandardResponse(StatusResponse.AUTHERROR, "Invalid Credentials"));
 
 			});
-
+			
+			get("/elements", (req, res) -> {
+				res.type("application/json");
+				if (Credentials.validate(req.headers("password"))) {
+					return new Gson().toJson(ElementService.getTestElementsInfo());
+				}
+				return new Gson().toJson(new StandardResponse(StatusResponse.AUTHERROR, "Invalid Credentials"));
+			});
+			
+			put("/element", (req, res) -> {
+				res.type("application/json");
+				if (Credentials.validate(req.headers("password"))) {
+					Element element = new Gson().fromJson(req.body(), Element.class);
+					return new Gson().toJson(ElementService.updateTestElement(element));
+				}
+				return new Gson().toJson(new StandardResponse(StatusResponse.AUTHERROR, "Invalid Credentials"));
+			});
+			
+			// --- Get list of threadgroups info from testplan---
+			get("/threadgroups", (req, res) -> {
+				res.type("application/json");
+				if (Credentials.validate(req.headers("password"))) {
+					return new Gson().toJson(ThreadGroupService.getAllThreadGroupsInfo());
+				}
+				return new Gson().toJson(new StandardResponse(StatusResponse.AUTHERROR, "Invalid Credentials"));
+			});
+			
+			
 			get("/vars", (req, res) -> {
 				res.type("application/json");
 				// return JsonHelper.getJmeterVars(true);
@@ -136,15 +157,6 @@ public class RestController {
 				return new Gson().toJson(new StandardResponse(StatusResponse.AUTHERROR, "Invalid Credentials"));
 			});
 
-			// --- Get list of threadgroups info from testplan---
-			get("/threadgroups", (req, res) -> {
-				res.type("application/json");
-				if (Credentials.validate(req.headers("password"))) {
-					return new Gson().toJson(ThreadGroupService.getAllThreadGroupsInfo());
-				}
-				return new Gson().toJson(new StandardResponse(StatusResponse.AUTHERROR, "Invalid Credentials"));
-			});
-			
 			put("/threadgroups", (req, res) -> {
 				res.type("application/json");
 				if (Credentials.validate(req.headers("password"))) {
@@ -154,15 +166,10 @@ public class RestController {
 				return new Gson().toJson(new StandardResponse(StatusResponse.AUTHERROR, "Invalid Credentials"));
 			});
 			
-			
-
-
-			put("/element", (req, res) -> {
+			get("/slaves", (req, res) -> {
 				res.type("application/json");
 				if (Credentials.validate(req.headers("password"))) {
-					Element element = new Gson().fromJson(req.body(), Element.class);
-					
-					return new Gson().toJson(TestService.updateTestElement(element));
+					return new Gson().toJson(new StandardResponse(StatusResponse.SUCCESS, JMeterUtils.getJMeterProperties().get("remote_hosts")));
 				}
 				return new Gson().toJson(new StandardResponse(StatusResponse.AUTHERROR, "Invalid Credentials"));
 			});

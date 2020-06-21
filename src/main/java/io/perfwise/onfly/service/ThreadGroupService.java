@@ -84,10 +84,10 @@ public class ThreadGroupService extends ThreadGroup {
 	}
 
 	public static StandardResponse getAllThreadGroupsInfo() {
+		HashSet<ThreadGroup> threadGroupList = OnFlyConfig.getJmeterThreadGroups();
+		//Iterator<ThreadGroup> tmp = threadGroupList.iterator();
 		try {
-
-			ThreadGroup threadGroups = (ThreadGroup) OnFlyConfig.getContext().getThreadGroup();
-			return new StandardResponse(StatusResponse.SUCCESS, threadGroups.getName());
+			return new StandardResponse(StatusResponse.SUCCESS, new Gson().toJsonTree(threadGroupList));
 		} catch (Exception e) {
 			return new StandardResponse(StatusResponse.ERROR, "Error updating user count");
 		}
