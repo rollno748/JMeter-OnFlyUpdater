@@ -10,16 +10,16 @@ Jmeter plugin to control Jmeter during the running status. This plugin adds feat
 
 ## Features
 
-[x] Get Plugin active status
-[x] Get Jmeter user status (active/running/stopped)
-[x] Get the list of properties from the running Jmeter (System/Jmeter)
-[x] Update one or more properties to running Jmeter (System/Jmeter)
-[x] Change Logger type to running Jmeter (OFF/FATAL/ERROR/WARN/INFO/DEBUG/TRACE/ALL)
-[x] Add/Remove users to specific threadgroup(s). Supports multiple updation at single call
-[x] Get info releated to specific threadgroup(s)
-[x] Enable/Disable elements to the running test (ThreadGroups/Listeners/ConfigElements etc)
-[x] Get list of variables from one or more threads
-[x] Update variables to one or more threads
+- [x] Get Plugin active status
+- [x] Get Jmeter user status (active/running/stopped)
+- [x] Get the list of properties from the running Jmeter (System/Jmeter)
+- [x] Update one or more properties to running Jmeter (System/Jmeter)
+- [x] Change Logger type to running Jmeter (OFF/FATAL/ERROR/WARN/INFO/DEBUG/TRACE/ALL)
+- [x] Add/Remove users to specific threadgroup(s). Supports multiple updation at single call
+- [x] Get info releated to specific threadgroup(s)
+- [x] Enable/Disable elements to the running test (ThreadGroups/Listeners/ConfigElements etc)
+- [x] Get list of variables from one or more threads
+- [x] Update variables to one or more threads
 
 ## Jar Dependencies Required
 
