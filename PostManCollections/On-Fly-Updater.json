@@ -6,42 +6,6 @@
 	},
 	"item": [
 		{
-			"name": "Stoptest",
-			"request": {
-				"method": "POST",
-				"header": [
-					{
-						"key": "password",
-						"value": "Upd@t3M3",
-						"type": "text"
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": ""
-				},
-				"url": {
-					"raw": "http://localhost:1304/di-jmeter/stoptest?action=shutdown",
-					"protocol": "http",
-					"host": [
-						"localhost"
-					],
-					"port": "1304",
-					"path": [
-						"di-jmeter",
-						"stoptest"
-					],
-					"query": [
-						{
-							"key": "action",
-							"value": "shutdown"
-						}
-					]
-				}
-			},
-			"response": []
-		},
-		{
 			"name": "Ping",
 			"request": {
 				"method": "GET",
@@ -167,7 +131,7 @@
 					}
 				],
 				"url": {
-					"raw": "http://localhost:1304/di-jmeter/logger/test",
+					"raw": "http://localhost:1304/di-jmeter/logger/debug",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -176,7 +140,7 @@
 					"path": [
 						"di-jmeter",
 						"logger",
-						"test"
+						"debug"
 					]
 				}
 			},
@@ -209,25 +173,84 @@
 			"response": []
 		},
 		{
-			"name": "Add/RemoveThread",
+			"name": "ThreadGroups",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
 			"request": {
-				"method": "PUT",
+				"method": "GET",
 				"header": [
 					{
 						"key": "password",
 						"value": "Upd@t3M3",
 						"type": "text"
-					},
-					{
-						"key": "Content-Type",
-						"name": "Content-Type",
-						"value": "application/json",
-						"type": "text"
 					}
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "[\n\t{\n        \"action\": \"remove\",\n        \"threadCount\": 1,\n        \"threadGroup\": \"TG1\"\n    }\n]",
+					"raw": ""
+				},
+				"url": {
+					"raw": "http://localhost:1304/di-jmeter/threadgroups",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "1304",
+					"path": [
+						"di-jmeter",
+						"threadgroups"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "ThreadGroups - Disable/Enable",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "password",
+						"type": "text",
+						"value": "Upd@t3M3"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:1304/di-jmeter/threadgroups",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "1304",
+					"path": [
+						"di-jmeter",
+						"threadgroups"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Threads - Add/Remove",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "password",
+						"type": "text",
+						"value": "Upd@t3M3"
+					},
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "[\n\t{\n        \"action\": \"remove\",\n        \"threadCount\": 3,\n        \"threadGroup\": \"TG1\"\n    },{\n        \"action\": \"add\",\n        \"threadCount\": 1,\n        \"threadGroup\": \"TG2\"\n    }\n]",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -302,51 +325,18 @@
 			"response": []
 		},
 		{
-			"name": "Disable/Enable ThreadGroups Copy",
-			"request": {
-				"method": "PUT",
-				"header": [
-					{
-						"key": "password",
-						"value": "Upd@t3M3",
-						"type": "text"
-					}
-				],
-				"url": {
-					"raw": "http://localhost:1304/di-jmeter/threadgroups",
-					"protocol": "http",
-					"host": [
-						"localhost"
-					],
-					"port": "1304",
-					"path": [
-						"di-jmeter",
-						"threadgroups"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "ThreadGroups",
-			"protocolProfileBehavior": {
-				"disableBodyPruning": true
-			},
+			"name": "Elements-GetAllVariables",
 			"request": {
 				"method": "GET",
 				"header": [
 					{
 						"key": "password",
-						"value": "Upd@t3M3",
-						"type": "text"
+						"type": "text",
+						"value": "Upd@t3M3"
 					}
 				],
-				"body": {
-					"mode": "raw",
-					"raw": ""
-				},
 				"url": {
-					"raw": "http://localhost:1304/di-jmeter/threadgroups",
+					"raw": "http://localhost:1304/di-jmeter/elements",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -354,20 +344,26 @@
 					"port": "1304",
 					"path": [
 						"di-jmeter",
-						"threadgroups"
+						"elements"
 					]
 				}
 			},
 			"response": []
 		},
 		{
-			"name": "Enable/Disable Element",
+			"name": "Element(s) - Update",
 			"request": {
 				"method": "PUT",
 				"header": [
 					{
 						"key": "password",
-						"value": "Upd@t3M3",
+						"type": "text",
+						"value": "Upd@t3M3"
+					},
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/x-www-form-urlencoded",
 						"type": "text"
 					}
 				],
@@ -381,6 +377,75 @@
 					"path": [
 						"di-jmeter",
 						"element"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Stoptest",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "password",
+						"value": "Upd@t3M3",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "http://localhost:1304/di-jmeter/stoptest?action=shutdown",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "1304",
+					"path": [
+						"di-jmeter",
+						"stoptest"
+					],
+					"query": [
+						{
+							"key": "action",
+							"value": "shutdown"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Slaves",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "password",
+						"type": "text",
+						"value": "Upd@t3M3"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "http://localhost:1304/di-jmeter/slaves",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "1304",
+					"path": [
+						"di-jmeter",
+						"slaves"
 					]
 				}
 			},
