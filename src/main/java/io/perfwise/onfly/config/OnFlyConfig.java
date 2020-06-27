@@ -1,6 +1,7 @@
 package io.perfwise.onfly.config;
 
 import java.io.Serializable;
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -40,11 +41,13 @@ public class OnFlyConfig extends AbstractTestElement implements ConfigElement, S
 	private static HashSet<ThreadGroup> jmeterThreadGroups = new HashSet<>();
 	private static List<String> jmeterThreadNames = new ArrayList<String>();
 	private static ThreadGroup threadGroups;
-	private static JMeterVariables vars; //So far unused
+	private static JMeterVariables variables; //So far unused
 	private static boolean addThread;
+	private static boolean threadVars;
 	private static int count;
+	private static Field testPlan;
 
-
+	
 	public void testStarted() {
 		this.setRunningVersion(true);
 		TestBeanHelper.prepare(this);
@@ -91,12 +94,27 @@ public class OnFlyConfig extends AbstractTestElement implements ConfigElement, S
 		if (iterEvent.getIteration() == 1) {
 			context = JMeterContextService.getContext();
 			jmeterEngine = context.getEngine();
+			variables = context.getVariables();
 			jmeterThreadNames.add(context.getThread().getThreadName());
 			jmeterThreadGroups.add((ThreadGroup) context.getThreadGroup());
-			//List<JMeterTreeNode> nodesToParent = JMeter
-			// vars = JMeterContextService.getContext().getVariables();
+			
+			if(testPlan == null) {
+				try {
+					testPlan = context.getEngine().getClass().getDeclaredField("test");
+				} catch (NoSuchFieldException e) {
+					e.printStackTrace();
+				} catch (SecurityException e) {
+					e.printStackTrace();
+				}
+				testPlan.setAccessible(true);
+			}
+	
 		}
-
+		
+		if(isThreadVars()) {
+			//Add each thread vars to something to return to 
+		}
+		
 		if (isAddThread()) {
 			addThreads(count);
 		}
@@ -172,11 +190,11 @@ public class OnFlyConfig extends AbstractTestElement implements ConfigElement, S
 	}
 
 	public static JMeterVariables getVars() {
-		return vars;
+		return variables;
 	}
 
-	public static void setVars(JMeterVariables vars) {
-		OnFlyConfig.vars = vars;
+	public static void setVars(JMeterVariables variables) {
+		OnFlyConfig.variables = variables;
 	}
 
 	public static JMeterContext getContext() {
@@ -237,6 +255,31 @@ public class OnFlyConfig extends AbstractTestElement implements ConfigElement, S
 
 	public static void setCount(int count) {
 		OnFlyConfig.count = count;
+	}
+	
+
+	public static JMeterVariables getVariables() {
+		return variables;
+	}
+
+	public static void setVariables(JMeterVariables variables) {
+		OnFlyConfig.variables = variables;
+	}
+
+	public static Field getTestPlan() {
+		return testPlan;
+	}
+
+	public static void setTestPlan(Field testPlan) {
+		OnFlyConfig.testPlan = testPlan;
+	}
+	
+	public static boolean isThreadVars() {
+		return threadVars;
+	}
+
+	public static void setThreadVars(boolean threadVars) {
+		OnFlyConfig.threadVars = threadVars;
 	}
 
 }

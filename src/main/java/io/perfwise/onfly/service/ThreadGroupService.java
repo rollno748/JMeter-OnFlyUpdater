@@ -1,5 +1,6 @@
 package io.perfwise.onfly.service;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -15,6 +16,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 
 import io.perfwise.onfly.config.OnFlyConfig;
+import io.perfwise.onfly.model.ThreadGroups;
 import io.perfwise.onfly.model.User;
 import io.perfwise.onfly.rest.StandardResponse;
 import io.perfwise.onfly.rest.StatusResponse;
@@ -58,7 +60,48 @@ public class ThreadGroupService extends ThreadGroup {
 		}
 
 	}
+	
+	
+	public static StandardResponse getAllThreads() {
+		context = OnFlyConfig.getContext();
+		ThreadGroup tg = null;
+		JsonArray threadInfoJsonArray = null;
+		HashSet<ThreadGroup> threadGroupList = OnFlyConfig.getJmeterThreadGroups();
+		
+		try {
+			threadInfoJsonArray = new JsonArray();
+			Iterator<ThreadGroup> tmp = threadGroupList.iterator();
+			while (tmp.hasNext()) {
+				ThreadGroups tGroups = new ThreadGroups();
+				tg = tmp.next();
+				tGroups.setThreadGroupComment(tg.getComment());
+				tGroups.setThreadGroupName(tg.getName());
+				tGroups.setThreadNames(getThreadNamesForThreadGroup(tg.getName()));
+				threadInfoJsonArray.add(new Gson().toJson(tGroups));
+				
+			}
 
+			return new StandardResponse(StatusResponse.SUCCESS, new Gson().toJsonTree(threadInfoJsonArray));
+
+		} catch (Exception e) {
+			return new StandardResponse(StatusResponse.ERROR, "Error while retrieving the Thread Info");
+		}
+	}
+
+
+	private static List<String> getThreadNamesForThreadGroup(String name) {
+		List<String> tNames = new ArrayList<String>();
+		
+		for(int i=0; i<OnFlyConfig.getJmeterThreadNames().size(); i++) {
+			if(OnFlyConfig.getJmeterThreadNames().get(i).contains(name)) {
+				tNames.add(OnFlyConfig.getJmeterThreadNames().get(i));
+			}
+		}
+		
+		return tNames;
+	}
+
+	
 	private static void removeUsers(User user) {
 
 		try {
@@ -72,6 +115,7 @@ public class ThreadGroupService extends ThreadGroup {
 		}
 	}
 
+	
 	public static void addUsers(User user) {
 		OnFlyConfig.setThreadGrp(threadGroup);
 		try {
@@ -83,6 +127,7 @@ public class ThreadGroupService extends ThreadGroup {
 		}
 	}
 
+	
 	public static StandardResponse getAllThreadGroupsInfo() {
 		HashSet<ThreadGroup> threadGroupList = OnFlyConfig.getJmeterThreadGroups();
 		//Iterator<ThreadGroup> tmp = threadGroupList.iterator();
@@ -106,6 +151,7 @@ public class ThreadGroupService extends ThreadGroup {
 		LOGGER.info(String.format("Thread going to be stopped is %s", threadName));
 		return threadName;
 	}
+	
 
 	private static ThreadGroup getAppropriateThreadGroupfromList(String tgName) {
 		threadGroup = null;
@@ -124,7 +170,9 @@ public class ThreadGroupService extends ThreadGroup {
 
 		return threadGroup;
 	}
-
+	
+	
+	
 	// Getters and Setters
 
 	public JMeterContext getContext() {
@@ -134,5 +182,7 @@ public class ThreadGroupService extends ThreadGroup {
 	public void setContext(JMeterContext context) {
 		ThreadGroupService.context = OnFlyConfig.getContext();
 	}
+
+	
 
 }

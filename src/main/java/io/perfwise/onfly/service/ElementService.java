@@ -2,15 +2,19 @@ package io.perfwise.onfly.service;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.lang.reflect.Field;
+import java.util.Collection;
 
 import org.apache.jmeter.control.Controller;
 import org.apache.jmeter.control.GenericController;
 import org.apache.jmeter.gui.tree.JMeterTreeModel;
+import org.apache.jmeter.reporters.ResultCollector;
 import org.apache.jmeter.threads.JMeterContext;
 import org.apache.jmeter.threads.JMeterContextService;
 import org.apache.jmeter.threads.ThreadGroup;
 import org.apache.jorphan.collections.HashTree;
 import org.apache.jorphan.collections.HashTreeTraverser;
+import org.apache.jorphan.collections.SearchByClass;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -27,6 +31,7 @@ public class ElementService extends JMeterTreeModel implements HashTreeTraverser
 
 	private static ThreadGroup threadGroup;
 	private static JMeterContext context;
+	private static Field testPlan;
 
 	// GuiPackage
 	// JMeterGUIComponent getGui
@@ -34,15 +39,11 @@ public class ElementService extends JMeterTreeModel implements HashTreeTraverser
 	public static StandardResponse getTestElementsInfo() {
 		try {
 			context = OnFlyConfig.getContext();
-			JMeterTreeModel jTreeModel = new JMeterTreeModel();
-			HashTree jMeterTestPlanModel = jTreeModel.getTestPlan();
-
-			LOGGER.info("Tree model :: " + jMeterTestPlanModel);
-
-			JMeterContextService.getContext().getThreadGroup().setEnabled(false);
-
-			Controller controller = new GenericController();
-			controller.addTestElement(controller);
+			testPlan = OnFlyConfig.getTestPlan();
+			HashTree testPlanTreeRC = (HashTree) testPlan.get(context.getEngine());
+			SearchByClass<ResultCollector> search= new SearchByClass<>(ResultCollector.class);
+			testPlanTreeRC.traverse(search);
+			Collection<ResultCollector> test = search.getSearchResults();
 
 			return new StandardResponse(StatusResponse.SUCCESS, "Element status updated in Jmeter");
 
