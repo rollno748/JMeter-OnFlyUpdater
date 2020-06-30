@@ -64,7 +64,10 @@ public class OnFlyConfig extends AbstractTestElement implements ConfigElement, S
 		testStarted();
 	}
 
-	public void testEnded() {
+	public void testEnded() {		
+		jmeterThreadGroups.clear();
+		jmeterThreadNames.clear();
+		
 		synchronized (this) {
 			try {
 				RestController.stopRestServer();
@@ -90,8 +93,10 @@ public class OnFlyConfig extends AbstractTestElement implements ConfigElement, S
 
 	@Override
 	public void iterationStart(LoopIterationEvent iterEvent) {
+		
 
 		if (iterEvent.getIteration() == 1) {
+			
 			context = JMeterContextService.getContext();
 			jmeterEngine = context.getEngine();
 			variables = context.getVariables();

@@ -4,14 +4,14 @@ import javax.xml.transform.Transformer;
 
 import org.apache.jmeter.threads.JMeterContextService.ThreadCounts;
 
-import com.google.gson.JsonElement;
+import com.google.gson.JsonArray;
 
 public class StandardResponse {
 
 	private StatusResponse status;
 	private String message;
 	private Object object;
-	private JsonElement data;
+	private JsonArray threadsInfo;
 	private ThreadCounts threadCounts;
 	private Transformer newTransformer;
 
@@ -24,9 +24,9 @@ public class StandardResponse {
 		this.message=message;
 	}
 
-	public StandardResponse(StatusResponse status, JsonElement data) {
+	public StandardResponse(StatusResponse status, JsonArray data) {
 		this.status=status;
-		this.data=data;
+		this.threadsInfo=data;
 	}
 	
 	public StandardResponse(StatusResponse status, ThreadCounts threadCounts) {
@@ -63,12 +63,12 @@ public class StandardResponse {
 		this.message = message;
 	}
 
-	public JsonElement getData() {
-		return data;
+	public JsonArray getData() {
+		return threadsInfo;
 	}
 
-	public void setData(JsonElement data) {
-		this.data = data;
+	public void setData(JsonArray threadsInfo) {
+		this.threadsInfo = threadsInfo;
 	}
 
 	public ThreadCounts getThreadCounts() {

@@ -65,11 +65,10 @@ public class ThreadGroupService extends ThreadGroup {
 	public static StandardResponse getAllThreads() {
 		context = OnFlyConfig.getContext();
 		ThreadGroup tg = null;
-		JsonArray threadInfoJsonArray = null;
+		JsonArray threadInfoJsonArray = new JsonArray();
 		HashSet<ThreadGroup> threadGroupList = OnFlyConfig.getJmeterThreadGroups();
 		
 		try {
-			threadInfoJsonArray = new JsonArray();
 			Iterator<ThreadGroup> tmp = threadGroupList.iterator();
 			while (tmp.hasNext()) {
 				ThreadGroups tGroups = new ThreadGroups();
@@ -77,11 +76,10 @@ public class ThreadGroupService extends ThreadGroup {
 				tGroups.setThreadGroupComment(tg.getComment());
 				tGroups.setThreadGroupName(tg.getName());
 				tGroups.setThreadNames(getThreadNamesForThreadGroup(tg.getName()));
-				threadInfoJsonArray.add(new Gson().toJson(tGroups));
-				
+				threadInfoJsonArray.add(new Gson().toJsonTree(tGroups));
 			}
-
-			return new StandardResponse(StatusResponse.SUCCESS, new Gson().toJsonTree(threadInfoJsonArray));
+			threadGroupList = null;
+			return new StandardResponse(StatusResponse.SUCCESS, threadInfoJsonArray);
 
 		} catch (Exception e) {
 			return new StandardResponse(StatusResponse.ERROR, "Error while retrieving the Thread Info");
