@@ -1,7 +1,10 @@
 package io.perfwise.onfly.rest;
 
+import java.util.Map;
+
 import javax.xml.transform.Transformer;
 
+import org.apache.jmeter.threads.JMeterVariables;
 import org.apache.jmeter.threads.JMeterContextService.ThreadCounts;
 
 import com.google.gson.JsonArray;
@@ -10,8 +13,9 @@ public class StandardResponse {
 
 	private StatusResponse status;
 	private String message;
-	private Object object;
+	private Object vars;
 	private JsonArray threadsInfo;
+	private JMeterVariables variables;
 	private ThreadCounts threadCounts;
 	private Transformer newTransformer;
 
@@ -39,11 +43,22 @@ public class StandardResponse {
 		this.newTransformer=newTransformer;
 	}
 	
+	public StandardResponse(StatusResponse status, JMeterVariables variables) {
+		this.status=status;
+		this.variables=variables;
+	}
+	
 	public StandardResponse(StatusResponse status, Object object) {
 		this.status=status;
-		this.object=object;
+		this.vars=object;
 	}
-
+	
+	public StandardResponse(StatusResponse status, Map<String, String> vars) {
+		this.status=status;
+		this.vars=vars;
+	}
+	
+	
 
 	// Getters and setters
 	
@@ -63,12 +78,20 @@ public class StandardResponse {
 		this.message = message;
 	}
 
-	public JsonArray getData() {
+	public JsonArray getThreadsInfo() {
 		return threadsInfo;
 	}
 
-	public void setData(JsonArray threadsInfo) {
+	public void setThreadsInfo(JsonArray threadsInfo) {
 		this.threadsInfo = threadsInfo;
+	}
+
+	public JMeterVariables getVariables() {
+		return variables;
+	}
+
+	public void setVariables(JMeterVariables variables) {
+		this.variables = variables;
 	}
 
 	public ThreadCounts getThreadCounts() {
@@ -78,7 +101,7 @@ public class StandardResponse {
 	public void setThreadCounts(ThreadCounts threadCounts) {
 		this.threadCounts = threadCounts;
 	}
-	
+
 	public Transformer getNewTransformer() {
 		return newTransformer;
 	}
@@ -87,12 +110,12 @@ public class StandardResponse {
 		this.newTransformer = newTransformer;
 	}
 
-	public Object getObject() {
-		return object;
+	public Object getVars() {
+		return vars;
 	}
 
-	public void setObject(Object object) {
-		this.object = object;
+	public void setVars(Object vars) {
+		this.vars = vars;
 	}
 	
 }

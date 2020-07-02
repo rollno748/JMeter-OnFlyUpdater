@@ -186,6 +186,12 @@ public class RestController {
 				}
 				return new Gson().toJson(new StandardResponse(StatusResponse.AUTHERROR, "Invalid Credentials"));
 			});
+			/*
+			 * 2020-06-30 23:14:25,375 INFO o.a.j.e.DistributedRunner: Failed to configure 127.0.0.1
+				2020-06-30 23:14:25,375 INFO o.a.j.e.DistributedRunner: Stopping remote engines
+				2020-06-30 23:14:25,375 INFO o.a.j.e.DistributedRunner: Remote engines have been stopped
+				2020-06-30 23:14:25,375 ERROR o.a.j.g.a.ActionRouter: Error processing org.apache.jmeter.gui.action.RemoteStart@15d0d6c9
+			 */
 
 			post("/stoptest", (req, res) -> {
 				res.type("application/json");

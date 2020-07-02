@@ -41,7 +41,8 @@ public class OnFlyConfig extends AbstractTestElement implements ConfigElement, S
 	private static HashSet<ThreadGroup> jmeterThreadGroups = new HashSet<>();
 	private static List<String> jmeterThreadNames = new ArrayList<String>();
 	private static ThreadGroup threadGroups;
-	private static JMeterVariables variables; //So far unused
+	//private static Set<Entry<String, Object>> variables;
+	private static JMeterVariables variables;
 	private static boolean addThread;
 	private static boolean threadVars;
 	private static int count;
@@ -99,7 +100,6 @@ public class OnFlyConfig extends AbstractTestElement implements ConfigElement, S
 			
 			context = JMeterContextService.getContext();
 			jmeterEngine = context.getEngine();
-			variables = context.getVariables();
 			jmeterThreadNames.add(context.getThread().getThreadName());
 			jmeterThreadGroups.add((ThreadGroup) context.getThreadGroup());
 			
@@ -117,7 +117,8 @@ public class OnFlyConfig extends AbstractTestElement implements ConfigElement, S
 		}
 		
 		if(isThreadVars()) {
-			//Add each thread vars to something to return to 
+			OnFlyConfig.setVariables(context.getVariables());
+			setThreadVars(false);
 		}
 		
 		if (isAddThread()) {
@@ -194,14 +195,6 @@ public class OnFlyConfig extends AbstractTestElement implements ConfigElement, S
 		OnFlyConfig.threadGroups = threadGroups;
 	}
 
-	public static JMeterVariables getVars() {
-		return variables;
-	}
-
-	public static void setVars(JMeterVariables variables) {
-		OnFlyConfig.variables = variables;
-	}
-
 	public static JMeterContext getContext() {
 		return context;
 	}
@@ -262,7 +255,6 @@ public class OnFlyConfig extends AbstractTestElement implements ConfigElement, S
 		OnFlyConfig.count = count;
 	}
 	
-
 	public static JMeterVariables getVariables() {
 		return variables;
 	}
