@@ -14,13 +14,16 @@ Jmeter plugin to control Jmeter during the running status. This plugin adds feat
 - [x] Get Jmeter user status (active/running/stopped)
 - [x] Get the list of properties from the running Jmeter (System/Jmeter)
 - [x] Update one or more properties to running Jmeter (System/Jmeter)
-- [x] Change Logger type to running Jmeter (OFF/FATAL/ERROR/WARN/INFO/DEBUG/TRACE/ALL)
-- [x] Get All the thread info 
+- [ ] Get the Logger type of running Jmeter
+- [x] Update Logger type to running Jmeter (OFF/FATAL/ERROR/WARN/INFO/DEBUG/TRACE/ALL)
+- [x] Get All the threads info 
 - [x] Add/Remove users/threads to specific threadgroup(s). Supports multiple updation at single call
 - [x] Get info releated to specific threadgroup(s)
-- [x] Enable/Disable elements to the running test (ThreadGroups/Listeners/ConfigElements etc)
+- [ ] Update info to specific threadgroup(s)
 - [x] Get list of variables from one or more threads
-- [x] Update variables to one or more threads
+- [ ] Update variables to one or more threads
+- [ ] Get elements from the running test (ThreadGroups/Listeners/ConfigElements etc)
+- [ ] Enable/Disable elements to the running test (ThreadGroups/Listeners/ConfigElements etc)
 - [x] Stops the test - Supports both gradual and abrupt
 - [x] Get Slaves Info
 - [x] Send Stop signals to specific/all slaves
@@ -68,9 +71,9 @@ GetProperties|GET|/{URI-PATH}/properties?type={type}|jmeter/system||Completed
 UpdateProperties|PUT|/{URI-PATH}/properties|NA||Completed
 GetThreads|GET|/{URI-PATH}/threads|NA||Completed
 UpdateThreads|PUT|/{URI-PATH}/threads|NA||Completed
-GetThreadGroupsList|PUT|/{URI-PATH}/threadgroups|NA||In Progress
+GetThreadGroupsList|PUT|/{URI-PATH}/threadgroups|NA||Completed
 UpdateThreadGroups|PUT|/{URI-PATH}/threadgroups|NA||NotStarted
-GetJmeterVariables|GET|/{URI-PATH}/vars|NA||In Progress
+GetJmeterVariables|GET|/{URI-PATH}/vars|NA||Completed
 UpdateJmeterVariables|PUT|/{URI-PATH}/vars|NA||In Progress
 TestInfo|GET|/{URI-PATH}/testinfo|NA||In Progress
 UpdateTestElement|PUT|/{URI-PATH}/element|NA||In Progress
