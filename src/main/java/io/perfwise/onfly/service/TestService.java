@@ -91,6 +91,17 @@ public class TestService extends SchematicView {
 		
 	}
 	
+	
+	public static StandardResponse getLoggerLevel() {
+		String logLevel = Configurator.class.getName();
+		try {
+			return new StandardResponse(StatusResponse.SUCCESS, String.format("The Log Level in Jmeter is %s", logLevel));
+		} catch (Exception e) {
+			return new StandardResponse(StatusResponse.ERROR, e.toString());
+		}		
+	}
+	
+	
 	public static StandardResponse stopTestSlaves(String action, String targettedSlaves) {
 		//DistributedRunner dt = new DistributedRunner();
 		/*

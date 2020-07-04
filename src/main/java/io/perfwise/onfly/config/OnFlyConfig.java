@@ -20,12 +20,8 @@ import org.apache.jmeter.threads.JMeterContextService;
 import org.apache.jmeter.threads.JMeterThread;
 import org.apache.jmeter.threads.JMeterVariables;
 import org.apache.jmeter.threads.ThreadGroup;
-import org.apache.jmeter.util.JMeterUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
 
 import io.perfwise.onfly.rest.RestController;
 import io.perfwise.utils.Credentials;
@@ -46,10 +42,7 @@ public class OnFlyConfig extends AbstractTestElement implements ConfigElement, S
 	private static List<String> jmeterThreadNames = new ArrayList<String>();
 	private static ThreadGroup threadGroups;
 	private static JMeterVariables variables;
-	private static JsonArray variablesInJson;
 	private static boolean addThread;
-	private static boolean threadVars;
-	private static boolean updateThreadVars;
 	private static int count;
 	private static Field testPlan;
 
@@ -121,28 +114,11 @@ public class OnFlyConfig extends AbstractTestElement implements ConfigElement, S
 	
 		}
 		
-		if(isThreadVars()) {
-			OnFlyConfig.setVariables(context.getVariables());
-			setThreadVars(false);
-		}
-		
-		if(isUpdateThreadVars()) {
-			updateVariables(getVariablesInJson());
-			OnFlyConfig.setUpdateThreadVars(true);
-		}
-		
 		if (isAddThread()) {
 			addThreads(count);
 		}
 	}
-
-	private void updateVariables(JsonArray variables) {
-		JsonObject json = variables.getAsJsonObject();
-		json.entrySet().parallelStream().forEach(entry -> {
-			context.getVariables().put(entry.getKey(), entry.getValue().getAsString());
-			JMeterUtils.setProperty(entry.getKey(), entry.getValue().getAsString());
-		});
-	}
+	
 
 	@Override
 	public void threadStarted() {
@@ -191,9 +167,6 @@ public class OnFlyConfig extends AbstractTestElement implements ConfigElement, S
 		this.password = password;
 	}
 
-	public void setVariables(String vars) {
-
-	}
 
 	public static StandardJMeterEngine getJmeterEngine() {
 		return jmeterEngine;
@@ -285,30 +258,6 @@ public class OnFlyConfig extends AbstractTestElement implements ConfigElement, S
 
 	public static void setTestPlan(Field testPlan) {
 		OnFlyConfig.testPlan = testPlan;
-	}
-	
-	public static boolean isThreadVars() {
-		return threadVars;
-	}
-
-	public static void setThreadVars(boolean threadVars) {
-		OnFlyConfig.threadVars = threadVars;
-	}
-
-	public static boolean isUpdateThreadVars() {
-		return updateThreadVars;
-	}
-
-	public static void setUpdateThreadVars(boolean updateThreadVars) {
-		OnFlyConfig.updateThreadVars = updateThreadVars;
-	}
-
-	public static JsonArray getVariablesInJson() {
-		return variablesInJson;
-	}
-
-	public static void setVariablesInJson(JsonArray variablesInJson) {
-		OnFlyConfig.variablesInJson = variablesInJson;
 	}
 	
 }

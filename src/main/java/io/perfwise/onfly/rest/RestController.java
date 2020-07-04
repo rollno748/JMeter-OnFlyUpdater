@@ -20,6 +20,7 @@ import com.google.gson.JsonParser;
 
 import io.perfwise.onfly.model.Element;
 import io.perfwise.onfly.model.Property;
+import io.perfwise.onfly.model.VariableModel;
 import io.perfwise.onfly.service.ElementService;
 import io.perfwise.onfly.service.PropertyService;
 import io.perfwise.onfly.service.TestService;
@@ -65,6 +66,7 @@ public class RestController {
 				res.type("application/json");
 				return new Gson().toJson(new StandardResponse(StatusResponse.SUCCESS, "On-Fly-Updater Running"));
 			});
+			
 
 			get("/status", (req, res) -> {
 				res.type("application/json");
@@ -83,6 +85,7 @@ public class RestController {
 				return new Gson().toJson(new StandardResponse(StatusResponse.AUTHERROR, "Invalid Credentials"));
 			});
 
+			
 			put("/properties", (req, res) -> {
 				res.type("application/json");
 				if (Credentials.validate(req.headers("password"))) {
@@ -94,7 +97,7 @@ public class RestController {
 				return new Gson().toJson(new StandardResponse(StatusResponse.AUTHERROR, "Invalid Credentials"));
 			});
 			
-
+			
 			put("/logger/:loglevel", (req, res) -> {
 				res.type("application/json");
 				if (Credentials.validate(req.headers("password"))) {
@@ -112,6 +115,7 @@ public class RestController {
 				return new Gson().toJson(new StandardResponse(StatusResponse.AUTHERROR, "Invalid Credentials"));
 			});
 
+			
 			put("/threads", (req, res) -> {
 				res.type("application/json");
 				if (Credentials.validate(req.headers("password"))) {
@@ -131,6 +135,7 @@ public class RestController {
 				}
 				return new Gson().toJson(new StandardResponse(StatusResponse.AUTHERROR, "Invalid Credentials"));
 			});
+
 			
 			put("/threadgroups", (req, res) -> {
 				res.type("application/json");
@@ -150,6 +155,7 @@ public class RestController {
 				return new Gson().toJson(new StandardResponse(StatusResponse.AUTHERROR, "Invalid Credentials"));
 			});
 
+			
 			put("/element", (req, res) -> {
 				res.type("application/json");
 				if (Credentials.validate(req.headers("password"))) {
@@ -158,6 +164,7 @@ public class RestController {
 				}
 				return new Gson().toJson(new StandardResponse(StatusResponse.AUTHERROR, "Invalid Credentials"));
 			});
+			
 
 			get("/vars", (req, res) -> {
 				res.type("application/json");
@@ -167,18 +174,19 @@ public class RestController {
 				return new Gson().toJson(new StandardResponse(StatusResponse.AUTHERROR, "Invalid Credentials"));
 			});
 
+			
 			put("/vars", (req, res) -> {
 				res.type("application/json");
-
+				
 				if (Credentials.validate(req.headers("password"))) {
-					JsonParser jsonParser = new JsonParser();
-					JsonElement jsonElement = jsonParser.parse(req.body());
-					JsonArray jsonArray = jsonElement.getAsJsonArray();
-					return new Gson().toJson(VariableService.setVars(jsonArray));
+					VariableModel vars	= new Gson().fromJson(req.body(), VariableModel.class);
+					
+					return new Gson().toJson(VariableService.setVars(vars));
 				}
 				return new Gson().toJson(new StandardResponse(StatusResponse.AUTHERROR, "Invalid Credentials"));
 			});
 
+			
 			get("/slaves", (req, res) -> {
 				res.type("application/json");
 				if (Credentials.validate(req.headers("password"))) {
@@ -186,6 +194,7 @@ public class RestController {
 				}
 				return new Gson().toJson(new StandardResponse(StatusResponse.AUTHERROR, "Invalid Credentials"));
 			});
+			
 
 			post("/stoptest", (req, res) -> {
 				res.type("application/json");
@@ -195,6 +204,7 @@ public class RestController {
 				}
 				return new Gson().toJson(new StandardResponse(StatusResponse.AUTHERROR, "Invalid Credentials"));
 			});
+			
 			
 			post("/slaves/stoptest", (req, res) -> {
 				res.type("application/json");

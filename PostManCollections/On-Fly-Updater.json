@@ -17,14 +17,14 @@
 					}
 				],
 				"url": {
-					"raw": "http://localhost:1304/di-jmeter/ping",
+					"raw": "http://localhost:1304/on-fly/ping",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
 					"port": "1304",
 					"path": [
-						"di-jmeter",
+						"on-fly",
 						"ping"
 					]
 				}
@@ -43,15 +43,42 @@
 					}
 				],
 				"url": {
-					"raw": "http://localhost:1304/di-jmeter/status",
+					"raw": "http://localhost:1304/on-fly/status",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
 					"port": "1304",
 					"path": [
-						"di-jmeter",
+						"on-fly",
 						"status"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Set Logger",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "password",
+						"type": "text",
+						"value": "Upd@t3M3"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:1304/on-fly/logger/info",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "1304",
+					"path": [
+						"on-fly",
+						"logger",
+						"info"
 					]
 				}
 			},
@@ -69,14 +96,14 @@
 					}
 				],
 				"url": {
-					"raw": "http://localhost:1304/di-jmeter/properties?type=jmeter",
+					"raw": "http://localhost:1304/on-fly/properties?type=jmeter",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
 					"port": "1304",
 					"path": [
-						"di-jmeter",
+						"on-fly",
 						"properties"
 					],
 					"query": [
@@ -105,42 +132,15 @@
 					"raw": "{\n    \"properties\": {\n        \"jmeter.reportgenerator.apdex_tolerated_threshold\": \"5000\",\n        \"key1\": \"value1\"\n    },\n    \"type\": \"jmeter\"\n}"
 				},
 				"url": {
-					"raw": "http://localhost:1304/di-jmeter/properties",
+					"raw": "http://localhost:1304/on-fly/properties",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
 					"port": "1304",
 					"path": [
-						"di-jmeter",
+						"on-fly",
 						"properties"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "logger",
-			"request": {
-				"method": "GET",
-				"header": [
-					{
-						"key": "password",
-						"value": "Upd@t3M3",
-						"type": "text"
-					}
-				],
-				"url": {
-					"raw": "http://localhost:1304/di-jmeter/logger/debug",
-					"protocol": "http",
-					"host": [
-						"localhost"
-					],
-					"port": "1304",
-					"path": [
-						"di-jmeter",
-						"logger",
-						"debug"
 					]
 				}
 			},
@@ -176,14 +176,14 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:1304/di-jmeter/threads",
+					"raw": "http://localhost:1304/on-fly/threads",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
 					"port": "1304",
 					"path": [
-						"di-jmeter",
+						"on-fly",
 						"threads"
 					]
 				}
@@ -217,14 +217,14 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:1304/di-jmeter/threads",
+					"raw": "http://localhost:1304/on-fly/threads",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
 					"port": "1304",
 					"path": [
-						"di-jmeter",
+						"on-fly",
 						"threads"
 					]
 				}
@@ -250,14 +250,14 @@
 					"raw": ""
 				},
 				"url": {
-					"raw": "http://localhost:1304/di-jmeter/threadgroups",
+					"raw": "http://localhost:1304/on-fly/threadgroups",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
 					"port": "1304",
 					"path": [
-						"di-jmeter",
+						"on-fly",
 						"threadgroups"
 					]
 				}
@@ -276,14 +276,14 @@
 					}
 				],
 				"url": {
-					"raw": "http://localhost:1304/di-jmeter/threadgroups",
+					"raw": "http://localhost:1304/on-fly/threadgroups",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
 					"port": "1304",
 					"path": [
-						"di-jmeter",
+						"on-fly",
 						"threadgroups"
 					]
 				}
@@ -302,14 +302,14 @@
 					}
 				],
 				"url": {
-					"raw": "http://localhost:1304/di-jmeter/vars",
+					"raw": "http://localhost:1304/on-fly/vars",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
 					"port": "1304",
 					"path": [
-						"di-jmeter",
+						"on-fly",
 						"vars"
 					]
 				}
@@ -317,25 +317,29 @@
 			"response": []
 		},
 		{
-			"name": "VariableModifier",
+			"name": "Update Variables",
 			"request": {
 				"method": "PUT",
 				"header": [
 					{
 						"key": "password",
-						"value": "Upd@t3M3",
-						"type": "text"
+						"type": "text",
+						"value": "Upd@t3M3"
 					}
 				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"TEST\": \"TestingfromPostman\"\n}"
+				},
 				"url": {
-					"raw": "http://localhost:1304/di-jmeter/vars",
+					"raw": "http://localhost:1304/on-fly/vars",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
 					"port": "1304",
 					"path": [
-						"di-jmeter",
+						"on-fly",
 						"vars"
 					]
 				}
@@ -354,14 +358,14 @@
 					}
 				],
 				"url": {
-					"raw": "http://localhost:1304/di-jmeter/testinfo",
+					"raw": "http://localhost:1304/on-fly/testinfo",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
 					"port": "1304",
 					"path": [
-						"di-jmeter",
+						"on-fly",
 						"testinfo"
 					]
 				}
@@ -369,7 +373,7 @@
 			"response": []
 		},
 		{
-			"name": "Elements-GetAllVariables",
+			"name": "Elements",
 			"request": {
 				"method": "GET",
 				"header": [
@@ -380,14 +384,14 @@
 					}
 				],
 				"url": {
-					"raw": "http://localhost:1304/di-jmeter/elements",
+					"raw": "http://localhost:1304/on-fly/elements",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
 					"port": "1304",
 					"path": [
-						"di-jmeter",
+						"on-fly",
 						"elements"
 					]
 				}
@@ -412,14 +416,14 @@
 					}
 				],
 				"url": {
-					"raw": "http://localhost:1304/di-jmeter/element",
+					"raw": "http://localhost:1304/on-fly/element",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
 					"port": "1304",
 					"path": [
-						"di-jmeter",
+						"on-fly",
 						"element"
 					]
 				}
@@ -442,14 +446,14 @@
 					"raw": ""
 				},
 				"url": {
-					"raw": "http://localhost:1304/di-jmeter/stoptest?action=shutdown",
+					"raw": "http://localhost:1304/on-fly/stoptest?action=shutdown",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
 					"port": "1304",
 					"path": [
-						"di-jmeter",
+						"on-fly",
 						"stoptest"
 					],
 					"query": [
@@ -481,14 +485,14 @@
 					"raw": ""
 				},
 				"url": {
-					"raw": "http://localhost:1304/di-jmeter/slaves",
+					"raw": "http://localhost:1304/on-fly/slaves",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
 					"port": "1304",
 					"path": [
-						"di-jmeter",
+						"on-fly",
 						"slaves"
 					]
 				}
@@ -511,14 +515,14 @@
 					"raw": ""
 				},
 				"url": {
-					"raw": "http://localhost:1304/di-jmeter/slaves/stoptest",
+					"raw": "http://localhost:1304/on-fly/slaves/stoptest",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
 					"port": "1304",
 					"path": [
-						"di-jmeter",
+						"on-fly",
 						"slaves",
 						"stoptest"
 					]

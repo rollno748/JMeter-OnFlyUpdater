@@ -14,7 +14,6 @@ Jmeter plugin to control Jmeter during the running status. This plugin adds feat
 - [x] Get Jmeter user status (active/running/stopped)
 - [x] Get the list of properties from the running Jmeter (System/Jmeter)
 - [x] Update one or more properties to running Jmeter (System/Jmeter)
-- [ ] Get the Logger type of running Jmeter
 - [x] Update Logger type to running Jmeter (OFF/FATAL/ERROR/WARN/INFO/DEBUG/TRACE/ALL)
 - [x] Get All the threads info 
 - [x] Add/Remove users/threads to specific threadgroup(s). Supports multiple updation at single call
@@ -74,10 +73,12 @@ UpdateThreads|PUT|/{URI-PATH}/threads|NA||Completed
 GetThreadGroupsList|PUT|/{URI-PATH}/threadgroups|NA||Completed
 UpdateThreadGroups|PUT|/{URI-PATH}/threadgroups|NA||NotStarted
 GetJmeterVariables|GET|/{URI-PATH}/vars|NA||Completed
-UpdateJmeterVariables|PUT|/{URI-PATH}/vars|NA||In Progress
-TestInfo|GET|/{URI-PATH}/testinfo|NA||In Progress
-UpdateTestElement|PUT|/{URI-PATH}/element|NA||In Progress
+UpdateJmeterVariables|PUT|/{URI-PATH}/vars|NA||Completed
+GetElements|GET|/{URI-PATH}/element|NA||Not Started
+UpdateTestElement|PUT|/{URI-PATH}/element|NA||Not Started
 StopTest|POST|/{URI-PATH}/stoptest?action={action}|shutdown/stop||Completed
+Slaves|GET|/{URI-PATH}/slaves|NA||Completed
+StopTest|POST|/{URI-PATH}/stoptest?action={action}|shutdown/stop||Not Started
 
 ## Additional Info
 Some more info on the plugin
@@ -89,8 +90,7 @@ Some more info on the plugin
 ## Known Issues
 
 - [x] Updating test element in the testplan is not working
-- [x] Object is not cleared at the end of test for GetThreads
-
+- [x] Sending signals to slaves is not working
 
 ## References
 
