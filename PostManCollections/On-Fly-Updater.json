@@ -32,6 +32,32 @@
 			"response": []
 		},
 		{
+			"name": "Status",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "password",
+						"value": "Upd@t3M3",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:1304/di-jmeter/status",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "1304",
+					"path": [
+						"di-jmeter",
+						"status"
+					]
+				}
+			},
+			"response": []
+		},
+		{
 			"name": "PropertyDisplay",
 			"request": {
 				"method": "GET",
@@ -94,32 +120,6 @@
 			"response": []
 		},
 		{
-			"name": "Status",
-			"request": {
-				"method": "GET",
-				"header": [
-					{
-						"key": "password",
-						"value": "Upd@t3M3",
-						"type": "text"
-					}
-				],
-				"url": {
-					"raw": "http://localhost:1304/di-jmeter/status",
-					"protocol": "http",
-					"host": [
-						"localhost"
-					],
-					"port": "1304",
-					"path": [
-						"di-jmeter",
-						"status"
-					]
-				}
-			},
-			"response": []
-		},
-		{
 			"name": "logger",
 			"request": {
 				"method": "GET",
@@ -147,18 +147,36 @@
 			"response": []
 		},
 		{
-			"name": "TestInfo",
+			"name": "Threads - GetAllThreadsList",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
 			"request": {
 				"method": "GET",
 				"header": [
 					{
 						"key": "password",
-						"value": "Upd@t3M3",
-						"type": "text"
+						"type": "text",
+						"value": "Upd@t3M3"
+					},
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
 					}
 				],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
 				"url": {
-					"raw": "http://localhost:1304/di-jmeter/testinfo",
+					"raw": "http://localhost:1304/di-jmeter/threads",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -166,7 +184,48 @@
 					"port": "1304",
 					"path": [
 						"di-jmeter",
-						"testinfo"
+						"threads"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Threads - Add/Remove",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "password",
+						"type": "text",
+						"value": "Upd@t3M3"
+					},
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "[\n\t{\n        \"action\": \"remove\",\n        \"threadCount\": 3,\n        \"threadGroup\": \"TG1\"\n    },{\n        \"action\": \"add\",\n        \"threadCount\": 1,\n        \"threadGroup\": \"TG2\"\n    }\n]",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:1304/di-jmeter/threads",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "1304",
+					"path": [
+						"di-jmeter",
+						"threads"
 					]
 				}
 			},
@@ -232,47 +291,6 @@
 			"response": []
 		},
 		{
-			"name": "Threads - Add/Remove",
-			"request": {
-				"method": "PUT",
-				"header": [
-					{
-						"key": "password",
-						"type": "text",
-						"value": "Upd@t3M3"
-					},
-					{
-						"key": "Content-Type",
-						"name": "Content-Type",
-						"type": "text",
-						"value": "application/json"
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "[\n\t{\n        \"action\": \"remove\",\n        \"threadCount\": 3,\n        \"threadGroup\": \"TG1\"\n    },{\n        \"action\": \"add\",\n        \"threadCount\": 1,\n        \"threadGroup\": \"TG2\"\n    }\n]",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "http://localhost:1304/di-jmeter/threads",
-					"protocol": "http",
-					"host": [
-						"localhost"
-					],
-					"port": "1304",
-					"path": [
-						"di-jmeter",
-						"threads"
-					]
-				}
-			},
-			"response": []
-		},
-		{
 			"name": "GetVariablesList",
 			"request": {
 				"method": "GET",
@@ -319,6 +337,32 @@
 					"path": [
 						"di-jmeter",
 						"vars"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "TestInfo",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "password",
+						"value": "Upd@t3M3",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:1304/di-jmeter/testinfo",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "1304",
+					"path": [
+						"di-jmeter",
+						"testinfo"
 					]
 				}
 			},
@@ -383,7 +427,7 @@
 			"response": []
 		},
 		{
-			"name": "Stoptest",
+			"name": "StopTest",
 			"request": {
 				"method": "POST",
 				"header": [
@@ -446,6 +490,37 @@
 					"path": [
 						"di-jmeter",
 						"slaves"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "StopTest - Slaves",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "password",
+						"type": "text",
+						"value": "Upd@t3M3"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "http://localhost:1304/di-jmeter/slaves/stoptest",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "1304",
+					"path": [
+						"di-jmeter",
+						"slaves",
+						"stoptest"
 					]
 				}
 			},

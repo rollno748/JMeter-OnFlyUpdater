@@ -90,5 +90,31 @@ public class TestService extends SchematicView {
 		}
 		
 	}
+	
+	public static StandardResponse stopTestSlaves(String action, String targettedSlaves) {
+		//DistributedRunner dt = new DistributedRunner();
+		/*
+			2020-06-30 23:14:25,375 INFO o.a.j.e.DistributedRunner: Failed to configure 127.0.0.1
+			2020-06-30 23:14:25,375 INFO o.a.j.e.DistributedRunner: Stopping remote engines
+			2020-06-30 23:14:25,375 INFO o.a.j.e.DistributedRunner: Remote engines have been stopped
+			2020-06-30 23:14:25,375 ERROR o.a.j.g.a.ActionRouter: Error processing org.apache.jmeter.gui.action.RemoteStart@15d0d6c9
+		 */
+		//List<String> slavesList = Arrays.asList(targettedSlaves.split(","));
+		
+		
+		try {
+			StandardJMeterEngine engine = OnFlyConfig.getJmeterEngine();
+
+			if (action.toLowerCase().equals("shutdown")) {
+				engine.askThreadsToStop();
+				return new StandardResponse(StatusResponse.SUCCESS, "Jmeter is Shutting down !!");
+			}else {
+				engine.stopTest(true);
+				return new StandardResponse(StatusResponse.SUCCESS, "Jmeter Stopped abrubtly !!");
+			}
+		} catch (Exception e) {
+			return new StandardResponse(StatusResponse.ERROR, e.toString());
+		}
+	}
 
 }

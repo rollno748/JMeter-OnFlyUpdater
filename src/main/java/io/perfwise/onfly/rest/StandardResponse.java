@@ -4,20 +4,24 @@ import java.util.Map;
 
 import javax.xml.transform.Transformer;
 
-import org.apache.jmeter.threads.JMeterVariables;
 import org.apache.jmeter.threads.JMeterContextService.ThreadCounts;
 
 import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 
 public class StandardResponse {
 
 	private StatusResponse status;
 	private String message;
-	private Object vars;
+	private String TotalThreadGroups;
+	private Map<String, String> vars;
+	private Object slaves;
 	private JsonArray threadsInfo;
-	private JMeterVariables variables;
+	private JsonArray threadGroups;
+	private JsonObject variables;
 	private ThreadCounts threadCounts;
 	private Transformer newTransformer;
+	
 
 	public StandardResponse(StatusResponse status) {
 		this.status=status;
@@ -43,25 +47,25 @@ public class StandardResponse {
 		this.newTransformer=newTransformer;
 	}
 	
-	public StandardResponse(StatusResponse status, JMeterVariables variables) {
+	public StandardResponse(StatusResponse status, String size, JsonArray threadGroupsJsonArray) {
 		this.status=status;
-		this.variables=variables;
+		this.TotalThreadGroups=size;
+		this.threadGroups=threadGroupsJsonArray;
+	}
+	
+	public StandardResponse(StatusResponse status, JsonObject variableObj) {
+		this.status=status;
+		this.variables=variableObj;
 	}
 	
 	public StandardResponse(StatusResponse status, Object object) {
 		this.status=status;
-		this.vars=object;
-	}
-	
-	public StandardResponse(StatusResponse status, Map<String, String> vars) {
-		this.status=status;
-		this.vars=vars;
+		this.slaves=object;
 	}
 	
 	
-
 	// Getters and setters
-	
+
 	public StatusResponse getStatus() {
 		return status;
 	}
@@ -78,6 +82,22 @@ public class StandardResponse {
 		this.message = message;
 	}
 
+	public Map<String, String> getVars() {
+		return vars;
+	}
+
+	public void setVars(Map<String, String> vars) {
+		this.vars = vars;
+	}
+
+	public Object getSlaves() {
+		return slaves;
+	}
+
+	public void setSlaves(Object slaves) {
+		this.slaves = slaves;
+	}
+
 	public JsonArray getThreadsInfo() {
 		return threadsInfo;
 	}
@@ -86,11 +106,19 @@ public class StandardResponse {
 		this.threadsInfo = threadsInfo;
 	}
 
-	public JMeterVariables getVariables() {
+	public JsonArray getThreadGroups() {
+		return threadGroups;
+	}
+
+	public void setThreadGroups(JsonArray threadGroups) {
+		this.threadGroups = threadGroups;
+	}
+
+	public JsonObject getVariables() {
 		return variables;
 	}
 
-	public void setVariables(JMeterVariables variables) {
+	public void setVariables(JsonObject variables) {
 		this.variables = variables;
 	}
 
@@ -110,12 +138,12 @@ public class StandardResponse {
 		this.newTransformer = newTransformer;
 	}
 
-	public Object getVars() {
-		return vars;
+	public String getTotalThreadGroups() {
+		return TotalThreadGroups;
 	}
 
-	public void setVars(Object vars) {
-		this.vars = vars;
+	public void setTotalThreadGroups(String totalThreadGroups) {
+		TotalThreadGroups = totalThreadGroups;
 	}
 	
 }

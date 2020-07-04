@@ -16,7 +16,8 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 
 import io.perfwise.onfly.config.OnFlyConfig;
-import io.perfwise.onfly.model.ThreadGroups;
+import io.perfwise.onfly.model.ThreadGroupsModel;
+import io.perfwise.onfly.model.ThreadModel;
 import io.perfwise.onfly.model.User;
 import io.perfwise.onfly.rest.StandardResponse;
 import io.perfwise.onfly.rest.StatusResponse;
@@ -60,23 +61,22 @@ public class ThreadGroupService extends ThreadGroup {
 		}
 
 	}
-	
-	
+
 	public static StandardResponse getAllThreads() {
 		context = OnFlyConfig.getContext();
 		ThreadGroup tg = null;
 		JsonArray threadInfoJsonArray = new JsonArray();
 		HashSet<ThreadGroup> threadGroupList = OnFlyConfig.getJmeterThreadGroups();
-		
+
 		try {
 			Iterator<ThreadGroup> tmp = threadGroupList.iterator();
 			while (tmp.hasNext()) {
-				ThreadGroups tGroups = new ThreadGroups();
+				ThreadModel threadModel = new ThreadModel();
 				tg = tmp.next();
-				tGroups.setThreadGroupComment(tg.getComment());
-				tGroups.setThreadGroupName(tg.getName());
-				tGroups.setThreadNames(getThreadNamesForThreadGroup(tg.getName()));
-				threadInfoJsonArray.add(new Gson().toJsonTree(tGroups));
+				threadModel.setThreadGroupComment(tg.getComment());
+				threadModel.setThreadGroupName(tg.getName());
+				threadModel.setThreadNames(getThreadNamesForThreadGroup(tg.getName()));
+				threadInfoJsonArray.add(new Gson().toJsonTree(threadModel));
 			}
 			threadGroupList = null;
 			return new StandardResponse(StatusResponse.SUCCESS, threadInfoJsonArray);
@@ -86,20 +86,18 @@ public class ThreadGroupService extends ThreadGroup {
 		}
 	}
 
-
 	private static List<String> getThreadNamesForThreadGroup(String name) {
 		List<String> tNames = new ArrayList<String>();
-		
-		for(int i=0; i<OnFlyConfig.getJmeterThreadNames().size(); i++) {
-			if(OnFlyConfig.getJmeterThreadNames().get(i).contains(name)) {
+
+		for (int i = 0; i < OnFlyConfig.getJmeterThreadNames().size(); i++) {
+			if (OnFlyConfig.getJmeterThreadNames().get(i).contains(name)) {
 				tNames.add(OnFlyConfig.getJmeterThreadNames().get(i));
 			}
 		}
-		
+
 		return tNames;
 	}
 
-	
 	private static void removeUsers(User user) {
 
 		try {
@@ -113,24 +111,56 @@ public class ThreadGroupService extends ThreadGroup {
 		}
 	}
 
-	
 	public static void addUsers(User user) {
 		OnFlyConfig.setThreadGrp(threadGroup);
 		try {
 			OnFlyConfig.setCount(user.getThreadCount());
 			OnFlyConfig.setAddThread(true);
-			//OnFlyConfig.addThreads(user.getThreadCount());
+			// OnFlyConfig.addThreads(user.getThreadCount());
 		} catch (Exception e) {
 			LOGGER.error("Exception occurred while adding the threads");
 		}
 	}
 
-	
 	public static StandardResponse getAllThreadGroupsInfo() {
+		ThreadGroup tg = null;
+		int i = 0;
+		JsonArray threadGroupsJsonArray = new JsonArray();
 		HashSet<ThreadGroup> threadGroupList = OnFlyConfig.getJmeterThreadGroups();
-		//Iterator<ThreadGroup> tmp = threadGroupList.iterator();
+		int size = threadGroupList.size();
+
 		try {
-			return new StandardResponse(StatusResponse.SUCCESS, new Gson().toJsonTree(threadGroupList));
+			Iterator<ThreadGroup> tmp = threadGroupList.iterator();
+			while (tmp.hasNext()) {
+				ThreadGroupsModel tgModel = new ThreadGroupsModel();
+				tg = tmp.next();
+				tgModel.setThreadGroupComment(tg.getComment());
+				tgModel.setThreadGroupDelay(tg.getDelay());
+				tgModel.setThreadGroupName(tg.getName());
+				tgModel.setNumberOfThreads(tg.getNumberOfThreads());
+				tgModel.setThreadGroupRampUp(tg.getRampUp());
+				tgModel.setSchedularEnabled(tg.getScheduler());
+				tgModel.setThreadGroupNumber(i);
+
+				if (tg.getOnErrorStartNextLoop()) {
+					tgModel.setThreadGroupTestAction("StartNextLoop");
+				} else if (tg.getOnErrorStopTest()) {
+					tgModel.setThreadGroupTestAction("StopTest");
+				} else if (tg.getOnErrorStopTestNow()) {
+					tgModel.setThreadGroupTestAction("StopTestNow");
+				} else if (tg.getOnErrorStopThread()) {
+					tgModel.setThreadGroupTestAction("StopThread");
+				} else {
+					tgModel.setThreadGroupTestAction("Continue");
+				}
+
+				threadGroupsJsonArray.add(new Gson().toJsonTree(tgModel));
+				i += 1;
+			}
+
+			threadGroupList = null;
+
+			return new StandardResponse(StatusResponse.SUCCESS, Integer.toString(size), threadGroupsJsonArray);
 		} catch (Exception e) {
 			return new StandardResponse(StatusResponse.ERROR, "Error updating user count");
 		}
@@ -149,7 +179,6 @@ public class ThreadGroupService extends ThreadGroup {
 		LOGGER.info(String.format("Thread going to be stopped is %s", threadName));
 		return threadName;
 	}
-	
 
 	private static ThreadGroup getAppropriateThreadGroupfromList(String tgName) {
 		threadGroup = null;
@@ -168,9 +197,7 @@ public class ThreadGroupService extends ThreadGroup {
 
 		return threadGroup;
 	}
-	
-	
-	
+
 	// Getters and Setters
 
 	public JMeterContext getContext() {
@@ -180,7 +207,5 @@ public class ThreadGroupService extends ThreadGroup {
 	public void setContext(JMeterContext context) {
 		ThreadGroupService.context = OnFlyConfig.getContext();
 	}
-
-	
 
 }

@@ -39,10 +39,11 @@ public class PropertyService {
 				return new StandardResponse(StatusResponse.SUCCESS, "Jmeter Properties updated successfully");
 			} catch (Exception e) {
 
-				return new StandardResponse(StatusResponse.ERROR, "Error occurred while updating the property to Jmeter");
+				return new StandardResponse(StatusResponse.ERROR,
+						"Error occurred while updating the property to Jmeter");
 			}
 
-		} else if(props.getType().equalsIgnoreCase("system")){
+		} else if (props.getType().equalsIgnoreCase("system")) {
 			try {
 
 				JsonObject json = props.getProperties();
@@ -54,11 +55,19 @@ public class PropertyService {
 				return new StandardResponse(StatusResponse.SUCCESS, "System Properties updated successfully");
 			} catch (Exception e) {
 
-				return new StandardResponse(StatusResponse.ERROR, "Error occurred while updating the property to System");
+				return new StandardResponse(StatusResponse.ERROR,
+						"Error occurred while updating the property to System");
 			}
 		} else {
-			return new StandardResponse(StatusResponse.ERROR, "Invalid type defined.. Update is possible for tyoe jmeter and system");
+			return new StandardResponse(StatusResponse.ERROR,
+					"Invalid type defined.. Update is possible for tyoe jmeter and system");
 		}
-
 	}
+
+	public static StandardResponse getSlavesInfo() {
+
+		return new StandardResponse(StatusResponse.SUCCESS,
+				new Gson().toJsonTree(JMeterUtils.getJMeterProperties().get("remote_hosts")));
+	}
+
 }

@@ -10,7 +10,6 @@ import static spark.Spark.put;
 
 import java.net.InetAddress;
 
-import org.apache.jmeter.util.JMeterUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -168,12 +167,14 @@ public class RestController {
 				return new Gson().toJson(new StandardResponse(StatusResponse.AUTHERROR, "Invalid Credentials"));
 			});
 
-			// --- Get Jmeter variables info ---
 			put("/vars", (req, res) -> {
 				res.type("application/json");
 
 				if (Credentials.validate(req.headers("password"))) {
-					return new Gson().toJson(VariableService.setVars(req.body()));
+					JsonParser jsonParser = new JsonParser();
+					JsonElement jsonElement = jsonParser.parse(req.body());
+					JsonArray jsonArray = jsonElement.getAsJsonArray();
+					return new Gson().toJson(VariableService.setVars(jsonArray));
 				}
 				return new Gson().toJson(new StandardResponse(StatusResponse.AUTHERROR, "Invalid Credentials"));
 			});
@@ -181,23 +182,25 @@ public class RestController {
 			get("/slaves", (req, res) -> {
 				res.type("application/json");
 				if (Credentials.validate(req.headers("password"))) {
-					return new Gson().toJson(new StandardResponse(StatusResponse.SUCCESS,
-							JMeterUtils.getJMeterProperties().get("remote_hosts")));
+					return new Gson().toJson(PropertyService.getSlavesInfo());
 				}
 				return new Gson().toJson(new StandardResponse(StatusResponse.AUTHERROR, "Invalid Credentials"));
 			});
-			/*
-			 * 2020-06-30 23:14:25,375 INFO o.a.j.e.DistributedRunner: Failed to configure 127.0.0.1
-				2020-06-30 23:14:25,375 INFO o.a.j.e.DistributedRunner: Stopping remote engines
-				2020-06-30 23:14:25,375 INFO o.a.j.e.DistributedRunner: Remote engines have been stopped
-				2020-06-30 23:14:25,375 ERROR o.a.j.g.a.ActionRouter: Error processing org.apache.jmeter.gui.action.RemoteStart@15d0d6c9
-			 */
 
 			post("/stoptest", (req, res) -> {
 				res.type("application/json");
 
 				if (req.queryParams("action") != null && Credentials.validate(req.headers("password"))) {
 					return new Gson().toJson(TestService.stopTest(req.queryParams("action")));
+				}
+				return new Gson().toJson(new StandardResponse(StatusResponse.AUTHERROR, "Invalid Credentials"));
+			});
+			
+			post("/slaves/stoptest", (req, res) -> {
+				res.type("application/json");
+
+				if (req.queryParams("action") != null && Credentials.validate(req.headers("password"))) {
+					return new Gson().toJson(TestService.stopTestSlaves(req.queryParams("action"), req.queryParams("target-slave")));
 				}
 				return new Gson().toJson(new StandardResponse(StatusResponse.AUTHERROR, "Invalid Credentials"));
 			});

@@ -2,7 +2,7 @@ package io.perfwise.onfly.model;
 
 import java.util.List;
 
-public class ThreadGroups {
+public class ThreadModel {
 
 	String ThreadGroupName;
 	String ThreadGroupComment;

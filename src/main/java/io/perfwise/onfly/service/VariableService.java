@@ -1,10 +1,9 @@
 package io.perfwise.onfly.service;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
 import io.perfwise.onfly.config.OnFlyConfig;
@@ -38,12 +37,11 @@ public class VariableService {
 	}
 
 
-	public static StandardResponse setVars(String body) {
-		Map<String, String> variables = new HashMap<String, String>();
+	public static StandardResponse setVars(JsonArray jsonArray) {
 		try {
-			OnFlyConfig.setThreadVars(true);
-			//jVars = OnFlyConfig.setVariables(variables);
-			return new StandardResponse(StatusResponse.SUCCESS, variables);
+			OnFlyConfig.setVariablesInJson(jsonArray);
+			OnFlyConfig.setUpdateThreadVars(true);
+			return new StandardResponse(StatusResponse.SUCCESS, "Variable update success");
 
 		} catch (Exception e) {
 			return new StandardResponse(StatusResponse.ERROR, "Error in updating Jmeter variables :: "+e);
