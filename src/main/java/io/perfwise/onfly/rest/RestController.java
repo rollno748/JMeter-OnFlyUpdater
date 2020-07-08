@@ -156,7 +156,7 @@ public class RestController {
 			});
 
 			
-			put("/element", (req, res) -> {
+			put("/elements", (req, res) -> {
 				res.type("application/json");
 				if (Credentials.validate(req.headers("password"))) {
 					Element element = new Gson().fromJson(req.body(), Element.class);

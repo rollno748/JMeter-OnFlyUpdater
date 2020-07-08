@@ -43,9 +43,9 @@ public class ElementService extends JMeterTreeModel implements HashTreeTraverser
 			HashTree testPlanTreeRC = (HashTree) testPlan.get(context.getEngine());
 			SearchByClass<ResultCollector> search= new SearchByClass<>(ResultCollector.class);
 			testPlanTreeRC.traverse(search);
-			Collection<ResultCollector> test = search.getSearchResults();
+			Collection<ResultCollector> listeners = search.getSearchResults();
 
-			return new StandardResponse(StatusResponse.SUCCESS, "Element status updated in Jmeter");
+			return new StandardResponse(StatusResponse.SUCCESS, listeners);
 
 		} catch (Exception e) {
 			return new StandardResponse(StatusResponse.ERROR, e.toString());

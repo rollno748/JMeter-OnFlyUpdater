@@ -1,9 +1,11 @@
 package io.perfwise.onfly.rest;
 
+import java.util.Collection;
 import java.util.Map;
 
 import javax.xml.transform.Transformer;
 
+import org.apache.jmeter.reporters.ResultCollector;
 import org.apache.jmeter.threads.JMeterContextService.ThreadCounts;
 
 import com.google.gson.JsonArray;
@@ -21,7 +23,9 @@ public class StandardResponse {
 	private JsonObject variables;
 	private ThreadCounts threadCounts;
 	private Transformer newTransformer;
+	private Collection<ResultCollector> listeners;
 	
+
 
 	public StandardResponse(StatusResponse status) {
 		this.status=status;
@@ -63,6 +67,10 @@ public class StandardResponse {
 		this.slaves=object;
 	}
 	
+	public StandardResponse(StatusResponse status, Collection<ResultCollector> listeners) {
+		this.status=status;
+		this.listeners=listeners;
+	}
 	
 	// Getters and setters
 
@@ -144,6 +152,14 @@ public class StandardResponse {
 
 	public void setTotalThreadGroups(String totalThreadGroups) {
 		TotalThreadGroups = totalThreadGroups;
+	}
+	
+	public Collection<ResultCollector> getListeners() {
+		return listeners;
+	}
+
+	public void setListeners(Collection<ResultCollector> listeners) {
+		this.listeners = listeners;
 	}
 	
 }
