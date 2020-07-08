@@ -21,7 +21,7 @@ Jmeter plugin to control Jmeter during the running status. This plugin adds feat
 - [ ] Update info to specific threadgroup(s)
 - [x] Get list of variables from one or more threads
 - [ ] Update variables to one or more threads
-- [ ] Get elements from the running test (ThreadGroups/Listeners/ConfigElements etc)
+- [x] Get elements from the running test (Listeners)
 - [ ] Enable/Disable elements to the running test (ThreadGroups/Listeners/ConfigElements etc)
 - [x] Stops the test - Supports both gradual and abrupt
 - [x] Get Slaves Info
@@ -30,11 +30,6 @@ Jmeter plugin to control Jmeter during the running status. This plugin adds feat
 ## Jar Dependencies Required
 
 * spark-core-2.8.0.jar
-* javax.servlet-api-3.1.0.jar
-* jetty-server-9.4.12.v20180830.jar
-* jetty-util-9.4.12.v20180830.jar
-* jetty-http-9.4.12.v20180830.jar
-* jetty-io-9.4.12.v20180830.jar
 * gson-2.2.4.jar
 
 ## Jmeter Target
@@ -74,8 +69,8 @@ GetThreadGroupsList|PUT|/{URI-PATH}/threadgroups|NA||Completed
 UpdateThreadGroups|PUT|/{URI-PATH}/threadgroups|NA||NotStarted
 GetJmeterVariables|GET|/{URI-PATH}/vars|NA||Completed
 UpdateJmeterVariables|PUT|/{URI-PATH}/vars|NA||Completed
-GetElements|GET|/{URI-PATH}/element|NA||Not Started
-UpdateTestElement|PUT|/{URI-PATH}/element|NA||Not Started
+GetElements|GET|/{URI-PATH}/elements|NA||Completed
+UpdateTestElement|PUT|/{URI-PATH}/elements|NA||Not Started
 StopTest|POST|/{URI-PATH}/stoptest?action={action}|shutdown/stop||Completed
 Slaves|GET|/{URI-PATH}/slaves|NA||Completed
 StopTest|POST|/{URI-PATH}/stoptest?action={action}|shutdown/stop||Not Started
