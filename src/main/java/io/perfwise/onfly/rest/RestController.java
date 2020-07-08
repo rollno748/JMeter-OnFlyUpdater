@@ -32,6 +32,8 @@ import spark.Spark;
 public class RestController {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(RestController.class);
+	private static final double PLUGIN_VERSION=1.0;
+	
 	private static String UriPath;
 
 	public RestController(String UriPath) {
@@ -64,7 +66,7 @@ public class RestController {
 
 			get("/ping", (req, res) -> {
 				res.type("application/json");
-				return new Gson().toJson(new StandardResponse(StatusResponse.SUCCESS, "On-Fly-Updater Running"));
+				return new Gson().toJson(new StandardResponse(StatusResponse.SUCCESS, PLUGIN_VERSION));
 			});
 			
 

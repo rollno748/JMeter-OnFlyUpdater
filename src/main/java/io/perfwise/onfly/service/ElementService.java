@@ -41,6 +41,8 @@ public class ElementService extends JMeterTreeModel implements HashTreeTraverser
 			context = OnFlyConfig.getContext();
 			testPlan = OnFlyConfig.getTestPlan();
 			HashTree testPlanTreeRC = (HashTree) testPlan.get(context.getEngine());
+			SearchByClass<ResultCollector> ResultCollectorSearch= new SearchByClass<>(ResultCollector.class);
+			SearchByClass<ResultCollector> VisualizerSearch= new SearchByClass<>(ResultCollector.class);
 			SearchByClass<ResultCollector> search= new SearchByClass<>(ResultCollector.class);
 			testPlanTreeRC.traverse(search);
 			Collection<ResultCollector> listeners = search.getSearchResults();
@@ -56,16 +58,24 @@ public class ElementService extends JMeterTreeModel implements HashTreeTraverser
 	public static StandardResponse updateTestElement(Element element) {
 		try {
 
+//			context = OnFlyConfig.getContext();
+//			JMeterTreeModel jTreeModel = new JMeterTreeModel();
+//			HashTree jMeterTestPlanModel = jTreeModel.getTestPlan();
+//
+//			LOGGER.info("Tree model :: " + jMeterTestPlanModel);
+//
+//			JMeterContextService.getContext().getThreadGroup().setEnabled(false);
+//
+//			Controller controller = new GenericController();
+//			controller.addTestElement(controller);
+			
 			context = OnFlyConfig.getContext();
-			JMeterTreeModel jTreeModel = new JMeterTreeModel();
-			HashTree jMeterTestPlanModel = jTreeModel.getTestPlan();
-
-			LOGGER.info("Tree model :: " + jMeterTestPlanModel);
-
-			JMeterContextService.getContext().getThreadGroup().setEnabled(false);
-
-			Controller controller = new GenericController();
-			controller.addTestElement(controller);
+			testPlan = OnFlyConfig.getTestPlan();
+			HashTree testPlanTreeRC = (HashTree) testPlan.get(context.getEngine());
+			SearchByClass<ResultCollector> search= new SearchByClass<>(ResultCollector.class);
+			testPlanTreeRC.traverse(search);
+			Collection<ResultCollector> listeners = search.getSearchResults();
+			
 
 			return new StandardResponse(StatusResponse.SUCCESS, "Element status updated in Jmeter");
 

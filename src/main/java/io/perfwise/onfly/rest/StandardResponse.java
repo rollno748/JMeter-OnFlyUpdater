@@ -12,7 +12,8 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
 public class StandardResponse {
-
+	
+	private String pluginVersion;
 	private StatusResponse status;
 	private String message;
 	private String TotalThreadGroups;
@@ -24,11 +25,16 @@ public class StandardResponse {
 	private ThreadCounts threadCounts;
 	private Transformer newTransformer;
 	private Collection<ResultCollector> listeners;
-	
 
 
 	public StandardResponse(StatusResponse status) {
 		this.status=status;
+	}
+
+	public StandardResponse(StatusResponse status, double pluginVersion) {
+		this.status=status;
+		this.message="On-Fly-Updater Running";
+		this.pluginVersion=Double.toString(pluginVersion);
 	}
 
 	public StandardResponse(StatusResponse status, String message) {
@@ -160,6 +166,14 @@ public class StandardResponse {
 
 	public void setListeners(Collection<ResultCollector> listeners) {
 		this.listeners = listeners;
+	}
+	
+	public String getPluginVersion() {
+		return pluginVersion;
+	}
+
+	public void setPluginVersion(String pluginVersion) {
+		this.pluginVersion = pluginVersion;
 	}
 	
 }
