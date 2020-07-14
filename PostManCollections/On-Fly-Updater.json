@@ -69,7 +69,7 @@
 					}
 				],
 				"url": {
-					"raw": "http://localhost:1304/di-jmeter/logger/info",
+					"raw": "http://localhost:1304/di-jmeter/logger/debug",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -78,7 +78,7 @@
 					"path": [
 						"di-jmeter",
 						"logger",
-						"info"
+						"debug"
 					]
 				}
 			},
@@ -209,7 +209,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "[\n\t{\n        \"action\": \"remove\",\n        \"threadCount\": 3,\n        \"threadGroup\": \"TG1\"\n    },{\n        \"action\": \"add\",\n        \"threadCount\": 1,\n        \"threadGroup\": \"TG2\"\n    }\n]",
+					"raw": "[\n\t{\n        \"action\": \"add\",\n        \"threadCount\": 1,\n        \"threadGroup\": \"TG1\"\n    },{\n        \"action\": \"remove\",\n        \"threadCount\": 1,\n        \"threadGroup\": \"TG2\"\n    },{\n        \"action\": \"add\",\n        \"threadCount\": 1,\n        \"threadGroup\": \"TG3\"\n    }\n]",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -275,6 +275,10 @@
 						"value": "Upd@t3M3"
 					}
 				],
+				"body": {
+					"mode": "raw",
+					"raw": "[\n\t{\n        \"threadGroupName\": \"TG3\",\n        \"setActive\": false\n    }\n]"
+				},
 				"url": {
 					"raw": "http://localhost:1304/di-jmeter/threadgroups",
 					"protocol": "http",
@@ -425,6 +429,32 @@
 					"path": [
 						"di-jmeter",
 						"elements"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "AggregateResults",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "password",
+						"type": "text",
+						"value": "Upd@t3M3"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:1304/di-jmeter/aggregateview",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "1304",
+					"path": [
+						"di-jmeter",
+						"aggregateview"
 					]
 				}
 			},
