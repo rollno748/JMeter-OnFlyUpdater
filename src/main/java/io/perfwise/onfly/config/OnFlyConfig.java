@@ -46,7 +46,7 @@ public class OnFlyConfig extends AbstractTestElement implements ConfigElement, S
 	private static int count;
 	private static Field testPlan;
 
-	
+
 	public void testStarted() {
 		this.setRunningVersion(true);
 		TestBeanHelper.prepare(this);
@@ -117,6 +117,7 @@ public class OnFlyConfig extends AbstractTestElement implements ConfigElement, S
 		if (isAddThread()) {
 			addThreads(count);
 		}
+		
 	}
 	
 
@@ -136,6 +137,7 @@ public class OnFlyConfig extends AbstractTestElement implements ConfigElement, S
 			threadGroups.addNewThread(0, jmeterEngine);
 		}
 	}
+	
 	
 	// Getter and Setters
 
@@ -259,5 +261,7 @@ public class OnFlyConfig extends AbstractTestElement implements ConfigElement, S
 	public static void setTestPlan(Field testPlan) {
 		OnFlyConfig.testPlan = testPlan;
 	}
+	
+
 	
 }

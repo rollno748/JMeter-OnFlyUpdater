@@ -5,12 +5,9 @@ import java.awt.event.ActionListener;
 import java.lang.reflect.Field;
 import java.util.Collection;
 
-import org.apache.jmeter.control.Controller;
-import org.apache.jmeter.control.GenericController;
 import org.apache.jmeter.gui.tree.JMeterTreeModel;
 import org.apache.jmeter.reporters.ResultCollector;
 import org.apache.jmeter.threads.JMeterContext;
-import org.apache.jmeter.threads.JMeterContextService;
 import org.apache.jmeter.threads.ThreadGroup;
 import org.apache.jorphan.collections.HashTree;
 import org.apache.jorphan.collections.HashTreeTraverser;
@@ -33,16 +30,13 @@ public class ElementService extends JMeterTreeModel implements HashTreeTraverser
 	private static JMeterContext context;
 	private static Field testPlan;
 
-	// GuiPackage
-	// JMeterGUIComponent getGui
-
 	public static StandardResponse getTestElementsInfo() {
 		try {
 			context = OnFlyConfig.getContext();
 			testPlan = OnFlyConfig.getTestPlan();
 			HashTree testPlanTreeRC = (HashTree) testPlan.get(context.getEngine());
-			SearchByClass<ResultCollector> ResultCollectorSearch= new SearchByClass<>(ResultCollector.class);
-			SearchByClass<ResultCollector> VisualizerSearch= new SearchByClass<>(ResultCollector.class);
+			//SearchByClass<ResultCollector> ResultCollectorSearch= new SearchByClass<>(ResultCollector.class);
+			//SearchByClass<ResultCollector> VisualizerSearch= new SearchByClass<>(ResultCollector.class);
 			SearchByClass<ResultCollector> search= new SearchByClass<>(ResultCollector.class);
 			testPlanTreeRC.traverse(search);
 			Collection<ResultCollector> listeners = search.getSearchResults();
@@ -76,6 +70,9 @@ public class ElementService extends JMeterTreeModel implements HashTreeTraverser
 			testPlanTreeRC.traverse(search);
 			Collection<ResultCollector> listeners = search.getSearchResults();
 			
+			listeners.forEach(tmpList -> {
+				tmpList.setEnabled(false);
+				});
 
 			return new StandardResponse(StatusResponse.SUCCESS, "Element status updated in Jmeter");
 

@@ -16,6 +16,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 
 import io.perfwise.onfly.config.OnFlyConfig;
+import io.perfwise.onfly.model.TGModel;
 import io.perfwise.onfly.model.ThreadGroupsModel;
 import io.perfwise.onfly.model.ThreadModel;
 import io.perfwise.onfly.model.User;
@@ -33,6 +34,50 @@ public class ThreadGroupService extends ThreadGroup {
 	public ThreadGroupService() {
 		this.setContext(OnFlyConfig.getContext());
 	}
+	
+	
+	public static StandardResponse updateThreadGroups(JsonArray jsonArray) {
+
+		try {
+
+			for (JsonElement jsonElement : jsonArray) {
+				TGModel tgModel = new Gson().fromJson(jsonElement, TGModel.class);
+				threadGroup = getAppropriateThreadGroupfromList(tgModel.getThreadGroupName());
+				
+				if (!(threadGroup == null)) {
+					try {
+						toggleThreadGroup(tgModel.isSetActive());
+					}catch (Exception e) {
+						LOGGER.info(String.format("ThreadGroup %s toggled successfully !!", tgModel.getThreadGroupName()));
+					}
+					
+					threadGroup = null;
+				}
+			}
+
+			return new StandardResponse(StatusResponse.SUCCESS, "ThreadGroup toggled successfully");
+
+		} catch (Exception e) {
+			return new StandardResponse(StatusResponse.ERROR, "Error in Toggling ThreadGroup Element");
+		}
+
+	}
+
+	
+	private static void toggleThreadGroup(boolean setActive) {
+		OnFlyConfig.setThreadGrp(threadGroup);
+		
+		if(setActive) {
+			OnFlyConfig.setCount(1);
+			OnFlyConfig.setAddThread(true);
+		}else {
+			while (threadGroup.numberOfActiveThreads() >= 1) {
+				threadGroup.stopThread(getRandomThreadNames(OnFlyConfig.getJmeterThreadNames(), threadGroup.getName()),
+						true);
+			}
+		}
+	}
+
 
 	public static StandardResponse updateThreads(JsonArray jsonArray) {
 
@@ -46,9 +91,9 @@ public class ThreadGroupService extends ThreadGroup {
 				threadGroup = getAppropriateThreadGroupfromList(user.getThreadGroup());
 				if (!(threadGroup == null)) {
 					if (user.getAction().equalsIgnoreCase("add")) {
-						addUsers(user);
+						addUsers(user.getThreadCount());
 					} else if (user.getAction().equalsIgnoreCase("remove")) {
-						removeUsers(user);
+						removeUsers(user.getThreadCount(), user.getThreadGroup());
 					}
 					threadGroup = null;
 				}
@@ -61,6 +106,33 @@ public class ThreadGroupService extends ThreadGroup {
 		}
 
 	}
+
+//	public static StandardResponse updateThreadGroups(JsonArray jsonArray) {
+//
+//		try {
+//
+//			String returnStatement = null;
+//
+//			for (JsonElement jsonElement : jsonArray) {
+//				TGModel tgModel = new Gson().fromJson(jsonElement, TGModel.class);
+//
+//				threadGroup = getAppropriateThreadGroupfromList(tgModel.getThreadGroupName());
+//				
+//				if (!(threadGroup == null)) {
+//					threadGroup.setEnabled(tgModel.isSetActive());
+//					returnStatement = String.format("ThreadGroup %s Disabled Successfully",
+//								tgModel.getThreadGroupName());
+//					threadGroup = null;
+//				}
+//			}
+//
+//			return new StandardResponse(StatusResponse.SUCCESS, returnStatement);
+//
+//		} catch (Exception e) {
+//			return new StandardResponse(StatusResponse.ERROR, "Error in updating ThreadGroup Element");
+//		}
+//
+//	}
 
 	public static StandardResponse getAllThreads() {
 		context = OnFlyConfig.getContext();
@@ -98,12 +170,13 @@ public class ThreadGroupService extends ThreadGroup {
 		return tNames;
 	}
 
-	private static void removeUsers(User user) {
+	private static void removeUsers(int userCount, String threadGroupName) {
 
 		try {
-			for (int i = 0; i < user.getThreadCount(); i++) {
-				if (threadGroup.numberOfActiveThreads() >= user.getThreadCount()) {
-					threadGroup.stopThread(getRandomThreadNames(OnFlyConfig.getJmeterThreadNames(), user), true);
+			for (int i = 0; i < userCount; i++) {
+				if (threadGroup.numberOfActiveThreads() >= userCount) {
+					threadGroup.stopThread(getRandomThreadNames(OnFlyConfig.getJmeterThreadNames(), threadGroupName),
+							true);
 				}
 			}
 		} catch (Exception e) {
@@ -111,12 +184,11 @@ public class ThreadGroupService extends ThreadGroup {
 		}
 	}
 
-	public static void addUsers(User user) {
+	public static void addUsers(int userCount) {
 		OnFlyConfig.setThreadGrp(threadGroup);
 		try {
-			OnFlyConfig.setCount(user.getThreadCount());
+			OnFlyConfig.setCount(userCount);
 			OnFlyConfig.setAddThread(true);
-			// OnFlyConfig.addThreads(user.getThreadCount());
 		} catch (Exception e) {
 			LOGGER.error("Exception occurred while adding the threads");
 		}
@@ -167,13 +239,13 @@ public class ThreadGroupService extends ThreadGroup {
 	}
 
 	// returns a random thread name from the associated threadgroup.
-	private static String getRandomThreadNames(List<String> threadNames, User user) {
+	private static String getRandomThreadNames(List<String> threadNames, String threadGroupName) {
 		Random rand = new Random();
 		String threadName = null;
 
 		do {
 			threadName = threadNames.get(rand.nextInt(threadNames.size()));
-		} while (!threadName.contains(user.getThreadGroup()));
+		} while (!threadName.contains(threadGroupName));
 
 		OnFlyConfig.updateThreadNameList(threadName);
 		LOGGER.info(String.format("Thread going to be stopped is %s", threadName));

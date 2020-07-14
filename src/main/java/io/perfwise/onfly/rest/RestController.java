@@ -21,6 +21,7 @@ import com.google.gson.JsonParser;
 import io.perfwise.onfly.model.Element;
 import io.perfwise.onfly.model.Property;
 import io.perfwise.onfly.model.VariableModel;
+import io.perfwise.onfly.service.AggregateService;
 import io.perfwise.onfly.service.ElementService;
 import io.perfwise.onfly.service.PropertyService;
 import io.perfwise.onfly.service.TestService;
@@ -142,8 +143,10 @@ public class RestController {
 			put("/threadgroups", (req, res) -> {
 				res.type("application/json");
 				if (Credentials.validate(req.headers("password"))) {
-					// new Gson().toJson(ThreadGroupService.getAllThreadGroupsInfo());
-					return new Gson().toJson(ThreadGroupService.getAllThreadGroupsInfo());
+					JsonParser jsonParser = new JsonParser();
+					JsonElement jsonElement = jsonParser.parse(req.body());
+					JsonArray jsonArray = jsonElement.getAsJsonArray();
+					return new Gson().toJson(ThreadGroupService.updateThreadGroups(jsonArray));
 				}
 				return new Gson().toJson(new StandardResponse(StatusResponse.AUTHERROR, "Invalid Credentials"));
 			});
@@ -187,22 +190,31 @@ public class RestController {
 				}
 				return new Gson().toJson(new StandardResponse(StatusResponse.AUTHERROR, "Invalid Credentials"));
 			});
-
 			
-			get("/slaves", (req, res) -> {
+			
+			get("/aggregateview", (req, res) -> {
 				res.type("application/json");
 				if (Credentials.validate(req.headers("password"))) {
-					return new Gson().toJson(PropertyService.getSlavesInfo());
+					return new Gson().toJson(AggregateService.currentResults());
 				}
 				return new Gson().toJson(new StandardResponse(StatusResponse.AUTHERROR, "Invalid Credentials"));
 			});
-			
 
+			
 			post("/stoptest", (req, res) -> {
 				res.type("application/json");
 
 				if (req.queryParams("action") != null && Credentials.validate(req.headers("password"))) {
 					return new Gson().toJson(TestService.stopTest(req.queryParams("action")));
+				}
+				return new Gson().toJson(new StandardResponse(StatusResponse.AUTHERROR, "Invalid Credentials"));
+			});
+			
+			
+			get("/slaves", (req, res) -> {
+				res.type("application/json");
+				if (Credentials.validate(req.headers("password"))) {
+					return new Gson().toJson(PropertyService.getSlavesInfo());
 				}
 				return new Gson().toJson(new StandardResponse(StatusResponse.AUTHERROR, "Invalid Credentials"));
 			});
