@@ -146,6 +146,7 @@ public class RestController {
 					JsonParser jsonParser = new JsonParser();
 					JsonElement jsonElement = jsonParser.parse(req.body());
 					JsonArray jsonArray = jsonElement.getAsJsonArray();
+					
 					return new Gson().toJson(ThreadGroupService.updateThreadGroups(jsonArray));
 				}
 				return new Gson().toJson(new StandardResponse(StatusResponse.AUTHERROR, "Invalid Credentials"));

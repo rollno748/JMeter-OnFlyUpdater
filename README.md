@@ -18,7 +18,7 @@ Jmeter plugin to control Jmeter during the running status. This plugin adds feat
 - [x] Get All the threads info 
 - [x] Add/Remove users/threads to specific threadgroup(s). Supports multiple updation at single call
 - [x] Get info releated to specific threadgroup(s)
-- [ ] Update info to specific threadgroup(s)
+- [x] Update info to specific threadgroup(s)
 - [x] Get list of variables from one or more threads
 - [ ] Update variables to one or more threads
 - [x] Get elements from the running test (Listeners)
@@ -66,14 +66,14 @@ UpdateProperties|PUT|/{URI-PATH}/properties|NA||Completed
 GetThreads|GET|/{URI-PATH}/threads|NA||Completed
 UpdateThreads|PUT|/{URI-PATH}/threads|NA||Completed
 GetThreadGroupsList|PUT|/{URI-PATH}/threadgroups|NA||Completed
-UpdateThreadGroups|PUT|/{URI-PATH}/threadgroups|NA||NotStarted
+UpdateThreadGroups|PUT|/{URI-PATH}/threadgroups|NA||Completed
 GetJmeterVariables|GET|/{URI-PATH}/vars|NA||Completed
 UpdateJmeterVariables|PUT|/{URI-PATH}/vars|NA||Completed
 GetElements|GET|/{URI-PATH}/elements|NA||Completed
 UpdateTestElement|PUT|/{URI-PATH}/elements|NA||Not Started
 StopTest|POST|/{URI-PATH}/stoptest?action={action}|shutdown/stop||Completed
 Slaves|GET|/{URI-PATH}/slaves|NA||Completed
-StopTest|POST|/{URI-PATH}/stoptest?action={action}|shutdown/stop||Not Started
+StopTest-Slaves|POST|/{URI-PATH}/slaves/stoptest?action={action}|shutdown/stop||Not Started
 
 ## Additional Info
 Some more info on the plugin
@@ -84,6 +84,7 @@ Some more info on the plugin
 
 ## Known Issues
 
+- [x] Updating thread groups is working, resposne is not retrieved from the server
 - [x] Updating test element in the testplan is not working
 - [x] Sending signals to slaves is not working
 

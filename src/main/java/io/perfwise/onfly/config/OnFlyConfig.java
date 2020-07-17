@@ -5,6 +5,8 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.jmeter.config.ConfigElement;
 import org.apache.jmeter.engine.StandardJMeterEngine;
@@ -20,6 +22,8 @@ import org.apache.jmeter.threads.JMeterContextService;
 import org.apache.jmeter.threads.JMeterThread;
 import org.apache.jmeter.threads.JMeterVariables;
 import org.apache.jmeter.threads.ThreadGroup;
+import org.apache.jmeter.util.JMeterUtils;
+import org.apache.jmeter.visualizers.SamplingStatCalculator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -43,9 +47,14 @@ public class OnFlyConfig extends AbstractTestElement implements ConfigElement, S
 	private static ThreadGroup threadGroups;
 	private static JMeterVariables variables;
 	private static boolean addThread;
+	private static boolean isResultsViewer;
 	private static int count;
 	private static Field testPlan;
-
+	
+	private final Map<String, SamplingStatCalculator> tableRows = new ConcurrentHashMap<>();
+	private static final String TOTAL_ROW_LABEL = JMeterUtils.getResString("aggregate_report_total_label");
+	private final String useGroupName = JMeterUtils.getResString("aggregate_graph_use_group_name");
+	private final transient Object lock = new Object();
 
 	public void testStarted() {
 		this.setRunningVersion(true);
@@ -118,8 +127,34 @@ public class OnFlyConfig extends AbstractTestElement implements ConfigElement, S
 			addThreads(count);
 		}
 		
+		if(true) {
+			//add( res);
+			//isResultsViewer()
+		}
+		
 	}
 	
+
+//	private void add(final SampleResult res) {
+//		SamplingStatCalculator row = tableRows.computeIfAbsent(
+//                res.getSampleLabel(useGroupName.isSelected()),
+//                label -> {
+//                    SamplingStatCalculator newRow = new SamplingStatCalculator(label);
+//                    newRows.add(newRow);
+//                    return newRow;
+//                });
+//        synchronized (row) {
+//            /*
+//             * Synch is needed because multiple threads can update the counts.
+//             */
+//            row.addSample(res);
+//        }
+//        SamplingStatCalculator tot = tableRows.get(TOTAL_ROW_LABEL);
+//        synchronized(lock) {
+//            tot.addSample(res);
+//        }
+//       // dataChanged = true;
+//	}
 
 	@Override
 	public void threadStarted() {
@@ -262,6 +297,13 @@ public class OnFlyConfig extends AbstractTestElement implements ConfigElement, S
 		OnFlyConfig.testPlan = testPlan;
 	}
 	
+	public static boolean isResultsViewer() {
+		return isResultsViewer;
+	}
+
+	public static void setResultsViewer(boolean isResultsViewer) {
+		OnFlyConfig.isResultsViewer = isResultsViewer;
+	}
 
 	
 }

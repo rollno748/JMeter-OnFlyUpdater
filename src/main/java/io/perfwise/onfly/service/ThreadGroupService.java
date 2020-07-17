@@ -55,8 +55,7 @@ public class ThreadGroupService extends ThreadGroup {
 				}
 			}
 
-			return new StandardResponse(StatusResponse.SUCCESS, "ThreadGroup toggled successfully");
-
+			return new StandardResponse(StatusResponse.SUCCESS, "Threadgroup toggled successfully");
 		} catch (Exception e) {
 			return new StandardResponse(StatusResponse.ERROR, "Error in Toggling ThreadGroup Element");
 		}
@@ -71,7 +70,7 @@ public class ThreadGroupService extends ThreadGroup {
 			OnFlyConfig.setCount(1);
 			OnFlyConfig.setAddThread(true);
 		}else {
-			while (threadGroup.numberOfActiveThreads() >= 1) {
+			while (threadGroup.numberOfActiveThreads() != 0) {
 				threadGroup.stopThread(getRandomThreadNames(OnFlyConfig.getJmeterThreadNames(), threadGroup.getName()),
 						true);
 			}
