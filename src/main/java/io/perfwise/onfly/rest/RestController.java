@@ -16,11 +16,11 @@ import org.slf4j.LoggerFactory;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 import io.perfwise.onfly.model.Element;
 import io.perfwise.onfly.model.Property;
-import io.perfwise.onfly.model.VariableModel;
 import io.perfwise.onfly.service.AggregateService;
 import io.perfwise.onfly.service.ElementService;
 import io.perfwise.onfly.service.PropertyService;
@@ -185,9 +185,10 @@ public class RestController {
 				res.type("application/json");
 				
 				if (Credentials.validate(req.headers("password"))) {
-					VariableModel vars	= new Gson().fromJson(req.body(), VariableModel.class);
-					
-					return new Gson().toJson(VariableService.setVars(vars));
+					JsonParser jsonParser = new JsonParser();
+					JsonElement jsonElement = jsonParser.parse(req.body());
+					JsonObject json = jsonElement.getAsJsonObject();
+					return new Gson().toJson(VariableService.setVars(json));
 				}
 				return new Gson().toJson(new StandardResponse(StatusResponse.AUTHERROR, "Invalid Credentials"));
 			});

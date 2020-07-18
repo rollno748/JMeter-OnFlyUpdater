@@ -51,17 +51,6 @@ public class ElementService extends JMeterTreeModel implements HashTreeTraverser
 
 	public static StandardResponse updateTestElement(Element element) {
 		try {
-
-//			context = OnFlyConfig.getContext();
-//			JMeterTreeModel jTreeModel = new JMeterTreeModel();
-//			HashTree jMeterTestPlanModel = jTreeModel.getTestPlan();
-//
-//			LOGGER.info("Tree model :: " + jMeterTestPlanModel);
-//
-//			JMeterContextService.getContext().getThreadGroup().setEnabled(false);
-//
-//			Controller controller = new GenericController();
-//			controller.addTestElement(controller);
 			
 			context = OnFlyConfig.getContext();
 			testPlan = OnFlyConfig.getTestPlan();

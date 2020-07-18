@@ -20,7 +20,7 @@ Jmeter plugin to control Jmeter during the running status. This plugin adds feat
 - [x] Get info releated to specific threadgroup(s)
 - [x] Update info to specific threadgroup(s)
 - [x] Get list of variables from one or more threads
-- [ ] Update variables to one or more threads
+- [x] Update variables to one or more threads
 - [x] Get elements from the running test (Listeners)
 - [ ] Enable/Disable elements to the running test (ThreadGroups/Listeners/ConfigElements etc)
 - [x] Stops the test - Supports both gradual and abrupt
@@ -84,7 +84,7 @@ Some more info on the plugin
 
 ## Known Issues
 
-- [x] Updating thread groups is working, resposne is not retrieved from the server
+- [x] Updating thread groups is working, response is not retrieved from the server
 - [x] Updating test element in the testplan is not working
 - [x] Sending signals to slaves is not working
 

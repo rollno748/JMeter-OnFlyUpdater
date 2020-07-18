@@ -5,8 +5,6 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.jmeter.config.ConfigElement;
 import org.apache.jmeter.engine.StandardJMeterEngine;
@@ -22,8 +20,6 @@ import org.apache.jmeter.threads.JMeterContextService;
 import org.apache.jmeter.threads.JMeterThread;
 import org.apache.jmeter.threads.JMeterVariables;
 import org.apache.jmeter.threads.ThreadGroup;
-import org.apache.jmeter.util.JMeterUtils;
-import org.apache.jmeter.visualizers.SamplingStatCalculator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -51,10 +47,10 @@ public class OnFlyConfig extends AbstractTestElement implements ConfigElement, S
 	private static int count;
 	private static Field testPlan;
 	
-	private final Map<String, SamplingStatCalculator> tableRows = new ConcurrentHashMap<>();
-	private static final String TOTAL_ROW_LABEL = JMeterUtils.getResString("aggregate_report_total_label");
-	private final String useGroupName = JMeterUtils.getResString("aggregate_graph_use_group_name");
-	private final transient Object lock = new Object();
+	//private final Map<String, SamplingStatCalculator> tableRows = new ConcurrentHashMap<>();
+	//private static final String TOTAL_ROW_LABEL = JMeterUtils.getResString("aggregate_report_total_label");
+	//private final String useGroupName = JMeterUtils.getResString("aggregate_graph_use_group_name");
+	//private final transient Object lock = new Object();
 
 	public void testStarted() {
 		this.setRunningVersion(true);
@@ -285,8 +281,8 @@ public class OnFlyConfig extends AbstractTestElement implements ConfigElement, S
 		return variables;
 	}
 
-	public static void setVariables(JMeterVariables variables) {
-		OnFlyConfig.variables = variables;
+	public static void setVariables(JMeterVariables vars) {
+		OnFlyConfig.variables = vars;
 	}
 
 	public static Field getTestPlan() {

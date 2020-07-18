@@ -4,11 +4,9 @@ import java.util.Map.Entry;
 
 import org.apache.jmeter.threads.JMeterVariables;
 
-import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
 import io.perfwise.onfly.config.OnFlyConfig;
-import io.perfwise.onfly.model.VariableModel;
 import io.perfwise.onfly.rest.StandardResponse;
 import io.perfwise.onfly.rest.StatusResponse;
 
@@ -35,17 +33,22 @@ public class VariableService {
 		}
 	}
 
-	public static StandardResponse setVars(VariableModel vars) {
-
-		JMeterVariables jVars = OnFlyConfig.getContext().getVariables();
+	@SuppressWarnings("unlikely-arg-type")
+	public static StandardResponse setVars(JsonObject json) {
 
 		try {
-			JsonObject json = (JsonObject) new Gson().toJsonTree(vars);
+			JMeterVariables jVars = OnFlyConfig.getContext().getVariables();
 
-			json.entrySet().parallelStream().forEach(entry -> {
-				jVars.put(entry.getKey(), entry.getValue().getAsString());
+			jVars.entrySet().parallelStream().forEach(entry -> {
+				if (json.has(entry.getKey())) {
+					if (!(json.get(entry.getKey()).equals(entry.getValue().toString()))) {
+						jVars.put(entry.getKey(), json.get(entry.getKey()).toString());
+					}
+				}
 			});
-
+			
+			OnFlyConfig.setVariables(jVars);
+			
 			return new StandardResponse(StatusResponse.SUCCESS, "Variable update success");
 
 		} catch (Exception e) {
