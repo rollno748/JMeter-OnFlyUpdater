@@ -44,6 +44,7 @@ public class ElementService extends JMeterTreeModel implements HashTreeTraverser
 			return new StandardResponse(StatusResponse.SUCCESS, listeners);
 
 		} catch (Exception e) {
+			LOGGER.info("Eception occurred on getting element info ::"+ e);
 			return new StandardResponse(StatusResponse.ERROR, e.toString());
 		}
 
