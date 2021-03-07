@@ -104,5 +104,12 @@ Some more info on the plugin
 * Markdown editor online (https://dillinger.io/)
 
 
-Please rate a :star2: if you like it. Feel free to raise a issue for the bugs you see in this. 
+## 💲 Donate
+<a href="https://www.buymeacoffee.com/rollno748" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/v2/default-green.png" alt="Buy Me A Coffee" style="max-width:20%;" ></a> 
+
+Please rate a :star2: if you like it.
+
+Please open up a :beetle: - If you experienced something.
+ 
+
 
