@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "985c1bb3-6059-4b65-9d9d-cdf80512b7b2",
+		"_postman_id": "5355bc05-c47f-4453-88c7-e41af9867784",
 		"name": "On-Fly-Updater",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
@@ -538,6 +538,11 @@
 						"key": "password",
 						"type": "text",
 						"value": "Upd@t3M3"
+					},
+					{
+						"key": "slaves",
+						"value": "all",
+						"type": "default"
 					}
 				],
 				"body": {
@@ -560,6 +565,5 @@
 			},
 			"response": []
 		}
-	],
-	"protocolProfileBehavior": {}
+	]
 }

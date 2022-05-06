@@ -1,7 +1,7 @@
-# Jmeter-OnFlyUpdater
+# JMeter-OnFlyUpdater
 
 ## Introduction
-Jmeter plugin to control Jmeter during the running status. This plugin adds feature to control jmeter over REST APIs
+JMeter plugin to control Jmeter during the running status. This plugin adds feature to control jmeter over REST APIs
 
 ## Required Components
 
@@ -73,7 +73,7 @@ GetElements|GET|/{URI-PATH}/elements|NA||Completed
 UpdateTestElement|PUT|/{URI-PATH}/elements|NA||Not Started
 StopTest|POST|/{URI-PATH}/stoptest?action={action}|shutdown/stop||Completed
 Slaves|GET|/{URI-PATH}/slaves|NA||Completed
-StopTest-Slaves|POST|/{URI-PATH}/slaves/stoptest?action={action}|shutdown/stop||Not Started
+StopTest-Slaves|POST|/{URI-PATH}/slaves/stoptest?action={action}|shutdown/stop||Needs Validation
 
 ## Additional Info
 Some more info on the plugin
@@ -95,7 +95,6 @@ Some more info on the plugin
 * Examples: https://www.baeldung.com/spark-framework-rest-api
 * https://stackoverflow.com/questions/51054754/jmeter-ignore-view-results-tree-listener-only-in-non-gui
 * https://stackoverflow.com/questions/55796108/jmeter-how-to-disable-listener-by-code-groovy
-* 
 
 ## Tools Used
 

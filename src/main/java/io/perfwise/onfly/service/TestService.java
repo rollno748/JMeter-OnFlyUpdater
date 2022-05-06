@@ -1,13 +1,10 @@
 package io.perfwise.onfly.service;
 
-import java.util.Arrays;
-
-import javax.xml.XMLConstants;
-import javax.xml.transform.Source;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.stream.StreamSource;
-
+import io.perfwise.onfly.config.OnFlyConfig;
+import io.perfwise.onfly.rest.StandardResponse;
+import io.perfwise.onfly.rest.StatusResponse;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.jmeter.engine.DistributedRunner;
 import org.apache.jmeter.engine.StandardJMeterEngine;
 import org.apache.jmeter.gui.GuiPackage;
 import org.apache.jmeter.gui.action.SchematicView;
@@ -18,9 +15,12 @@ import org.apache.logging.log4j.core.config.Configurator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import io.perfwise.onfly.config.OnFlyConfig;
-import io.perfwise.onfly.rest.StandardResponse;
-import io.perfwise.onfly.rest.StatusResponse;
+import javax.xml.XMLConstants;
+import javax.xml.transform.Source;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.stream.StreamSource;
+import java.util.Arrays;
+import java.util.List;
 
 public class TestService extends SchematicView {
 	
@@ -103,29 +103,32 @@ public class TestService extends SchematicView {
 	
 	
 	public static StandardResponse stopTestSlaves(String action, String targettedSlaves) {
-		//DistributedRunner dt = new DistributedRunner();
+
+		if(targettedSlaves.isEmpty()){
+			return new StandardResponse(StatusResponse.ERROR, "LGs list should not be empty or null -> try checking /slaves to get the list of LGs to control");
+		}
+
+		List<String> slavesList = Arrays.asList(targettedSlaves.split(","));
+		DistributedRunner distributedRunner = OnFlyConfig.getDistributedRunner();
+
+		try {
+			if (action.toLowerCase().equals("shutdown")) {
+				distributedRunner.shutdown(slavesList);
+				return new StandardResponse(StatusResponse.SUCCESS, "JMeter LG(s) Shutting down !!");
+			}else {
+				distributedRunner.stop(slavesList);
+				return new StandardResponse(StatusResponse.SUCCESS, "JMeter LG(s) Stopped abruptly !!");
+			}
+		} catch (Exception e) {
+			return new StandardResponse(StatusResponse.ERROR, e.toString());
+		}
+
 		/*
 			2020-06-30 23:14:25,375 INFO o.a.j.e.DistributedRunner: Failed to configure 127.0.0.1
 			2020-06-30 23:14:25,375 INFO o.a.j.e.DistributedRunner: Stopping remote engines
 			2020-06-30 23:14:25,375 INFO o.a.j.e.DistributedRunner: Remote engines have been stopped
 			2020-06-30 23:14:25,375 ERROR o.a.j.g.a.ActionRouter: Error processing org.apache.jmeter.gui.action.RemoteStart@15d0d6c9
 		 */
-		//List<String> slavesList = Arrays.asList(targettedSlaves.split(","));
-		
-		
-		try {
-			StandardJMeterEngine engine = OnFlyConfig.getJmeterEngine();
-
-			if (action.toLowerCase().equals("shutdown")) {
-				engine.askThreadsToStop();
-				return new StandardResponse(StatusResponse.SUCCESS, "Jmeter is Shutting down !!");
-			}else {
-				engine.stopTest(true);
-				return new StandardResponse(StatusResponse.SUCCESS, "Jmeter Stopped abrubtly !!");
-			}
-		} catch (Exception e) {
-			return new StandardResponse(StatusResponse.ERROR, e.toString());
-		}
 	}
 
 }

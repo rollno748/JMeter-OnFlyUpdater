@@ -7,6 +7,7 @@ import java.util.HashSet;
 import java.util.List;
 
 import org.apache.jmeter.config.ConfigElement;
+import org.apache.jmeter.engine.DistributedRunner;
 import org.apache.jmeter.engine.StandardJMeterEngine;
 import org.apache.jmeter.engine.event.LoopIterationEvent;
 import org.apache.jmeter.engine.event.LoopIterationListener;
@@ -36,6 +37,7 @@ public class OnFlyConfig extends AbstractTestElement implements ConfigElement, S
 	private String uriPath;
 	private String password;
 	private static StandardJMeterEngine jmeterEngine;
+	private static DistributedRunner distributedRunner;
 	private static JMeterContext context;
 	private static JMeterThread jmeterThread;
 	private static HashSet<ThreadGroup> jmeterThreadGroups = new HashSet<>();
@@ -46,11 +48,7 @@ public class OnFlyConfig extends AbstractTestElement implements ConfigElement, S
 	private static boolean isResultsViewer;
 	private static int count;
 	private static Field testPlan;
-	
-	//private final Map<String, SamplingStatCalculator> tableRows = new ConcurrentHashMap<>();
-	//private static final String TOTAL_ROW_LABEL = JMeterUtils.getResString("aggregate_report_total_label");
-	//private final String useGroupName = JMeterUtils.getResString("aggregate_graph_use_group_name");
-	//private final transient Object lock = new Object();
+
 
 	public void testStarted() {
 		this.setRunningVersion(true);
@@ -71,7 +69,7 @@ public class OnFlyConfig extends AbstractTestElement implements ConfigElement, S
 	public void testEnded() {		
 		jmeterThreadGroups.clear();
 		jmeterThreadNames.clear();
-		
+
 		synchronized (this) {
 			try {
 				RestController.stopRestServer();
@@ -97,7 +95,6 @@ public class OnFlyConfig extends AbstractTestElement implements ConfigElement, S
 
 	@Override
 	public void iterationStart(LoopIterationEvent iterEvent) {
-		
 
 		if (iterEvent.getIteration() == 1) {
 			
@@ -116,7 +113,6 @@ public class OnFlyConfig extends AbstractTestElement implements ConfigElement, S
 				}
 				testPlan.setAccessible(true);
 			}
-	
 		}
 		
 		if (isAddThread()) {
@@ -129,28 +125,7 @@ public class OnFlyConfig extends AbstractTestElement implements ConfigElement, S
 		}
 		
 	}
-	
 
-//	private void add(final SampleResult res) {
-//		SamplingStatCalculator row = tableRows.computeIfAbsent(
-//                res.getSampleLabel(useGroupName.isSelected()),
-//                label -> {
-//                    SamplingStatCalculator newRow = new SamplingStatCalculator(label);
-//                    newRows.add(newRow);
-//                    return newRow;
-//                });
-//        synchronized (row) {
-//            /*
-//             * Synch is needed because multiple threads can update the counts.
-//             */
-//            row.addSample(res);
-//        }
-//        SamplingStatCalculator tot = tableRows.get(TOTAL_ROW_LABEL);
-//        synchronized(lock) {
-//            tot.addSample(res);
-//        }
-//       // dataChanged = true;
-//	}
 
 	@Override
 	public void threadStarted() {
@@ -200,7 +175,6 @@ public class OnFlyConfig extends AbstractTestElement implements ConfigElement, S
 		this.password = password;
 	}
 
-
 	public static StandardJMeterEngine getJmeterEngine() {
 		return jmeterEngine;
 	}
@@ -208,6 +182,14 @@ public class OnFlyConfig extends AbstractTestElement implements ConfigElement, S
 	public static void setJmeterEngine(StandardJMeterEngine jmeterEngine) {
 		OnFlyConfig.jmeterEngine = jmeterEngine;
 	}
+
+	public static DistributedRunner getDistributedRunner() {
+		return distributedRunner;
+	}
+	public static void setDistributedRunner(DistributedRunner distributedRunner) {
+		OnFlyConfig.distributedRunner = distributedRunner;
+	}
+
 
 	public static ThreadGroup getThreadGroups() {
 		return threadGroups;

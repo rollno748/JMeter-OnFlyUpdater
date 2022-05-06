@@ -1,34 +1,18 @@
 package io.perfwise.onfly.rest;
 
-import static spark.Spark.before;
-import static spark.Spark.get;
-import static spark.Spark.init;
-import static spark.Spark.path;
-import static spark.Spark.port;
-import static spark.Spark.post;
-import static spark.Spark.put;
-
-import java.net.InetAddress;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.google.gson.Gson;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
-
+import com.google.gson.*;
 import io.perfwise.onfly.model.Element;
 import io.perfwise.onfly.model.Property;
-import io.perfwise.onfly.service.AggregateService;
-import io.perfwise.onfly.service.ElementService;
-import io.perfwise.onfly.service.PropertyService;
-import io.perfwise.onfly.service.TestService;
-import io.perfwise.onfly.service.ThreadGroupService;
-import io.perfwise.onfly.service.VariableService;
+import io.perfwise.onfly.service.*;
 import io.perfwise.utils.Credentials;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import spark.Spark;
+
+import java.net.InetAddress;
+import java.util.List;
+
+import static spark.Spark.*;
 
 public class RestController {
 
@@ -62,8 +46,9 @@ public class RestController {
 		LOGGER.info("Loading REST Services");
 
 		path(UriPath, () -> {
+
 			before("/*", (q, a) -> LOGGER.info("Received an API call :: " + q.uri()));
-			
+
 
 			get("/ping", (req, res) -> {
 				res.type("application/json");
@@ -224,13 +209,13 @@ public class RestController {
 			
 			post("/slaves/stoptest", (req, res) -> {
 				res.type("application/json");
+				List<String> slaves = null;
 
 				if (req.queryParams("action") != null && Credentials.validate(req.headers("password"))) {
-					return new Gson().toJson(TestService.stopTestSlaves(req.queryParams("action"), req.queryParams("target-slave")));
+					return new Gson().toJson(TestService.stopTestSlaves(req.queryParams("action"), req.headers("slaves")));
 				}
 				return new Gson().toJson(new StandardResponse(StatusResponse.AUTHERROR, "Invalid Credentials"));
 			});
-
 		});
 
 	}

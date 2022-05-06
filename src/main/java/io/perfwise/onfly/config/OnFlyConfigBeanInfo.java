@@ -1,13 +1,13 @@
 package io.perfwise.onfly.config;
 
-import java.beans.PropertyDescriptor;
-import java.util.Arrays;
-import java.util.stream.Collectors;
-
 import org.apache.jmeter.testbeans.BeanInfoSupport;
 import org.apache.jmeter.testbeans.gui.TypeEditor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.beans.PropertyDescriptor;
+import java.util.Arrays;
+import java.util.stream.Collectors;
 
 public class OnFlyConfigBeanInfo extends BeanInfoSupport {
 	
