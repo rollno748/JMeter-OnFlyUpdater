@@ -19,13 +19,11 @@ public class VariableService {
 
 		try {
 			jVars = OnFlyConfig.getContext().getVariables();
-
 			for (Entry<String, Object> temp : jVars.entrySet()) {
 				if (!temp.getKey().equalsIgnoreCase("JMeterThread.pack")) {
 					variableObj.addProperty(temp.getKey(), temp.getValue().toString());
 				}
 			}
-
 			return new StandardResponse(StatusResponse.SUCCESS, variableObj);
 		} catch (Exception e) {
 			e.printStackTrace();

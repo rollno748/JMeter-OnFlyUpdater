@@ -55,11 +55,8 @@ public class OnFlyConfig extends AbstractTestElement implements ConfigElement, S
 		TestBeanHelper.prepare(this);
 		new Credentials(getPassword());
 		new RestController(getUriPath());
-
-		// Start Spark REST services
-		RestController.startRestServer(port);
+		RestController.startRestServer(port); // Initialize Spark REST services
 		RestController.loadServices();
-
 	}
 
 	public void testStarted(String host) {
@@ -118,12 +115,6 @@ public class OnFlyConfig extends AbstractTestElement implements ConfigElement, S
 		if (isAddThread()) {
 			addThreads(count);
 		}
-		
-		if(true) {
-			//add( res);
-			//isResultsViewer()
-		}
-		
 	}
 
 
@@ -144,7 +135,8 @@ public class OnFlyConfig extends AbstractTestElement implements ConfigElement, S
 		}
 	}
 	
-	
+
+
 	// Getter and Setters
 
 	public String getPort() {

@@ -178,16 +178,6 @@ public class RestController {
 				return new Gson().toJson(new StandardResponse(StatusResponse.AUTHERROR, "Invalid Credentials"));
 			});
 			
-			
-			get("/aggregateview", (req, res) -> {
-				res.type("application/json");
-				if (Credentials.validate(req.headers("password"))) {
-					return new Gson().toJson(AggregateService.currentResults());
-				}
-				return new Gson().toJson(new StandardResponse(StatusResponse.AUTHERROR, "Invalid Credentials"));
-			});
-
-			
 			post("/stoptest", (req, res) -> {
 				res.type("application/json");
 

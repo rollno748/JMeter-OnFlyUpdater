@@ -21,9 +21,9 @@ public class PropertyService {
 					new Gson().toJsonTree(JMeterUtils.getJMeterProperties()));
 
 		}
-
 		return new StandardResponse(StatusResponse.ERROR, "Invalid Property type received");
 	}
+
 
 	public static StandardResponse updateProperty(Property props) {
 
@@ -65,7 +65,6 @@ public class PropertyService {
 	}
 
 	public static StandardResponse getSlavesInfo() {
-
 		return new StandardResponse(StatusResponse.SUCCESS,
 				new Gson().toJsonTree(JMeterUtils.getJMeterProperties().get("remote_hosts")));
 	}

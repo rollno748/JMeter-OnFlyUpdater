@@ -435,32 +435,6 @@
 			"response": []
 		},
 		{
-			"name": "AggregateResults",
-			"request": {
-				"method": "GET",
-				"header": [
-					{
-						"key": "password",
-						"type": "text",
-						"value": "Upd@t3M3"
-					}
-				],
-				"url": {
-					"raw": "http://localhost:1304/di-jmeter/aggregateview",
-					"protocol": "http",
-					"host": [
-						"localhost"
-					],
-					"port": "1304",
-					"path": [
-						"di-jmeter",
-						"aggregateview"
-					]
-				}
-			},
-			"response": []
-		},
-		{
 			"name": "StopTest",
 			"request": {
 				"method": "POST",
