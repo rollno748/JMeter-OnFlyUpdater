@@ -14,7 +14,7 @@ public class VariableService {
 
 	private static JMeterVariables jVars;
 
-	public static StandardResponse getVars() {
+	public static StandardResponse getVars(String threadName) {
 		JsonObject variableObj = new JsonObject();
 
 		try {
@@ -32,7 +32,7 @@ public class VariableService {
 	}
 
 	@SuppressWarnings("unlikely-arg-type")
-	public static StandardResponse setVars(JsonObject json) {
+	public static StandardResponse setVars(String threadname, JsonObject json) {
 
 		try {
 			JMeterVariables jVars = OnFlyConfig.getContext().getVariables();

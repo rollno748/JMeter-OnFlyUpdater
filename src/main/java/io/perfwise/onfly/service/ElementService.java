@@ -16,7 +16,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import io.perfwise.onfly.config.OnFlyConfig;
-import io.perfwise.onfly.model.Element;
 import io.perfwise.onfly.rest.StandardResponse;
 import io.perfwise.onfly.rest.StatusResponse;
 

@@ -1,7 +1,6 @@
 package io.perfwise.onfly.rest;
 
 import com.google.gson.*;
-import io.perfwise.onfly.model.Element;
 import io.perfwise.onfly.model.Property;
 import io.perfwise.onfly.service.*;
 import io.perfwise.utils.Credentials;
@@ -157,23 +156,23 @@ public class RestController {
 			});
 			
 
-			get("/vars", (req, res) -> {
+			get("/vars/:threadname", (req, res) -> {
 				res.type("application/json");
 				if (Credentials.validate(req.headers("password"))) {
-					return new Gson().toJson(VariableService.getVars());
+					return new Gson().toJson(VariableService.getVars(req.params(":threadname")));
 				}
 				return new Gson().toJson(new StandardResponse(StatusResponse.AUTHERROR, "Invalid Credentials"));
 			});
 
 			
-			put("/vars", (req, res) -> {
+			put("/vars/:threadname", (req, res) -> {
 				res.type("application/json");
 				
 				if (Credentials.validate(req.headers("password"))) {
 					JsonParser jsonParser = new JsonParser();
 					JsonElement jsonElement = jsonParser.parse(req.body());
 					JsonObject json = jsonElement.getAsJsonObject();
-					return new Gson().toJson(VariableService.setVars(json));
+					return new Gson().toJson(VariableService.setVars(req.params(":threadname"), json));
 				}
 				return new Gson().toJson(new StandardResponse(StatusResponse.AUTHERROR, "Invalid Credentials"));
 			});
