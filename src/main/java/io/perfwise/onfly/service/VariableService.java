@@ -40,7 +40,7 @@ public class VariableService {
 			jVars.entrySet().parallelStream().forEach(entry -> {
 				if (json.has(entry.getKey())) {
 					if (!(json.get(entry.getKey()).equals(entry.getValue().toString()))) {
-						jVars.put(entry.getKey(), json.get(entry.getKey()).toString());
+						jVars.put(entry.getKey(), String.valueOf(json.get(entry.getKey())));
 					}
 				}
 			});

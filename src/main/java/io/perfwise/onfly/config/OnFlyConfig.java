@@ -45,7 +45,6 @@ public class OnFlyConfig extends AbstractTestElement implements ConfigElement, S
 	private static ThreadGroup threadGroups;
 	private static JMeterVariables variables;
 	private static boolean addThread;
-	private static boolean isResultsViewer;
 	private static int count;
 	private static Field testPlan;
 
@@ -55,7 +54,7 @@ public class OnFlyConfig extends AbstractTestElement implements ConfigElement, S
 		TestBeanHelper.prepare(this);
 		new Credentials(getPassword());
 		new RestController(getUriPath());
-		RestController.startRestServer(port); // Initialize Spark REST services
+		RestController.startRestServer(port); // Initialize REST services APIs to control JMeter
 		RestController.loadServices();
 	}
 
@@ -73,7 +72,6 @@ public class OnFlyConfig extends AbstractTestElement implements ConfigElement, S
 			} catch (Exception e) {
 				LOGGER.error("On-Fly-Updater REST services failed to stop", e);
 			}
-
 		}
 	}
 
@@ -266,14 +264,5 @@ public class OnFlyConfig extends AbstractTestElement implements ConfigElement, S
 	public static void setTestPlan(Field testPlan) {
 		OnFlyConfig.testPlan = testPlan;
 	}
-	
-	public static boolean isResultsViewer() {
-		return isResultsViewer;
-	}
 
-	public static void setResultsViewer(boolean isResultsViewer) {
-		OnFlyConfig.isResultsViewer = isResultsViewer;
-	}
-
-	
 }

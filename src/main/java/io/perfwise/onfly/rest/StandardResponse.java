@@ -1,6 +1,7 @@
 package io.perfwise.onfly.rest;
 
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Map;
 
 import javax.xml.transform.Transformer;
@@ -24,7 +25,7 @@ public class StandardResponse {
 	private JsonObject variables;
 	private ThreadCounts threadCounts;
 	private Transformer newTransformer;
-	private Collection<ResultCollector> listeners;
+	private HashSet<ResultCollector> listeners;
 
 
 	public StandardResponse(StatusResponse status) {
@@ -73,7 +74,7 @@ public class StandardResponse {
 		this.slaves=object;
 	}
 	
-	public StandardResponse(StatusResponse status, Collection<ResultCollector> listeners) {
+	public StandardResponse(StatusResponse status, HashSet<ResultCollector> listeners) {
 		this.status=status;
 		this.listeners=listeners;
 	}
@@ -164,7 +165,7 @@ public class StandardResponse {
 		return listeners;
 	}
 
-	public void setListeners(Collection<ResultCollector> listeners) {
+	public void setListeners(HashSet<ResultCollector> listeners) {
 		this.listeners = listeners;
 	}
 	
