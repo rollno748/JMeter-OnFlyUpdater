@@ -36,7 +36,6 @@ public class OnFlyConfigBeanInfo extends BeanInfoSupport {
 	                    .collect(Collectors.joining(" ,"));
 	            LOGGER.debug(descriptorsAsString);
 	        }
-
 	}
 
 }

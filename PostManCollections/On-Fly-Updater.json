@@ -17,7 +17,7 @@
 					}
 				],
 				"url": {
-					"raw": "http://localhost:1304/di-jmeter/ping",
+					"raw": "http://localhost:1304/on-fly/ping",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -43,7 +43,7 @@
 					}
 				],
 				"url": {
-					"raw": "http://localhost:1304/di-jmeter/status",
+					"raw": "http://localhost:1304/on-fly/status",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -69,7 +69,7 @@
 					}
 				],
 				"url": {
-					"raw": "http://localhost:1304/di-jmeter/logger/debug",
+					"raw": "http://localhost:1304/on-fly/logger/debug",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -96,7 +96,7 @@
 					}
 				],
 				"url": {
-					"raw": "http://localhost:1304/di-jmeter/properties?type=jmeter",
+					"raw": "http://localhost:1304/on-fly/properties?type=jmeter",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -132,7 +132,7 @@
 					"raw": "{\n    \"properties\": {\n        \"jmeter.reportgenerator.apdex_tolerated_threshold\": \"5000\",\n        \"key1\": \"value1\"\n    },\n    \"type\": \"jmeter\"\n}"
 				},
 				"url": {
-					"raw": "http://localhost:1304/di-jmeter/properties",
+					"raw": "http://localhost:1304/on-fly/properties",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -176,7 +176,7 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:1304/di-jmeter/threads",
+					"raw": "http://localhost:1304/on-fly/threads",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -217,7 +217,7 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:1304/di-jmeter/threads",
+					"raw": "http://localhost:1304/on-fly/threads",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -250,7 +250,7 @@
 					"raw": ""
 				},
 				"url": {
-					"raw": "http://localhost:1304/di-jmeter/threadgroups",
+					"raw": "http://localhost:1304/on-fly/threadgroups",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -280,7 +280,7 @@
 					"raw": "[\n\t{\n        \"threadGroupName\": \"TG3\",\n        \"setActive\": false\n    }\n]"
 				},
 				"url": {
-					"raw": "http://localhost:1304/di-jmeter/threadgroups",
+					"raw": "http://localhost:1304/on-fly/threadgroups",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -306,7 +306,7 @@
 					}
 				],
 				"url": {
-					"raw": "http://localhost:1304/di-jmeter/vars",
+					"raw": "http://localhost:1304/on-fly/vars",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -336,7 +336,7 @@
 					"raw": "{\n    \"TEST\": \"TestingfromPostman\"\n}"
 				},
 				"url": {
-					"raw": "http://localhost:1304/di-jmeter/vars",
+					"raw": "http://localhost:1304/on-fly/vars",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -362,7 +362,7 @@
 					}
 				],
 				"url": {
-					"raw": "http://localhost:1304/di-jmeter/testinfo",
+					"raw": "http://localhost:1304/on-fly/testinfo",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -388,7 +388,7 @@
 					}
 				],
 				"url": {
-					"raw": "http://localhost:1304/di-jmeter/elements",
+					"raw": "http://localhost:1304/on-fly/elements",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -420,7 +420,7 @@
 					}
 				],
 				"url": {
-					"raw": "http://localhost:1304/di-jmeter/elements",
+					"raw": "http://localhost:1304/on-fly/elements",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -450,7 +450,7 @@
 					"raw": ""
 				},
 				"url": {
-					"raw": "http://localhost:1304/di-jmeter/stoptest?action=shutdown",
+					"raw": "http://localhost:1304/on-fly/stoptest?action=shutdown",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -489,7 +489,7 @@
 					"raw": ""
 				},
 				"url": {
-					"raw": "http://localhost:1304/di-jmeter/slaves",
+					"raw": "http://localhost:1304/on-fly/slaves",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -524,7 +524,7 @@
 					"raw": ""
 				},
 				"url": {
-					"raw": "http://localhost:1304/di-jmeter/slaves/stoptest",
+					"raw": "http://localhost:1304/on-fly/slaves/stoptest",
 					"protocol": "http",
 					"host": [
 						"localhost"

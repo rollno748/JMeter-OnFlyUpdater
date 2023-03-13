@@ -16,9 +16,9 @@ JMeter plugin to control Jmeter during the running status. This plugin adds feat
 - [x] Update one or more properties to running Jmeter (System/Jmeter)
 - [x] Update Logger type to running Jmeter (OFF/FATAL/ERROR/WARN/INFO/DEBUG/TRACE/ALL)
 - [x] Get All the threads info 
-- [x] Add/Remove users/threads to specific threadgroup(s). Supports multiple updation at single call
-- [x] Get info releated to specific threadgroup(s)
-- [x] Update info to specific threadgroup(s)
+- [x] Add/Remove users/threads to specific thread group(s). Supports multiple update within single call
+- [x] Get info related to specific thread group(s)
+- [x] Update info to specific thread group(s)
 - [x] Get list of variables from one or more threads
 - [x] Update variables to one or more threads
 - [x] Get elements from the running test (Listeners)
@@ -39,9 +39,9 @@ JMeter plugin to control Jmeter during the running status. This plugin adds feat
 
 ## Installation Instructions
 
-* Download the source code from the Github.
+* Download the source code from the GitHub.
 * Just do a mvn clean install (Git bash is required)
-* Jar will be generated under the target directory (jmeter-onfly-updater-0.1.jar)
+* Jar will be generated under the target directory (jmeter-onfly-updater-1.0.jar)
 * Copy the Jar to `\<Jmeter Installed Directory\>/lib/ext/`
 
 ## How to use it
@@ -56,24 +56,24 @@ Add required config element (On-Fly-Updater config)
 
 ## Supported REST Services
 
-|Service|HTTP Method|URI|QueryParams|ReqBody|Status|
-|:---|:---:|:---|:---|:---|:---:|
-PluginRunningStatus|GET|/{URI-PATH}/ping|NA||Completed
-GetStatus|GET|/{URI-PATH}/status|NA||Completed
-SetLogger|PUT|/{URI-PATH}/logger/{logType}|WARN/ERROR/DEBUG/OFF||Completed
-GetProperties|GET|/{URI-PATH}/properties?type={type}|jmeter/system||Completed
-UpdateProperties|PUT|/{URI-PATH}/properties|NA||Completed
-GetThreads|GET|/{URI-PATH}/threads|NA||Completed
-UpdateThreads|PUT|/{URI-PATH}/threads|NA||Completed
-GetThreadGroupsList|PUT|/{URI-PATH}/threadgroups|NA||Completed
-UpdateThreadGroups|PUT|/{URI-PATH}/threadgroups|NA||Completed
-GetJmeterVariables|GET|/{URI-PATH}/vars|NA||Completed
-UpdateJmeterVariables|PUT|/{URI-PATH}/vars|NA||Completed
-GetElements|GET|/{URI-PATH}/elements|NA||Completed
-UpdateTestElement|PUT|/{URI-PATH}/elements|NA||Not Started
-StopTest|POST|/{URI-PATH}/stoptest?action={action}|shutdown/stop||Completed
-Slaves|GET|/{URI-PATH}/slaves|NA||Completed
-StopTest-Slaves|POST|/{URI-PATH}/slaves/stoptest?action={action}|shutdown/stop||Needs Validation
+| Service               | HTTP Method | URI                                         | QueryParams          | ReqBody |      Status      |
+|:----------------------|:-----------:|:--------------------------------------------|:---------------------|:--------|:----------------:|
+| PluginRunningStatus   |     GET     | /{URI-PATH}/ping                            | NA                   | -       |    Completed     |
+| GetStatus             |     GET     | /{URI-PATH}/status                          | NA                   | -       |    Completed     |
+| SetLogger             |     PUT     | /{URI-PATH}/logger/{logType}                | WARN/ERROR/DEBUG/OFF | -       |    Completed     |
+| GetProperties         |     GET     | /{URI-PATH}/properties?type={type}          | jmeter/system        | -       |    Completed     |
+| UpdateProperties      |     PUT     | /{URI-PATH}/properties                      | NA                   | -       |    Completed     |
+| GetThreads            |     GET     | /{URI-PATH}/threads                         | NA                   | -       |    Completed     |
+| UpdateThreads         |     PUT     | /{URI-PATH}/threads                         | NA                   | -       |    Completed     |
+| GetThreadGroupsList   |     PUT     | /{URI-PATH}/threadgroups                    | NA                   | -       |    Completed     |
+| UpdateThreadGroups    |     PUT     | /{URI-PATH}/threadgroups                    | NA                   | -       |    Completed     |
+| GetJmeterVariables    |     GET     | /{URI-PATH}/vars                            | NA                   | -       |    Completed     |
+| UpdateJmeterVariables |     PUT     | /{URI-PATH}/vars                            | NA                   | -       |    Completed     |
+| GetElements           |     GET     | /{URI-PATH}/elements                        | NA                   | -       |    Completed     |
+| UpdateTestElement     |     PUT     | /{URI-PATH}/elements                        | NA                   | -       |   Not Started    |
+| StopTest              |    POST     | /{URI-PATH}/stoptest?action={action}        | shutdown/stop        | -       |    Completed     |
+| Slaves                |     GET     | /{URI-PATH}/slaves                          | NA                   | -       |    Completed     |
+| StopTest-Slaves       |    POST     | /{URI-PATH}/slaves/stoptest?action={action} | shutdown/stop        | -       | Needs Validation |
 
 ## Additional Info
 Some more info on the plugin
@@ -91,7 +91,7 @@ Some more info on the plugin
 ## References
 
 * Plugin's Core Idea: https://octoperf.com/blog/2020/03/15/beanshell-server
-* REST servies: http://sparkjava.com/documentation
+* REST services: http://sparkjava.com/documentation
 * Examples: https://www.baeldung.com/spark-framework-rest-api
 * https://stackoverflow.com/questions/51054754/jmeter-ignore-view-results-tree-listener-only-in-non-gui
 * https://stackoverflow.com/questions/55796108/jmeter-how-to-disable-listener-by-code-groovy
@@ -103,7 +103,6 @@ Some more info on the plugin
 * Markdown editor online (https://dillinger.io/)
 
 
-## 💲 Donate
 ## 💲 Support Me
 <!-- [<a href="https://www.buymeacoffee.com/rollno748" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" height="45px" width="162px" alt="Buy Me A Coffee"></a>](https://www.buymeacoffee.com/rollno748) -->
 If this project help you reduce time to develop, you can give me a cup of coffee :) 

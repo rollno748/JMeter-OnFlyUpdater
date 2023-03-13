@@ -10,10 +10,7 @@ public class Credentials {
 	}
 
 	public static boolean validate(String pass) {
-		if (keyPass.equals(pass)) {
-			return true;
-		}
-		return false;
+		return keyPass.equals(pass) ? true : false;
 	}
 
 }

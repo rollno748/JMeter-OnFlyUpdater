@@ -15,7 +15,6 @@ import org.apache.jmeter.testbeans.TestBean;
 import org.apache.jmeter.testbeans.TestBeanHelper;
 import org.apache.jmeter.testelement.AbstractTestElement;
 import org.apache.jmeter.testelement.TestStateListener;
-import org.apache.jmeter.testelement.ThreadListener;
 import org.apache.jmeter.threads.JMeterContext;
 import org.apache.jmeter.threads.JMeterContextService;
 import org.apache.jmeter.threads.JMeterThread;
@@ -27,8 +26,7 @@ import org.slf4j.LoggerFactory;
 import io.perfwise.onfly.rest.RestController;
 import io.perfwise.utils.Credentials;
 
-public class OnFlyConfig extends AbstractTestElement implements ConfigElement, Serializable, Cloneable, ThreadListener,
-		TestStateListener, LoopIterationListener, TestBean {
+public class OnFlyConfig extends AbstractTestElement implements ConfigElement, Serializable, TestStateListener, LoopIterationListener, TestBean {
 
 	private static final long serialVersionUID = 3031594799580611171L;
 	private static final Logger LOGGER = LoggerFactory.getLogger(OnFlyConfig.class);
@@ -41,7 +39,7 @@ public class OnFlyConfig extends AbstractTestElement implements ConfigElement, S
 	private static JMeterContext context;
 	private static JMeterThread jmeterThread;
 	private static HashSet<ThreadGroup> jmeterThreadGroups = new HashSet<>();
-	private static List<String> jmeterThreadNames = new ArrayList<String>();
+	private static List<String> jmeterThreadNames = new ArrayList<>();
 	private static ThreadGroup threadGroups;
 	private static JMeterVariables variables;
 	private static boolean addThread;
@@ -114,17 +112,6 @@ public class OnFlyConfig extends AbstractTestElement implements ConfigElement, S
 			addThreads(count);
 		}
 	}
-
-
-	@Override
-	public void threadStarted() {
-		// TODO Auto-generated method stub
-	}
-
-	@Override
-	public void threadFinished() {
-		// TODO Auto-generated method stub
-	}
 	
 	public static void addThreads(int count) {
 		setAddThread(false);
@@ -134,9 +121,7 @@ public class OnFlyConfig extends AbstractTestElement implements ConfigElement, S
 	}
 	
 
-
 	// Getter and Setters
-
 	public String getPort() {
 		return port;
 	}
@@ -176,10 +161,10 @@ public class OnFlyConfig extends AbstractTestElement implements ConfigElement, S
 	public static DistributedRunner getDistributedRunner() {
 		return distributedRunner;
 	}
+
 	public static void setDistributedRunner(DistributedRunner distributedRunner) {
 		OnFlyConfig.distributedRunner = distributedRunner;
 	}
-
 
 	public static ThreadGroup getThreadGroups() {
 		return threadGroups;
