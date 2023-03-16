@@ -204,7 +204,7 @@ public class ThreadGroupService extends ThreadGroup {
 				tgModel.setThreadGroupName(tg.getName());
 				tgModel.setNumberOfThreads(tg.getNumberOfThreads());
 				tgModel.setThreadGroupRampUp(tg.getRampUp());
-				tgModel.setSchedularEnabled(tg.getScheduler());
+				tgModel.setSchedulerEnabled(tg.getScheduler());
 				tgModel.setThreadGroupNumber(i);
 
 				if (tg.getOnErrorStartNextLoop()) {

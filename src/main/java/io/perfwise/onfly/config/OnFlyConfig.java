@@ -1,11 +1,7 @@
 package io.perfwise.onfly.config;
 
-import java.io.Serializable;
-import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-
+import io.perfwise.onfly.rest.RestController;
+import io.perfwise.utils.Credentials;
 import org.apache.jmeter.config.ConfigElement;
 import org.apache.jmeter.engine.DistributedRunner;
 import org.apache.jmeter.engine.StandardJMeterEngine;
@@ -15,16 +11,16 @@ import org.apache.jmeter.testbeans.TestBean;
 import org.apache.jmeter.testbeans.TestBeanHelper;
 import org.apache.jmeter.testelement.AbstractTestElement;
 import org.apache.jmeter.testelement.TestStateListener;
-import org.apache.jmeter.threads.JMeterContext;
-import org.apache.jmeter.threads.JMeterContextService;
-import org.apache.jmeter.threads.JMeterThread;
-import org.apache.jmeter.threads.JMeterVariables;
 import org.apache.jmeter.threads.ThreadGroup;
+import org.apache.jmeter.threads.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import io.perfwise.onfly.rest.RestController;
-import io.perfwise.utils.Credentials;
+import java.io.Serializable;
+import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
 
 public class OnFlyConfig extends AbstractTestElement implements ConfigElement, Serializable, TestStateListener, LoopIterationListener, TestBean {
 
@@ -45,32 +41,58 @@ public class OnFlyConfig extends AbstractTestElement implements ConfigElement, S
 	private static boolean addThread;
 	private static int count;
 	private static Field testPlan;
+	private RestController restController;
+	private Credentials credentials;
 
 
 	public void testStarted() {
 		this.setRunningVersion(true);
 		TestBeanHelper.prepare(this);
-		new Credentials(getPassword());
-		new RestController(getUriPath());
-		RestController.startRestServer(port); // Initialize REST services APIs to control JMeter
-		RestController.loadServices();
+		credentials = new Credentials(getPassword());
+		restController = new RestController(getUriPath());// Initialize REST services APIs to control JMeter
+		restController.startRestServer(port); // Start REST services APIs
 	}
 
-	public void testStarted(String host) {
-		testStarted();
+	@Override
+	public void iterationStart(LoopIterationEvent loopIterationEvent) {
+
+		if (loopIterationEvent.getIteration() == 1) {
+			context = JMeterContextService.getContext();
+			jmeterEngine = context.getEngine();
+			jmeterThreadNames.add(context.getThread().getThreadName());
+			jmeterThreadGroups.add((ThreadGroup) context.getThreadGroup());
+
+			if(testPlan == null) {
+				try {
+					testPlan = context.getEngine().getClass().getDeclaredField("test");
+				} catch (NoSuchFieldException e) {
+					e.printStackTrace();
+				} catch (SecurityException e) {
+					e.printStackTrace();
+				}
+				testPlan.setAccessible(true);
+			}
+		}
+
+		if (isAddThread()) {
+			addThreads(count);
+		}
 	}
 
 	public void testEnded() {		
 		jmeterThreadGroups.clear();
 		jmeterThreadNames.clear();
-
 		synchronized (this) {
 			try {
-				RestController.stopRestServer();
+				restController.stopRestServer();
 			} catch (Exception e) {
 				LOGGER.error("On-Fly-Updater REST services failed to stop", e);
 			}
 		}
+	}
+
+	public void testStarted(String host) {
+		testStarted();
 	}
 
 	public void testEnded(String host) {
@@ -85,41 +107,12 @@ public class OnFlyConfig extends AbstractTestElement implements ConfigElement, S
 		return false;
 	}
 	
-
-	@Override
-	public void iterationStart(LoopIterationEvent iterEvent) {
-
-		if (iterEvent.getIteration() == 1) {
-			
-			context = JMeterContextService.getContext();
-			jmeterEngine = context.getEngine();
-			jmeterThreadNames.add(context.getThread().getThreadName());
-			jmeterThreadGroups.add((ThreadGroup) context.getThreadGroup());
-			
-			if(testPlan == null) {
-				try {
-					testPlan = context.getEngine().getClass().getDeclaredField("test");
-				} catch (NoSuchFieldException e) {
-					e.printStackTrace();
-				} catch (SecurityException e) {
-					e.printStackTrace();
-				}
-				testPlan.setAccessible(true);
-			}
-		}
-		
-		if (isAddThread()) {
-			addThreads(count);
-		}
-	}
-	
 	public static void addThreads(int count) {
 		setAddThread(false);
 		for (int i = 0; i < count; i++) {
 			threadGroups.addNewThread(0, jmeterEngine);
 		}
 	}
-	
 
 	// Getter and Setters
 	public String getPort() {
@@ -127,10 +120,6 @@ public class OnFlyConfig extends AbstractTestElement implements ConfigElement, S
 	}
 
 	public void setPort(String port) {
-
-		if (port.isEmpty()) {
-			this.port = "4567";
-		}
 		this.port = port;
 	}
 

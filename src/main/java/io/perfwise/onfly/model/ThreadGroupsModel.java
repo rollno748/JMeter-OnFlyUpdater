@@ -8,7 +8,7 @@ public class ThreadGroupsModel {
     String threadGroupComment;
     long threadGroupDelay;
     int threadGroupRampUp;
-    boolean schedularEnabled;
+    boolean schedulerEnabled;
     String testActionOnError;
     
 	public int getThreadGroupNumber() {
@@ -47,11 +47,11 @@ public class ThreadGroupsModel {
 	public void setThreadGroupRampUp(int rampup) {
 		this.threadGroupRampUp = rampup;
 	}
-	public boolean getSchedularEnabled() {
-		return schedularEnabled;
+	public boolean getSchedulerEnabled() {
+		return schedulerEnabled;
 	}
-	public void setSchedularEnabled(boolean enabled) {
-		this.schedularEnabled = enabled;
+	public void setSchedulerEnabled(boolean enabled) {
+		this.schedulerEnabled = enabled;
 	}
 	public String getThreadGroupTestAction() {
 		return testActionOnError;

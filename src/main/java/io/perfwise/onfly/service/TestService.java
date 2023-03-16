@@ -66,7 +66,7 @@ public class TestService extends SchematicView {
 				return new StandardResponse(StatusResponse.SUCCESS, "Jmeter is Shutting down !!");
 			}else {
 				engine.stopTest(true);
-				return new StandardResponse(StatusResponse.SUCCESS, "Jmeter Stopped abrubtly !!");
+				return new StandardResponse(StatusResponse.SUCCESS, "Jmeter Stopped abruptly !!");
 			}
 		} catch (Exception e) {
 			return new StandardResponse(StatusResponse.ERROR, e.toString());

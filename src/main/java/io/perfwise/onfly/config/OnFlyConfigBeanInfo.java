@@ -15,27 +15,26 @@ public class OnFlyConfigBeanInfo extends BeanInfoSupport {
 
 	public OnFlyConfigBeanInfo() {
 		super(OnFlyConfig.class);
-
 		createPropertyGroup("connection", new String[] { "uriPath", "port", "password" });
 
-		PropertyDescriptor p = property("uriPath");
-		p.setValue(NOT_UNDEFINED, Boolean.TRUE);
-		p.setValue(DEFAULT, "/on-fly");
+		PropertyDescriptor propertyDescriptor = property("uriPath");
+		propertyDescriptor.setValue(NOT_UNDEFINED, Boolean.TRUE);
+		propertyDescriptor.setValue(DEFAULT, "/on-fly");
 
-		p = property("port");
-		p.setValue(NOT_UNDEFINED, Boolean.TRUE);
-		p.setValue(DEFAULT, "1304");
+		propertyDescriptor = property("port");
+		propertyDescriptor.setValue(NOT_UNDEFINED, Boolean.TRUE);
+		propertyDescriptor.setValue(DEFAULT, "1304");
 
-		p = property("password", TypeEditor.PasswordEditor);
-		p.setValue(NOT_UNDEFINED, Boolean.TRUE);
-		p.setValue(DEFAULT, "Upd@t3M3");
+		propertyDescriptor = property("password", TypeEditor.PasswordEditor);
+		propertyDescriptor.setValue(NOT_UNDEFINED, Boolean.TRUE);
+		propertyDescriptor.setValue(DEFAULT, "Upd@t3M3");
 		
-		 if(LOGGER.isDebugEnabled()) {
-	            String descriptorsAsString = Arrays.stream(getPropertyDescriptors())
-	                    .map(pd -> pd.getName() + "=" + pd.getDisplayName())
-	                    .collect(Collectors.joining(" ,"));
-	            LOGGER.debug(descriptorsAsString);
-	        }
+		if(LOGGER.isDebugEnabled()) {
+			String descriptorsAsString = Arrays.stream(getPropertyDescriptors())
+					.map(pd -> pd.getName() + "=" + pd.getDisplayName())
+					.collect(Collectors.joining(" ,"));
+			LOGGER.debug(descriptorsAsString);
+		}
 	}
 
 }

@@ -4,6 +4,10 @@ import com.google.gson.*;
 import io.perfwise.onfly.model.Property;
 import io.perfwise.onfly.service.*;
 import io.perfwise.utils.Credentials;
+import io.swagger.models.Contact;
+import io.swagger.models.Info;
+import io.swagger.models.License;
+import io.swagger.models.Swagger;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import spark.Spark;
@@ -24,29 +28,46 @@ public class RestController {
 		RestController.UriPath = UriPath;
 	}
 
-	public static void startRestServer(String port) {
-
+	public void startRestServer(String port) {
 		int serverPort = Integer.parseInt(port);
 		try {
 			port(serverPort);
 			init();
-			LOGGER.info(String.format("On-Fly-Updater REST services started :: http://%s:%s%s/",
-					InetAddress.getLocalHost().getHostAddress(), port, UriPath));
+			String localHostAddress = InetAddress.getLocalHost().getHostAddress();
+			String fullPath = "http://" + localHostAddress + ":" + port + UriPath;
+			LOGGER.info("On-Fly-Updater REST services started :: {}", fullPath);
+			this.routes();
 		} catch (Exception e) {
-			LOGGER.error("On-Fly-Updater REST services failed to start", e);
+			LOGGER.error("Failed to start On-Fly-Updater services", e);
 		}
 	}
 
-	public static void stopRestServer() {
+	public void stopRestServer() {
 		Spark.stop();
 	}
 
-	public static void loadServices() {
+	private void routes() {
 		LOGGER.info("Loading REST Services");
+		/* Swagger Config
+		 * goes here
+		 */
+		Swagger swaggerConfig = new Swagger().info(
+				new Info().title("On-Fly Updater Swagger")
+						.description("desc")
+						.version("1.0")
+						.contact(new Contact().name("rollno748")
+								.email("")
+								.url("https://github.com/rollno748/JMeter-OnFlyUpdater"))
+						.license(new License()
+								.name("Apache 2.0")
+								.url("http://www.apache.org/licenses/LICENSE-2.0.html")));
+
+		//registering swagger
+//		new SwaggerContextService().withSwaggerConfig((SwaggerConfig) swaggerConfig);
 
 		path(UriPath, () -> {
 
-			before("/*", (q, a) -> LOGGER.info("Received an API call :: " + q.uri()));
+			before("/*", (q, a) -> LOGGER.info("Received an API call : {} - {} ", q.ip(), q.uri()));
 
 			get("/ping", (req, res) -> {
 				res.type("application/json");

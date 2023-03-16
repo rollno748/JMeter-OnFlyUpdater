@@ -1,14 +1,12 @@
 package io.perfwise.onfly.service;
 
-import java.util.Map.Entry;
-
-import org.apache.jmeter.threads.JMeterVariables;
-
 import com.google.gson.JsonObject;
-
 import io.perfwise.onfly.config.OnFlyConfig;
 import io.perfwise.onfly.rest.StandardResponse;
 import io.perfwise.onfly.rest.StatusResponse;
+import org.apache.jmeter.threads.JMeterVariables;
+
+import java.util.Map.Entry;
 
 public class VariableService {
 
@@ -44,11 +42,8 @@ public class VariableService {
 					}
 				}
 			});
-			
 			OnFlyConfig.setVariables(jVars);
-			
 			return new StandardResponse(StatusResponse.SUCCESS, "Variable update success");
-
 		} catch (Exception e) {
 			return new StandardResponse(StatusResponse.ERROR, "Error in updating Jmeter variables :: " + e);
 		}
