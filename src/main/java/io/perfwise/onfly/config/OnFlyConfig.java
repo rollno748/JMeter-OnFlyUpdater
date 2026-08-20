@@ -18,9 +18,10 @@ import org.slf4j.LoggerFactory;
 
 import java.io.Serializable;
 import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 public class OnFlyConfig extends AbstractTestElement implements ConfigElement, Serializable, TestStateListener, LoopIterationListener, TestBean {
 
@@ -34,14 +35,15 @@ public class OnFlyConfig extends AbstractTestElement implements ConfigElement, S
 	private static DistributedRunner distributedRunner;
 	private static JMeterContext context;
 	private static JMeterThread jmeterThread;
-	private static HashSet<ThreadGroup> jmeterThreadGroups = new HashSet<>();
-	private static List<String> jmeterThreadNames = new ArrayList<>();
+	private RestController restController;
+	private static Set<ThreadGroup> jmeterThreadGroups = ConcurrentHashMap.newKeySet();
+	private static List<String> jmeterThreadNames = new CopyOnWriteArrayList<>();
+	private static ConcurrentHashMap<String, JMeterVariables> threadVariables = new ConcurrentHashMap<>();
 	private static ThreadGroup threadGroups;
 	private static JMeterVariables variables;
 	private static boolean addThread;
 	private static int count;
-	private static Field testPlan;
-	private RestController restController;
+	private static volatile Field testPlan;  // volatile required for double-checked locking (Fix 10)
 	private Credentials credentials;
 
 
@@ -49,39 +51,53 @@ public class OnFlyConfig extends AbstractTestElement implements ConfigElement, S
 		this.setRunningVersion(true);
 		TestBeanHelper.prepare(this);
 		credentials = new Credentials(getPassword());
-		restController = new RestController(getUriPath());// Initialize REST services APIs to control JMeter
+		restController = new RestController(getUriPath());
 		restController.startRestServer(port); // Start REST services APIs
 	}
 
 	@Override
 	public void iterationStart(LoopIterationEvent loopIterationEvent) {
+		JMeterContext currentCtx = JMeterContextService.getContext();
+		String threadName = currentCtx.getThread().getThreadName();
 
-		if (loopIterationEvent.getIteration() == 1) {
-			context = JMeterContextService.getContext();
-			jmeterEngine = context.getEngine();
-			jmeterThreadNames.add(context.getThread().getThreadName());
-			jmeterThreadGroups.add((ThreadGroup) context.getThreadGroup());
-
-			if(testPlan == null) {
-				try {
-					testPlan = context.getEngine().getClass().getDeclaredField("test");
-				} catch (NoSuchFieldException e) {
-					e.printStackTrace();
-				} catch (SecurityException e) {
-					e.printStackTrace();
-				}
-				testPlan.setAccessible(true);
-			}
+		// Fix 4: register thread names on every first-iteration, covers dynamically added threads
+		if (!jmeterThreadNames.contains(threadName)) {
+			jmeterThreadNames.add(threadName);
 		}
 
-		if (isAddThread()) {
-			addThreads(count);
+		// Fix 3: keep per-thread variable references up to date each iteration
+		threadVariables.put(threadName, currentCtx.getVariables());
+
+		if (loopIterationEvent.getIteration() == 1) {
+			this.setInitialContext(loopIterationEvent);
+		}
+		if (isAddThread()) { addThreads(count); }
+	}
+
+	private void setInitialContext(LoopIterationEvent loopIterationEvent) {
+		context = JMeterContextService.getContext();
+		jmeterEngine = context.getEngine();
+		jmeterThreadGroups.add((ThreadGroup) context.getThreadGroup());
+
+		if (testPlan == null) {
+			synchronized (OnFlyConfig.class) {
+				if (testPlan == null) {  // double-checked locking — safe because field is volatile
+					try {
+						Field f = context.getEngine().getClass().getDeclaredField("test");
+						f.setAccessible(true);
+						testPlan = f;  // publish after fully initialised
+					} catch (NoSuchFieldException | SecurityException e) {
+						LOGGER.error("Failed to access JMeter test plan field", e);
+					}
+				}
+			}
 		}
 	}
 
-	public void testEnded() {		
+	public void testEnded() {
 		jmeterThreadGroups.clear();
 		jmeterThreadNames.clear();
+		threadVariables.clear();
 		synchronized (this) {
 			try {
 				restController.stopRestServer();
@@ -199,11 +215,11 @@ public class OnFlyConfig extends AbstractTestElement implements ConfigElement, S
 		OnFlyConfig.jmeterThreadNames.remove(new String(threadName));
 	}
 
-	public static HashSet<ThreadGroup> getJmeterThreadGroups() {
+	public static Set<ThreadGroup> getJmeterThreadGroups() {
 		return jmeterThreadGroups;
 	}
 
-	public static void setJmeterThreadGroups(HashSet<ThreadGroup> jmeterThreadGroups) {
+	public static void setJmeterThreadGroups(Set<ThreadGroup> jmeterThreadGroups) {
 		OnFlyConfig.jmeterThreadGroups = jmeterThreadGroups;
 	}
 
@@ -237,6 +253,10 @@ public class OnFlyConfig extends AbstractTestElement implements ConfigElement, S
 
 	public static void setTestPlan(Field testPlan) {
 		OnFlyConfig.testPlan = testPlan;
+	}
+
+	public static ConcurrentHashMap<String, JMeterVariables> getThreadVariables() {
+		return threadVariables;
 	}
 
 }

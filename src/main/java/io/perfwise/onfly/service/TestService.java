@@ -4,7 +4,7 @@ import io.perfwise.onfly.config.OnFlyConfig;
 import io.perfwise.onfly.rest.StandardResponse;
 import io.perfwise.onfly.rest.StatusResponse;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.jmeter.engine.DistributedRunner;
+import org.apache.jmeter.engine.ClientJMeterEngine;
 import org.apache.jmeter.engine.StandardJMeterEngine;
 import org.apache.jmeter.gui.GuiPackage;
 import org.apache.jmeter.gui.action.SchematicView;
@@ -19,6 +19,7 @@ import javax.xml.XMLConstants;
 import javax.xml.transform.Source;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.stream.StreamSource;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -104,31 +105,36 @@ public class TestService extends SchematicView {
 	
 	public static StandardResponse stopTestSlaves(String action, String targettedSlaves) {
 
-		if(targettedSlaves.isEmpty()){
-			return new StandardResponse(StatusResponse.ERROR, "LGs list should not be empty or null -> try checking /slaves to get the list of LGs to control");
+		if (targettedSlaves == null || targettedSlaves.trim().isEmpty()) {
+			return new StandardResponse(StatusResponse.ERROR,
+					"Slaves list is required. Use GET /slaves to see available hosts.");
 		}
 
-		List<String> slavesList = Arrays.asList(targettedSlaves.split(","));
-		DistributedRunner distributedRunner = OnFlyConfig.getDistributedRunner();
+		String[] hosts = targettedSlaves.split(",");
+		List<String> failed = new ArrayList<>();
 
-		try {
-			if (action.toLowerCase().equals("shutdown")) {
-				distributedRunner.shutdown(slavesList);
-				return new StandardResponse(StatusResponse.SUCCESS, "JMeter LG(s) Shutting down !!");
-			}else {
-				distributedRunner.stop(slavesList);
-				return new StandardResponse(StatusResponse.SUCCESS, "JMeter LG(s) Stopped abruptly !!");
+		for (String host : hosts) {
+			String slave = host.trim();
+			if (slave.isEmpty()) continue;
+			try {
+				ClientJMeterEngine engine = new ClientJMeterEngine(slave);
+				if (action.equalsIgnoreCase("shutdown")) {
+					engine.stopTest(false);
+				} else {
+					engine.stopTest(true);
+				}
+				LOGGER.info("Stop signal sent to slave: {}", slave);
+			} catch (Exception e) {
+				LOGGER.error("Failed to send stop signal to slave {}: {}", slave, e.getMessage());
+				failed.add(slave);
 			}
-		} catch (Exception e) {
-			return new StandardResponse(StatusResponse.ERROR, e.toString());
 		}
 
-		/*
-			2020-06-30 23:14:25,375 INFO o.a.j.e.DistributedRunner: Failed to configure 127.0.0.1
-			2020-06-30 23:14:25,375 INFO o.a.j.e.DistributedRunner: Stopping remote engines
-			2020-06-30 23:14:25,375 INFO o.a.j.e.DistributedRunner: Remote engines have been stopped
-			2020-06-30 23:14:25,375 ERROR o.a.j.g.a.ActionRouter: Error processing org.apache.jmeter.gui.action.RemoteStart@15d0d6c9
-		 */
+		if (failed.isEmpty()) {
+			String msg = action.equalsIgnoreCase("shutdown") ? "JMeter LG(s) shutting down !!" : "JMeter LG(s) stopped abruptly !!";
+			return new StandardResponse(StatusResponse.SUCCESS, msg);
+		}
+		return new StandardResponse(StatusResponse.ERROR, "Failed to stop slaves: " + failed);
 	}
 
 }

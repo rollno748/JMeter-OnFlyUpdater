@@ -4,25 +4,25 @@ import com.google.gson.*;
 import io.perfwise.onfly.model.Property;
 import io.perfwise.onfly.service.*;
 import io.perfwise.utils.Credentials;
-import io.swagger.models.Contact;
-import io.swagger.models.Info;
-import io.swagger.models.License;
-import io.swagger.models.Swagger;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import spark.Spark;
 
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.InetAddress;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 import static spark.Spark.*;
 
 public class RestController {
-
 	private static final Logger LOGGER = LoggerFactory.getLogger(RestController.class);
-	private static final double PLUGIN_VERSION=1.0;
-	
+	private static final double PLUGIN_VERSION = 1.0;
 	private static String UriPath;
+
+	private String openApiSpec;
 
 	public RestController(String UriPath) {
 		RestController.UriPath = UriPath;
@@ -31,12 +31,14 @@ public class RestController {
 	public void startRestServer(String port) {
 		int serverPort = Integer.parseInt(port);
 		try {
+			openApiSpec = loadResource("/openapi.json");
 			port(serverPort);
+			this.routes();   // register routes before init so no request can arrive before they're ready
 			init();
+			Spark.awaitInitialization();  // Fix 7: block until Jetty is fully bound
 			String localHostAddress = InetAddress.getLocalHost().getHostAddress();
 			String fullPath = "http://" + localHostAddress + ":" + port + UriPath;
 			LOGGER.info("On-Fly-Updater REST services started :: {}", fullPath);
-			this.routes();
 		} catch (Exception e) {
 			LOGGER.error("Failed to start On-Fly-Updater services", e);
 		}
@@ -44,30 +46,40 @@ public class RestController {
 
 	public void stopRestServer() {
 		Spark.stop();
+		Spark.awaitStop();  // Fix 7: block until Jetty has fully released the port, prevents restart races
+	}
+
+	private String loadResource(String path) {
+		try (InputStream is = RestController.class.getResourceAsStream(path)) {
+			if (is == null) return "{}";
+			StringBuilder sb = new StringBuilder();
+			try (BufferedReader reader = new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8))) {
+				String line;
+				while ((line = reader.readLine()) != null) {
+					sb.append(line).append('\n');
+				}
+			}
+			return sb.toString();
+		} catch (Exception e) {
+			LOGGER.error("Failed to load resource {}", path, e);
+			return "{}";
+		}
 	}
 
 	private void routes() {
 		LOGGER.info("Loading REST Services");
-		/* Swagger Config
-		 * goes here
-		 */
-		Swagger swaggerConfig = new Swagger().info(
-				new Info().title("On-Fly Updater Swagger")
-						.description("desc")
-						.version("1.0")
-						.contact(new Contact().name("rollno748")
-								.email("")
-								.url("https://github.com/rollno748/JMeter-OnFlyUpdater"))
-						.license(new License()
-								.name("Apache 2.0")
-								.url("http://www.apache.org/licenses/LICENSE-2.0.html")));
-
-		//registering swagger
-//		new SwaggerContextService().withSwaggerConfig((SwaggerConfig) swaggerConfig);
 
 		path(UriPath, () -> {
 
 			before("/*", (q, a) -> LOGGER.info("Received an API call : {} - {} ", q.ip(), q.uri()));
+
+			// Fix 6: CORS header so online tools (Swagger Editor, Postman web) can reach the spec
+			options("/*", (req, res) -> {
+				res.header("Access-Control-Allow-Origin", "*");
+				res.header("Access-Control-Allow-Methods", "GET,PUT,POST,OPTIONS");
+				res.header("Access-Control-Allow-Headers", "password,Content-Type");
+				return "OK";
+			});
 
 			get("/ping", (req, res) -> {
 				res.type("application/json");
@@ -89,18 +101,16 @@ public class RestController {
 				}
 				return new Gson().toJson(new StandardResponse(StatusResponse.AUTHERROR, "Invalid Credentials"));
 			});
-			
+
 			put("/properties", (req, res) -> {
 				res.type("application/json");
 				if (Credentials.validate(req.headers("password"))) {
-
 					Property props = new Gson().fromJson(req.body(), Property.class);
-
 					return new Gson().toJson(PropertyService.updateProperty(props));
 				}
 				return new Gson().toJson(new StandardResponse(StatusResponse.AUTHERROR, "Invalid Credentials"));
 			});
-			
+
 			put("/logger/:loglevel", (req, res) -> {
 				res.type("application/json");
 				if (Credentials.validate(req.headers("password"))) {
@@ -116,7 +126,7 @@ public class RestController {
 				}
 				return new Gson().toJson(new StandardResponse(StatusResponse.AUTHERROR, "Invalid Credentials"));
 			});
-			
+
 			put("/threads", (req, res) -> {
 				res.type("application/json");
 				if (Credentials.validate(req.headers("password"))) {
@@ -127,7 +137,7 @@ public class RestController {
 				}
 				return new Gson().toJson(new StandardResponse(StatusResponse.AUTHERROR, "Invalid Credentials"));
 			});
-			
+
 			get("/threadgroups", (req, res) -> {
 				res.type("application/json");
 				if (Credentials.validate(req.headers("password"))) {
@@ -176,7 +186,6 @@ public class RestController {
 
 			put("/vars/:threadname", (req, res) -> {
 				res.type("application/json");
-				
 				if (Credentials.validate(req.headers("password"))) {
 					JsonParser jsonParser = new JsonParser();
 					JsonElement jsonElement = jsonParser.parse(req.body());
@@ -185,10 +194,9 @@ public class RestController {
 				}
 				return new Gson().toJson(new StandardResponse(StatusResponse.AUTHERROR, "Invalid Credentials"));
 			});
-			
+
 			post("/stoptest", (req, res) -> {
 				res.type("application/json");
-
 				if (req.queryParams("action") != null && Credentials.validate(req.headers("password"))) {
 					return new Gson().toJson(TestService.stopTest(req.queryParams("action")));
 				}
@@ -205,15 +213,51 @@ public class RestController {
 
 			post("/slaves/stoptest", (req, res) -> {
 				res.type("application/json");
-				List<String> slaves = null;
-
 				if (req.queryParams("action") != null && Credentials.validate(req.headers("password"))) {
 					return new Gson().toJson(TestService.stopTestSlaves(req.queryParams("action"), req.headers("slaves")));
 				}
 				return new Gson().toJson(new StandardResponse(StatusResponse.AUTHERROR, "Invalid Credentials"));
 			});
-		});
 
+			// Fix 6: serve OpenAPI spec with CORS so Swagger Editor / Postman web can import it
+			get("/openapi.json", (request, response) -> {
+				response.type("application/json");
+				response.header("Access-Control-Allow-Origin", "*");
+				return openApiSpec;
+			});
+
+			// Fix 6: serve Swagger UI (CDN) wired to the local spec
+			get("/swagger", (request, response) -> {
+				response.type("text/html");
+				return buildSwaggerUiHtml(request.host());
+			});
+
+		});
+	}
+
+	private static String buildSwaggerUiHtml(String host) {
+		String specUrl = "http://" + host + UriPath + "/openapi.json";
+		return "<!DOCTYPE html>\n"
+			+ "<html>\n"
+			+ "<head>\n"
+			+ "  <title>JMeter OnFly Updater API</title>\n"
+			+ "  <meta charset=\"utf-8\"/>\n"
+			+ "  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n"
+			+ "  <link rel=\"stylesheet\" href=\"https://unpkg.com/swagger-ui-dist@5.9.0/swagger-ui.css\">\n"
+			+ "</head>\n"
+			+ "<body>\n"
+			+ "  <div id=\"swagger-ui\"></div>\n"
+			+ "  <script src=\"https://unpkg.com/swagger-ui-dist@5.9.0/swagger-ui-bundle.js\"></script>\n"
+			+ "  <script>\n"
+			+ "    SwaggerUIBundle({\n"
+			+ "      url: '" + specUrl + "',\n"
+			+ "      dom_id: '#swagger-ui',\n"
+			+ "      presets: [SwaggerUIBundle.presets.apis],\n"
+			+ "      layout: 'BaseLayout'\n"
+			+ "    });\n"
+			+ "  </script>\n"
+			+ "</body>\n"
+			+ "</html>\n";
 	}
 
 }

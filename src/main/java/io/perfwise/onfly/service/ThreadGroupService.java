@@ -15,7 +15,11 @@ import org.apache.jmeter.threads.ThreadGroup;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Random;
+import java.util.Set;
 
 public class ThreadGroupService extends ThreadGroup {
 
@@ -131,7 +135,7 @@ public class ThreadGroupService extends ThreadGroup {
 		context = OnFlyConfig.getContext();
 		ThreadGroup tg = null;
 		JsonArray threadInfoJsonArray = new JsonArray();
-		HashSet<ThreadGroup> threadGroupList = OnFlyConfig.getJmeterThreadGroups();
+		Set<ThreadGroup> threadGroupList = OnFlyConfig.getJmeterThreadGroups();
 
 		try {
 			Iterator<ThreadGroup> tmp = threadGroupList.iterator();
@@ -191,7 +195,7 @@ public class ThreadGroupService extends ThreadGroup {
 		ThreadGroup tg = null;
 		int i = 0;
 		JsonArray threadGroupsJsonArray = new JsonArray();
-		HashSet<ThreadGroup> threadGroupList = OnFlyConfig.getJmeterThreadGroups();
+		Set<ThreadGroup> threadGroupList = OnFlyConfig.getJmeterThreadGroups();
 		int size = threadGroupList.size();
 
 		try {
@@ -248,7 +252,7 @@ public class ThreadGroupService extends ThreadGroup {
 	private static ThreadGroup getAppropriateThreadGroupfromList(String tgName) {
 		threadGroup = null;
 		ThreadGroup tg;
-		HashSet<ThreadGroup> threadGroupList = OnFlyConfig.getJmeterThreadGroups();
+		Set<ThreadGroup> threadGroupList = OnFlyConfig.getJmeterThreadGroups();
 
 		Iterator<ThreadGroup> tmp = threadGroupList.iterator();
 		while (tmp.hasNext()) {

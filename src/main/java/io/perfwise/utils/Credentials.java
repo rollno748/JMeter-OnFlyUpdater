@@ -7,6 +7,9 @@ public class Credentials {
 	}
 
 	public static boolean validate(String pass) {
+		if (keyPass == null || pass == null) {
+			return false;
+		}
 		return keyPass.equals(pass);
 	}
 

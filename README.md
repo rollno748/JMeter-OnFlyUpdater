@@ -22,15 +22,15 @@ JMeter plugin to control Jmeter during the running status. This plugin adds feat
 - [x] Get list of variables from one or more threads
 - [x] Update variables to one or more threads
 - [x] Get elements from the running test (Listeners)
-- [ ] Enable/Disable elements to the running test (ThreadGroups/Listeners/ConfigElements etc)
+- [x] Enable/Disable elements to the running test (ThreadGroups/Listeners/Timers/Assertions/ConfigElements etc)
 - [x] Stops the test - Supports both gradual and abrupt
 - [x] Get Slaves Info
 - [x] Send Stop signals to specific/all slaves
 
 ## Jar Dependencies Required
 
-* spark-core-2.8.0.jar
-* gson-2.2.4.jar
+* spark-core-2.9.4.jar
+* gson-2.10.1.jar
 
 ## Jmeter Target
 
@@ -65,15 +65,17 @@ Add required config element (On-Fly-Updater config)
 | UpdateProperties      |     PUT     | /{URI-PATH}/properties                      | NA                   | -       |    Completed     |
 | GetThreads            |     GET     | /{URI-PATH}/threads                         | NA                   | -       |    Completed     |
 | UpdateThreads         |     PUT     | /{URI-PATH}/threads                         | NA                   | -       |    Completed     |
-| GetThreadGroupsList   |     PUT     | /{URI-PATH}/threadgroups                    | NA                   | -       |    Completed     |
+| GetThreadGroupsList   |     GET     | /{URI-PATH}/threadgroups                    | NA                   | -       |    Completed     |
 | UpdateThreadGroups    |     PUT     | /{URI-PATH}/threadgroups                    | NA                   | -       |    Completed     |
 | GetJmeterVariables    |     GET     | /{URI-PATH}/vars                            | NA                   | -       |    Completed     |
 | UpdateJmeterVariables |     PUT     | /{URI-PATH}/vars                            | NA                   | -       |    Completed     |
 | GetElements           |     GET     | /{URI-PATH}/elements                        | NA                   | -       |    Completed     |
-| UpdateTestElement     |     PUT     | /{URI-PATH}/elements                        | NA                   | -       |   Not Started    |
+| UpdateTestElement     |     PUT     | /{URI-PATH}/elements                        | NA                   | -       |    Completed     |
 | StopTest              |    POST     | /{URI-PATH}/stoptest?action={action}        | shutdown/stop        | -       |    Completed     |
 | Slaves                |     GET     | /{URI-PATH}/slaves                          | NA                   | -       |    Completed     |
-| StopTest-Slaves       |    POST     | /{URI-PATH}/slaves/stoptest?action={action} | shutdown/stop        | -       | Needs Validation |
+| StopTest-Slaves       |    POST     | /{URI-PATH}/slaves/stoptest?action={action} | shutdown/stop        | -       |    Completed     |
+| GetOpenApiSpec        |     GET     | /{URI-PATH}/openapi.json                    | NA                   | -       |    Completed     |
+| SwaggerUI             |     GET     | /{URI-PATH}/swagger                         | NA                   | -       |    Completed     |
 
 ## Additional Info
 Some more info on the plugin
@@ -84,9 +86,7 @@ Some more info on the plugin
 
 ## Known Issues
 
-- [x] Updating thread groups is working, response is not retrieved from the server
-- [x] Updating test element in the testplan is not working
-- [x] Sending signals to slaves is not working
+- Spark REST server may behave abnormally if the JMeter test is restarted without restarting the JVM. `awaitStop()` reduces the window, but full Spark static-state reset between runs is not guaranteed.
 
 ## References
 

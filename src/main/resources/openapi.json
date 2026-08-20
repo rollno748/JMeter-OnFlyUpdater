@@ -1,0 +1,272 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "JMeter OnFly Updater",
+    "description": "REST API to control JMeter during test execution. All endpoints (except /ping and /openapi.json) require the `password` header.",
+    "contact": { "url": "https://github.com/rollno748/JMeter-OnFlyUpdater" },
+    "version": "1.0"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:{port}{basePath}",
+      "variables": {
+        "port":     { "default": "1304",    "description": "Port set in On-Fly-Updater config element" },
+        "basePath": { "default": "/on-fly", "description": "URI path set in On-Fly-Updater config element" }
+      }
+    }
+  ],
+  "components": {
+    "securitySchemes": {
+      "passwordHeader": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "password",
+        "description": "Password configured in On-Fly-Updater config element (default: Upd@t3M3)"
+      }
+    },
+    "schemas": {
+      "StandardResponse": {
+        "type": "object",
+        "properties": {
+          "status":  { "type": "string", "example": "SUCCESS" },
+          "message": { }
+        }
+      },
+      "PropertyRequest": {
+        "type": "object",
+        "required": ["type", "properties"],
+        "properties": {
+          "type":       { "type": "string", "enum": ["jmeter", "system"] },
+          "properties": { "type": "object", "additionalProperties": { "type": "string" } }
+        },
+        "example": { "type": "jmeter", "properties": { "influxdb.host": "newhost" } }
+      },
+      "ThreadUpdateRequest": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "required": ["threadGroup", "action", "threadCount"],
+          "properties": {
+            "threadGroup":  { "type": "string" },
+            "action":       { "type": "string", "enum": ["add", "remove"] },
+            "threadCount":  { "type": "integer", "minimum": 1 }
+          }
+        },
+        "example": [{ "threadGroup": "Thread Group 1", "action": "add", "threadCount": 5 }]
+      },
+      "ThreadGroupUpdateRequest": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "required": ["threadGroupName", "setActive"],
+          "properties": {
+            "threadGroupName": { "type": "string" },
+            "setActive":       { "type": "boolean" }
+          }
+        },
+        "example": [{ "threadGroupName": "Thread Group 1", "setActive": false }]
+      },
+      "ElementUpdateRequest": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "required": ["name", "type", "enabled"],
+          "properties": {
+            "name":    { "type": "string", "description": "Element name as shown in JMeter" },
+            "type":    { "type": "string", "enum": ["listener", "threadgroup", "timer", "assertion", "config", "preprocessor", "postprocessor"] },
+            "enabled": { "type": "boolean" }
+          }
+        },
+        "example": [{ "name": "View Results Tree", "type": "listener", "enabled": false }]
+      },
+      "VariableUpdateRequest": {
+        "type": "object",
+        "additionalProperties": { "type": "string" },
+        "example": { "myVar": "newValue" }
+      }
+    }
+  },
+  "security": [{ "passwordHeader": [] }],
+  "paths": {
+    "/ping": {
+      "get": {
+        "summary": "Plugin running status",
+        "description": "Returns plugin version. No authentication required.",
+        "security": [],
+        "responses": {
+          "200": { "description": "Plugin is running", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/StandardResponse" } } } }
+        }
+      }
+    },
+    "/status": {
+      "get": {
+        "summary": "JMeter test execution status",
+        "description": "Returns active/finished/total thread counts from JMeterContextService.",
+        "responses": {
+          "200": { "description": "Thread count summary" }
+        }
+      }
+    },
+    "/properties": {
+      "get": {
+        "summary": "Get JMeter or System properties",
+        "parameters": [
+          { "name": "type", "in": "query", "required": true, "schema": { "type": "string", "enum": ["jmeter", "system"] } }
+        ],
+        "responses": {
+          "200": { "description": "Property key-value pairs" }
+        }
+      },
+      "put": {
+        "summary": "Update JMeter or System properties",
+        "requestBody": {
+          "required": true,
+          "content": { "application/json": { "schema": { "$ref": "#/components/schemas/PropertyRequest" } } }
+        },
+        "responses": {
+          "200": { "description": "Properties updated" }
+        }
+      }
+    },
+    "/logger/{logType}": {
+      "put": {
+        "summary": "Set JMeter root log level",
+        "parameters": [
+          { "name": "logType", "in": "path", "required": true, "schema": { "type": "string", "enum": ["OFF", "FATAL", "ERROR", "WARN", "INFO", "DEBUG", "TRACE", "ALL"] } }
+        ],
+        "responses": {
+          "200": { "description": "Log level changed" }
+        }
+      }
+    },
+    "/threads": {
+      "get": {
+        "summary": "Get all active thread names grouped by thread group",
+        "responses": {
+          "200": { "description": "Thread names per thread group" }
+        }
+      },
+      "put": {
+        "summary": "Add or remove threads from a thread group",
+        "requestBody": {
+          "required": true,
+          "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ThreadUpdateRequest" } } }
+        },
+        "responses": {
+          "200": { "description": "Thread count updated" }
+        }
+      }
+    },
+    "/threadgroups": {
+      "get": {
+        "summary": "Get thread group configuration (ramp-up, thread count, scheduler, error action)",
+        "responses": {
+          "200": { "description": "Thread group details" }
+        }
+      },
+      "put": {
+        "summary": "Toggle thread groups active/inactive",
+        "requestBody": {
+          "required": true,
+          "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ThreadGroupUpdateRequest" } } }
+        },
+        "responses": {
+          "200": { "description": "Thread group toggled" }
+        }
+      }
+    },
+    "/elements": {
+      "get": {
+        "summary": "Get test elements by type",
+        "description": "Returns name, type, and enabled state for each matching element.",
+        "parameters": [
+          {
+            "name": "type", "in": "query", "required": true,
+            "schema": { "type": "string", "enum": ["listeners", "threadgroups", "timers", "assertions", "config", "preprocessors", "postprocessors"] }
+          }
+        ],
+        "responses": {
+          "200": { "description": "Array of {name, type, enabled}" }
+        }
+      },
+      "put": {
+        "summary": "Enable or disable test elements by name and type",
+        "requestBody": {
+          "required": true,
+          "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ElementUpdateRequest" } } }
+        },
+        "responses": {
+          "200": { "description": "Result with updated and notFound arrays" }
+        }
+      }
+    },
+    "/vars/{threadname}": {
+      "get": {
+        "summary": "Get JMeter variables for a specific thread",
+        "parameters": [
+          { "name": "threadname", "in": "path", "required": true, "schema": { "type": "string" }, "description": "Full thread name, e.g. Thread Group 1-1" }
+        ],
+        "responses": {
+          "200": { "description": "Variable key-value pairs" }
+        }
+      },
+      "put": {
+        "summary": "Update JMeter variables for a specific thread",
+        "parameters": [
+          { "name": "threadname", "in": "path", "required": true, "schema": { "type": "string" } }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": { "application/json": { "schema": { "$ref": "#/components/schemas/VariableUpdateRequest" } } }
+        },
+        "responses": {
+          "200": { "description": "Variables updated" }
+        }
+      }
+    },
+    "/stoptest": {
+      "post": {
+        "summary": "Stop the local JMeter test",
+        "parameters": [
+          { "name": "action", "in": "query", "required": true, "schema": { "type": "string", "enum": ["shutdown", "stop"] }, "description": "shutdown=graceful, stop=abrupt" }
+        ],
+        "responses": {
+          "200": { "description": "Stop signal sent" }
+        }
+      }
+    },
+    "/slaves": {
+      "get": {
+        "summary": "Get configured remote slave hosts",
+        "description": "Returns value of the remote_hosts JMeter property.",
+        "responses": {
+          "200": { "description": "Comma-separated slave host list" }
+        }
+      }
+    },
+    "/slaves/stoptest": {
+      "post": {
+        "summary": "Stop test on specific remote slaves",
+        "parameters": [
+          { "name": "action", "in": "query", "required": true, "schema": { "type": "string", "enum": ["shutdown", "stop"] } }
+        ],
+        "requestBody": {
+          "description": "Pass target slaves as `slaves` request header (comma-separated host or host:port values)",
+          "content": {}
+        },
+        "responses": {
+          "200": { "description": "Stop signal sent to each slave" }
+        }
+      }
+    },
+    "/openapi.json": {
+      "get": {
+        "summary": "This OpenAPI specification",
+        "security": [],
+        "responses": {
+          "200": { "description": "OpenAPI 3.0.3 JSON spec" }
+        }
+      }
+    }
+  }
+}
